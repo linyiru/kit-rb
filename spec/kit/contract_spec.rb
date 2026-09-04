@@ -33,7 +33,11 @@ module ContractRegistry
     { spec_path: "/v4/sequences/{sequence_id}/subscribers", runtime_path: "/v4/sequences/5/subscribers",
       invoke: ->(c) { c.sequences.subscribers(5) }, klass: Kit::Objects::Subscriber },
     { spec_path: "/v4/broadcasts", runtime_path: "/v4/broadcasts",
-      invoke: ->(c) { c.broadcasts.list }, klass: Kit::Objects::Broadcast }
+      invoke: ->(c) { c.broadcasts.list }, klass: Kit::Objects::Broadcast },
+    { spec_path: "/v4/webhooks", runtime_path: "/v4/webhooks",
+      invoke: ->(c) { c.webhooks.list }, klass: Kit::Objects::Webhook },
+    { spec_path: "/v4/webhook_endpoints", runtime_path: "/v4/webhook_endpoints",
+      invoke: ->(c) { c.webhook_endpoints.list }, klass: Kit::Objects::WebhookEndpoint }
   ].freeze
 end
 

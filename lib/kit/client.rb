@@ -45,5 +45,13 @@ module Kit
     def broadcasts
       @broadcasts ||= Resources::Broadcasts.new(@connection)
     end
+
+    def webhooks
+      @webhooks ||= Resources::Webhooks.new(@connection)
+    end
+
+    def webhook_endpoints
+      @webhook_endpoints ||= Resources::WebhookEndpoints.new(@connection)
+    end
   end
 end

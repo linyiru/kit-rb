@@ -208,6 +208,26 @@ module Kit
       attr_reader status: String?
       def self.from: (Hash[String, untyped] hash) -> Broadcast
     end
+    class Webhook
+      attr_reader id: Integer?
+      attr_reader account_id: Integer?
+      attr_reader event: Hash[String, untyped]?
+      attr_reader target_url: String?
+      def self.from: (Hash[String, untyped] hash) -> Webhook
+    end
+    class WebhookEndpoint
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader url: String?
+      attr_reader events: Array[untyped]?
+      attr_reader status: String?
+      attr_reader source: String?
+      attr_reader description: String?
+      attr_reader created_by_app: untyped
+      attr_reader created_at: String?
+      attr_reader previous_secret_expires_at: String?
+      def self.from: (Hash[String, untyped] hash) -> WebhookEndpoint
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -272,6 +292,19 @@ module Kit
       def update: (Integer id, **untyped attributes) -> Objects::Broadcast
       def delete: (Integer id) -> void
     end
+    class Webhooks < Base
+      def list: (**untyped params) -> Collection[Objects::Webhook]
+      def create: (target_url: String, event: Hash[untyped, untyped]) -> Objects::Webhook
+      def delete: (Integer id) -> void
+    end
+    class WebhookEndpoints < Base
+      def list: (**untyped params) -> Collection[Objects::WebhookEndpoint]
+      def get: (Integer id) -> Objects::WebhookEndpoint
+      def create: (url: String, events: Array[untyped], ?name: String?, ?description: String?) -> Objects::WebhookEndpoint
+      def delete: (Integer id) -> void
+      def rotate_secret: (Integer id, ?force: bool?) -> Objects::WebhookEndpoint
+      def revoke_previous_secret: (Integer id) -> Objects::WebhookEndpoint
+    end
   end
 
   class Client
@@ -284,5 +317,7 @@ module Kit
     def forms: () -> Resources::Forms
     def sequences: () -> Resources::Sequences
     def broadcasts: () -> Resources::Broadcasts
+    def webhooks: () -> Resources::Webhooks
+    def webhook_endpoints: () -> Resources::WebhookEndpoints
   end
 end
