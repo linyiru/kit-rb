@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2026-09-04
+
+First feature-complete release: the entire Kit API v4 surface — all 81 documented
+operations across every resource — verified against the vendored OpenAPI document.
+
+### Added
+- Full resource coverage via `client.`: `account` (colors, creator_profile,
+  email/growth stats), `subscribers` (list/get/create/update/unsubscribe, filter,
+  tags, stats, location), `tags`, `custom_fields`, `forms`, `sequences` (incl.
+  emails and subscribers), `broadcasts` (incl. stats and click reports),
+  `email_templates`, `segments`, `posts`, `snippets`, `purchases`, `webhooks`,
+  `webhook_endpoints`, and `bulk` (all eight batch operations).
+- OAuth 2.0: `client_credentials` grant and RFC 7009 token `revoke`, alongside
+  the existing authorization-code / refresh / PKCE flows.
+- `Base#one`/`#collection` helpers centralising single-object and cursor-list
+  plumbing (POST-based lists supported for the filter endpoints).
+- Testing layers: WebMock unit specs, an OpenAPI list-envelope contract test,
+  VCR integration cassettes (secrets scrubbed) replayed in CI, `rake smoke`
+  (live read-only), and an opt-in e2e lifecycle. Full RBS + Steep.
+- Trusted Publishing release workflow (GitHub Actions OIDC → RubyGems).
+
 ## [0.0.0] - 2026-09-04
 
 Name-reservation release: the P0 foundation and a working `GET /v4/account`

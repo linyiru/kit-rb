@@ -1,0 +1,37 @@
+name: Release
+
+# Publishes to RubyGems via OIDC Trusted Publishing on a version tag — no
+# long-lived API key is stored. Configure the trusted publisher first at
+# rubygems.org/gems/kit-rb -> Settings -> Trusted Publishers (repository
+# linyiru/kit-rb, workflow release.yml, environment rubygems).
+#
+# Cut a release with:  git tag v0.1.0 && git push origin v0.1.0
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    environment: rubygems
+    permissions:
+      contents: read
+      id-token: write # mint the short-lived OIDC token RubyGems trades for creds
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - name: Verify the gate is green before publishing
+        run: bundle exec rake
+      - name: Publish to RubyGems (Trusted Publishing)
+        uses: rubygems/release-gem@v1
