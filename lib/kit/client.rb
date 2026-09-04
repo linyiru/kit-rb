@@ -25,5 +25,9 @@ module Kit
     def subscribers
       @subscribers ||= Resources::Subscribers.new(@connection)
     end
+
+    def tags
+      @tags ||= Resources::Tags.new(@connection)
+    end
   end
 end

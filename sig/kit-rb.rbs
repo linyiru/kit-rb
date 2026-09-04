@@ -142,6 +142,13 @@ module Kit
       attr_reader account: Account
       def self.from: (Hash[String, untyped] hash) -> AccountInfo
     end
+    class Tag
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader created_at: String?
+      attr_reader subscriber_count: Integer?
+      def self.from: (Hash[String, untyped] hash) -> Tag
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -169,6 +176,14 @@ module Kit
       def update: (Integer id, ?first_name: String?, ?email_address: String?, ?fields: Hash[untyped, untyped]?) -> Objects::Subscriber
       def unsubscribe: (Integer id) -> Objects::Subscriber
     end
+    class Tags < Base
+      def list: (**untyped params) -> Collection[Objects::Tag]
+      def create: (name: String) -> Objects::Tag
+      def update: (Integer id, name: String) -> Objects::Tag
+      def tag_subscriber: (Integer tag_id, Integer subscriber_id) -> Objects::Subscriber
+      def remove_subscriber: (Integer tag_id, Integer subscriber_id) -> untyped
+      def subscribers: (Integer tag_id, **untyped params) -> Collection[Objects::Subscriber]
+    end
   end
 
   class Client
@@ -176,5 +191,6 @@ module Kit
     def initialize: (?api_key: String?, ?access_token: String?, **untyped options) -> void
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
+    def tags: () -> Resources::Tags
   end
 end
