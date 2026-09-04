@@ -16,6 +16,7 @@ vertical slice. Not yet feature-complete — resources land in 0.1.0 per docs/DE
 - `http.rb`-backed `Kit::Connection` with JSON handling and a typed error
   hierarchy (`Kit::AuthenticationError`, `NotFoundError`, `RateLimitError`, …).
 - `GET /v4/account` vertical slice returning immutable `Data` value objects.
+- Subscribers resource: list (auto-paginating), get, create, update, unsubscribe.
 - OAuth 2.0 authorization-code flow: `Kit::OAuth::Client` (authorize URL,
   code exchange, single-use refresh), PKCE (S256) helper, and `Token` object.
 - Cursor pagination engine (`Kit::Collection#auto_paging_each`) and automatic

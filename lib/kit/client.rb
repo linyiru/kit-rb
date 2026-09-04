@@ -21,5 +21,9 @@ module Kit
     def account
       @account ||= Resources::Account.new(@connection)
     end
+
+    def subscribers
+      @subscribers ||= Resources::Subscribers.new(@connection)
+    end
   end
 end
