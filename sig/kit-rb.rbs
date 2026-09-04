@@ -339,6 +339,8 @@ module Kit
       def update: (Integer id, name: String) -> Objects::Tag
       def tag_subscriber: (Integer tag_id, Integer subscriber_id) -> Objects::Subscriber
       def remove_subscriber: (Integer tag_id, Integer subscriber_id) -> untyped
+      def tag_subscriber_by_email: (Integer tag_id, email_address: String) -> Objects::Subscriber
+      def remove_subscriber_by_email: (Integer tag_id, email_address: String) -> void
       def subscribers: (Integer tag_id, **untyped params) -> Collection[Objects::Subscriber]
     end
     class CustomFields < Base

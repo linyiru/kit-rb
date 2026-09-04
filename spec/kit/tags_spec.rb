@@ -57,6 +57,25 @@ RSpec.describe Kit::Resources::Tags do
     end
   end
 
+  describe "#tag_subscriber_by_email / #remove_subscriber_by_email" do
+    it "tags a subscriber by email" do
+      stub = stub_request(:post, "https://api.kit.com/v4/tags/9/subscribers")
+             .with(body: { "email_address" => "s5@x.com" })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("subscriber" => sub(id: 5)))
+      expect(client.tags.tag_subscriber_by_email(9, email_address: "s5@x.com")).to be_a(Kit::Objects::Subscriber)
+      expect(stub).to have_been_requested
+    end
+
+    it "removes a tag from a subscriber by email (query param)" do
+      stub = stub_request(:delete, "https://api.kit.com/v4/tags/9/subscribers")
+             .with(query: { "email_address" => "s5@x.com" })
+             .to_return(status: 204, body: "")
+      expect(client.tags.remove_subscriber_by_email(9, email_address: "s5@x.com")).to be_nil
+      expect(stub).to have_been_requested
+    end
+  end
+
   describe "#subscribers" do
     it "returns a Collection of Subscriber tagged with this tag" do
       stub_kit(:get, "/v4/tags/9/subscribers",
