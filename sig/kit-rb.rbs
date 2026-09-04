@@ -156,6 +156,19 @@ module Kit
       attr_reader label: String?
       def self.from: (Hash[String, untyped] hash) -> CustomField
     end
+    class Form
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader created_at: String?
+      attr_reader type: String?
+      attr_reader format: untyped
+      attr_reader embed_js: String?
+      attr_reader embed_url: String?
+      attr_reader archived: bool?
+      attr_reader uid: String?
+      attr_reader subscriber_count: Integer?
+      def self.from: (Hash[String, untyped] hash) -> Form
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -197,6 +210,12 @@ module Kit
       def update: (Integer id, label: String) -> Objects::CustomField
       def delete: (Integer id) -> void
     end
+    class Forms < Base
+      def list: (**untyped params) -> Collection[Objects::Form]
+      def subscribers: (Integer form_id, **untyped params) -> Collection[Objects::Subscriber]
+      def add_subscriber: (Integer form_id, Integer subscriber_id, ?referrer: String?) -> Objects::Subscriber
+      def add_subscriber_by_email: (Integer form_id, email_address: String, ?referrer: String?) -> Objects::Subscriber
+    end
   end
 
   class Client
@@ -206,5 +225,6 @@ module Kit
     def subscribers: () -> Resources::Subscribers
     def tags: () -> Resources::Tags
     def custom_fields: () -> Resources::CustomFields
+    def forms: () -> Resources::Forms
   end
 end

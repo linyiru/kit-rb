@@ -33,5 +33,9 @@ module Kit
     def custom_fields
       @custom_fields ||= Resources::CustomFields.new(@connection)
     end
+
+    def forms
+      @forms ||= Resources::Forms.new(@connection)
+    end
   end
 end

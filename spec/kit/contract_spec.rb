@@ -23,7 +23,11 @@ module ContractRegistry
     { spec_path: "/v4/tags/{tag_id}/subscribers", runtime_path: "/v4/tags/9/subscribers",
       invoke: ->(c) { c.tags.subscribers(9) }, klass: Kit::Objects::Subscriber },
     { spec_path: "/v4/custom_fields", runtime_path: "/v4/custom_fields",
-      invoke: ->(c) { c.custom_fields.list }, klass: Kit::Objects::CustomField }
+      invoke: ->(c) { c.custom_fields.list }, klass: Kit::Objects::CustomField },
+    { spec_path: "/v4/forms", runtime_path: "/v4/forms",
+      invoke: ->(c) { c.forms.list }, klass: Kit::Objects::Form },
+    { spec_path: "/v4/forms/{form_id}/subscribers", runtime_path: "/v4/forms/7/subscribers",
+      invoke: ->(c) { c.forms.subscribers(7) }, klass: Kit::Objects::Subscriber }
   ].freeze
 end
 
