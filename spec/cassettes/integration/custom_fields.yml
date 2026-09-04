@@ -1,0 +1,80 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.kit.com/v4/custom_fields
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      User-Agent:
+      - kit-rb/0.0.0
+      X-Kit-Api-Key:
+      - "<KIT_API_KEY>"
+      Connection:
+      - close
+      Host:
+      - api.kit.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 04 Sep 2026 16:26:22 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '136'
+      Connection:
+      - close
+      Server:
+      - nginx
+      X-Frame-Options:
+      - ALLOWALL
+      X-Xss-Protection:
+      - '0'
+      X-Content-Type-Options:
+      - nosniff
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Set-Cookie:
+      - XSRF-TOKEN=kAjDpi3Xsy_e4lamFFIhnDgN5XHrqcwFo_-ofqMa7LxDs74RRAC26aJKIyzDpIGh-k1LLL5CvsS9hnKXxjm7zQ;
+        path=/; secure
+      - XSRF-TOKEN=kAjDpi3Xsy_e4lamFFIhnDgN5XHrqcwFo_-ofqMa7LxDs74RRAC26aJKIyzDpIGh-k1LLL5CvsS9hnKXxjm7zQ;
+        path=/; secure
+      - _mailapp_session=5d3296f0bbc1506dcaa0e9598a0a9cd5; path=/; expires=Fri, 04
+        Sep 2026 16:36:22 GMT; secure; HttpOnly
+      Etag:
+      - W/"d1ea4c39b5f8bad1e7befe1b7a31d436"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Security-Policy:
+      - 'report-uri /csp-violations; default-src ''self''; base-uri ''self''; font-src
+        * data:; img-src * blob: data: webkit-fake-url:; object-src ''none''; media-src
+        * blob: data:; form-action * mailto:; script-src ''self'' https://*.kit.com
+        https://*.convertkit.com https://*.stripe.com https://*.intercom.io https://kit.fontawesome.com
+        https://challenges.cloudflare.com https://cdp.customer.io https://cdp-eu.customer.io
+        ''strict-dynamic'' ''report-sample'' ''unsafe-eval'' ''nonce-CWemIyd8d1LDOUYZZnYabg=='';
+        style-src ''self'' https: ''unsafe-inline''; connect-src * https://challenges.cloudflare.com;
+        frame-src * https://challenges.cloudflare.com; child-src * blob:; worker-src
+        ''self'' blob:'
+      X-Request-Id:
+      - 761654e5-0207-4dcf-a6f7-211799615485
+      X-Runtime:
+      - '0.026623'
+      Strict-Transport-Security:
+      - max-age=63072000; includeSubDomains
+      Vary:
+      - Origin
+    body:
+      encoding: UTF-8
+      string: '{"custom_fields":[],"pagination":{"has_previous_page":false,"has_next_page":false,"start_cursor":null,"end_cursor":null,"per_page":500}}'
+  recorded_at: Fri, 04 Sep 2026 16:26:22 GMT
+recorded_with: VCR 6.4.0
