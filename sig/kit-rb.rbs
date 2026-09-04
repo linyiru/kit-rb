@@ -142,6 +142,14 @@ module Kit
       attr_reader account: Account
       def self.from: (Hash[String, untyped] hash) -> AccountInfo
     end
+    class CreatorProfile
+      attr_reader name: String?
+      attr_reader byline: String?
+      attr_reader bio: String?
+      attr_reader image_url: String?
+      attr_reader profile_url: String?
+      def self.from: (Hash[String, untyped] hash) -> CreatorProfile
+    end
     class Tag
       attr_reader id: Integer?
       attr_reader name: String?
@@ -320,6 +328,11 @@ module Kit
     end
     class Account < Base
       def get: () -> Objects::AccountInfo
+      def colors: () -> Array[String]
+      def update_colors: (Array[String] colors) -> Array[String]
+      def creator_profile: () -> Objects::CreatorProfile
+      def email_stats: () -> Hash[String, untyped]
+      def growth_stats: (**untyped params) -> Hash[String, untyped]
     end
     class Subscribers < Base
       def list: (**untyped params) -> Collection[Objects::Subscriber]

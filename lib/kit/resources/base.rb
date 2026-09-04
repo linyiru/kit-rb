@@ -19,6 +19,12 @@ module Kit
         @connection.request(:get, path, params: params)
       end
 
+      # For a PUT whose payload is not a single wrapped object (e.g. the account
+      # colors array); enveloped objects go through `one`.
+      def http_put(path, body: nil, params: {})
+        @connection.request(:put, path, params: params, body: body)
+      end
+
       def http_delete(path, params: {})
         @connection.request(:delete, path, params: params)
       end
