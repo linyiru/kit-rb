@@ -69,5 +69,9 @@ module Kit
     def snippets
       @snippets ||= Resources::Snippets.new(@connection)
     end
+
+    def purchases
+      @purchases ||= Resources::Purchases.new(@connection)
+    end
   end
 end

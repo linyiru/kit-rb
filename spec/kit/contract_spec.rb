@@ -45,7 +45,9 @@ module ContractRegistry
     { spec_path: "/v4/posts", runtime_path: "/v4/posts",
       invoke: ->(c) { c.posts.list }, klass: Kit::Objects::Post },
     { spec_path: "/v4/snippets", runtime_path: "/v4/snippets",
-      invoke: ->(c) { c.snippets.list }, klass: Kit::Objects::Snippet }
+      invoke: ->(c) { c.snippets.list }, klass: Kit::Objects::Snippet },
+    { spec_path: "/v4/purchases", runtime_path: "/v4/purchases",
+      invoke: ->(c) { c.purchases.list }, klass: Kit::Objects::Purchase }
   ].freeze
 end
 

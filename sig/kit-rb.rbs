@@ -270,6 +270,22 @@ module Kit
       attr_reader document: untyped
       def self.from: (Hash[String, untyped] hash) -> Snippet
     end
+    class Purchase
+      attr_reader id: Integer?
+      attr_reader transaction_id: String?
+      attr_reader subscriber_id: Integer?
+      attr_reader status: String?
+      attr_reader email_address: String?
+      attr_reader currency: String?
+      attr_reader transaction_time: String?
+      attr_reader subtotal: Numeric?
+      attr_reader discount: Numeric?
+      attr_reader tax: Numeric?
+      attr_reader total: Numeric?
+      attr_reader products: Array[untyped]?
+      attr_reader source: String?
+      def self.from: (Hash[String, untyped] hash) -> Purchase
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -341,6 +357,11 @@ module Kit
       def list: (**untyped params) -> Collection[Objects::Post]
       def get: (Integer id) -> Objects::Post
     end
+    class Purchases < Base
+      def list: (**untyped params) -> Collection[Objects::Purchase]
+      def get: (Integer id) -> Objects::Purchase
+      def create: (**untyped attributes) -> Objects::Purchase
+    end
     class Snippets < Base
       def list: (**untyped params) -> Collection[Objects::Snippet]
       def get: (Integer id) -> Objects::Snippet
@@ -381,5 +402,6 @@ module Kit
     def segments: () -> Resources::Segments
     def posts: () -> Resources::Posts
     def snippets: () -> Resources::Snippets
+    def purchases: () -> Resources::Purchases
   end
 end
