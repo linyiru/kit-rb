@@ -52,6 +52,21 @@ module Kit
   # 5xx — a Kit-side failure.
   class ServerError < APIError; end
 
+  # An OAuth token-endpoint failure. `oauth_error` is the RFC 6749 `error` code
+  # (e.g. "invalid_grant") and `error_description` its human-readable detail.
+  class OAuthError < APIError
+    attr_reader :oauth_error, :error_description
+
+    def initialize(status:, body: nil, response: nil)
+      if body.is_a?(Hash)
+        @oauth_error = body["error"]
+        @error_description = body["error_description"]
+      end
+      super(@oauth_error && "OAuth error: #{@oauth_error} (#{@error_description})",
+            status: status, body: body, response: response)
+    end
+  end
+
   # Maps an HTTP status to the most specific error class above.
   class Error
     def self.class_for(status)

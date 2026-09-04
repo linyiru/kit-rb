@@ -16,6 +16,7 @@ Metrics/BlockLength:
     - "*.gemspec"
 
 Metrics/MethodLength:
+  Max: 15
   Exclude:
     - "spec/**/*"
 

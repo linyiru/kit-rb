@@ -32,6 +32,43 @@ module Kit
   end
   class ServerError < APIError
   end
+  class OAuthError < APIError
+    attr_reader oauth_error: String?
+    attr_reader error_description: String?
+    def initialize: (status: Integer, ?body: untyped, ?response: untyped) -> void
+  end
+
+  module OAuth
+    class Challenge
+      attr_reader code_verifier: String
+      attr_reader code_challenge: String
+      attr_reader code_challenge_method: String
+    end
+    module PKCE
+      METHOD: String
+      def self.generate: () -> Challenge
+      def self.challenge_for: (String verifier) -> String
+    end
+    class Token
+      attr_reader access_token: String?
+      attr_reader refresh_token: String?
+      attr_reader token_type: String?
+      attr_reader expires_in: Integer?
+      attr_reader scope: String?
+      attr_reader created_at: Integer?
+      def self.from: (Hash[String, untyped] hash) -> Token
+      def expires_at: () -> Integer?
+      def expired?: (?now: Integer, ?leeway: Integer) -> bool
+    end
+    class Client
+      AUTHORIZE_PATH: String
+      TOKEN_PATH: String
+      def initialize: (client_id: String, ?client_secret: String?, ?redirect_uri: String?, ?base_url: String) -> void
+      def authorization_url: (?scope: String, ?state: String?, ?code_challenge: String?, ?code_challenge_method: String?, ?tenant_name: String?, ?redirect_uri: String?) -> String
+      def exchange_code: (String code, ?code_verifier: String?, ?redirect_uri: String?) -> Token
+      def refresh: (String refresh_token) -> Token
+    end
+  end
 
   module Auth
     class ApiKey
