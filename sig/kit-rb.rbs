@@ -53,11 +53,15 @@ module Kit
     attr_reader base_url: String
     attr_reader open_timeout: Integer
     attr_reader read_timeout: Integer
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer) -> void
+    attr_reader max_retries: Integer
+    attr_reader retry_backoff: Float
+    attr_reader max_backoff: Numeric
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
   end
 
   class Connection
     JSON_TYPE: String
+    RETRYABLE: Array[singleton(APIError)]
     def initialize: (Configuration config) -> void
     def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
   end

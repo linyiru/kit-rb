@@ -5,34 +5,45 @@ require "json"
 
 module Kit
   # The transport layer: builds requests with http.rb, injects auth and JSON
-  # headers, parses responses, and maps non-2xx statuses onto the typed error
-  # hierarchy. Resources talk to the API only through this.
+  # headers, parses responses, maps non-2xx statuses onto the typed error
+  # hierarchy, and retries transient failures (429 + 5xx) with backoff.
+  # Resources talk to the API only through this.
   class Connection
     JSON_TYPE = "application/json"
+    RETRYABLE = [RateLimitError, ServerError].freeze
 
     def initialize(config)
       @config = config
     end
 
     # Issues a request and returns the parsed JSON body (a Hash) on success.
+    # 429s honour `Retry-After`; 5xx use exponential backoff with jitter; both
+    # give up after `config.max_retries` and re-raise the typed error.
     #
     # @param method [Symbol] :get, :post, :put, :delete
     # @param path [String] e.g. "/v4/account" (leading slash, no host)
     # @param params [Hash] query string params
     # @param body [Hash, nil] JSON request body
     def request(method, path, params: {}, body: nil)
-      response = client.request(
-        method,
-        "#{@config.base_url}#{path}",
-        params: params,
-        json: body
-      )
-      handle(response)
-    rescue HTTP::Error => e
-      raise Error, "HTTP transport error: #{e.message}"
+      attempt = 0
+      begin
+        handle(perform(method, path, params, body))
+      rescue *RETRYABLE => e
+        attempt += 1
+        raise if attempt > @config.max_retries
+
+        backoff_sleep(backoff_for(e, attempt))
+        retry
+      end
     end
 
     private
+
+    def perform(method, path, params, body)
+      client.request(method, "#{@config.base_url}#{path}", params: params, json: body)
+    rescue HTTP::Error => e
+      raise Error, "HTTP transport error: #{e.message}"
+    end
 
     def client
       HTTP
@@ -73,6 +84,21 @@ module Kit
       else
         klass.new(status: status, body: body, response: response)
       end
+    end
+
+    # Seconds to wait before the next attempt: the server's Retry-After when it
+    # sent one (429), else exponential backoff (base * 2^(n-1)) with jitter,
+    # capped at config.max_backoff.
+    def backoff_for(error, attempt)
+      return error.retry_after if error.is_a?(RateLimitError) && error.retry_after
+
+      base = @config.retry_backoff * (2**(attempt - 1))
+      [base + (rand * @config.retry_backoff), @config.max_backoff].min
+    end
+
+    # Extracted so tests can stub the wait instead of really sleeping.
+    def backoff_sleep(seconds)
+      sleep(seconds)
     end
   end
 end

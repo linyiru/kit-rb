@@ -32,3 +32,7 @@ Naming/FileName:
 # Named keyword forwarding reads better in a public constructor than anonymous **.
 Style/ArgumentsForwarding:
   Enabled: false
+
+# A configuration object legitimately takes many keyword options.
+Metrics/ParameterLists:
+  CountKeywordArgs: false
