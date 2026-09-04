@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
 ## [0.2.0] - 2026-09-04
 
 ### Changed
@@ -58,3 +60,8 @@ vertical slice. Not yet feature-complete — resources land in 0.1.0 per docs/DE
 - Cursor pagination engine (`Kit::Collection#auto_paging_each`) and automatic
   429/5xx retry with backoff.
 - RBS signatures for the public surface.
+
+[Unreleased]: https://github.com/linyiru/kit-rb/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/linyiru/kit-rb/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/linyiru/kit-rb/compare/7ce3329...v0.1.0
+[0.0.0]: https://rubygems.org/gems/kit-rb/versions/0.0.0
