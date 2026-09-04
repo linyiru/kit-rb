@@ -45,10 +45,9 @@ module Kit
         collection("/v4/subscribers/#{id}/tags", "tags", Objects::Tag, params)
       end
 
-      # GET /v4/subscribers/:id/stats — engagement stats. Returns the raw
-      # `subscriber` hash ({ "id" => ..., "stats" => { ... } }).
+      # GET /v4/subscribers/:id/stats — the subscriber's engagement stats.
       def stats(id)
-        http_get("/v4/subscribers/#{id}/stats").fetch("subscriber")
+        one(:get, "/v4/subscribers/#{id}/stats", "subscriber", Objects::SubscriberStats)
       end
 
       # POST /v4/subscribers/:id/location — set the subscriber's location

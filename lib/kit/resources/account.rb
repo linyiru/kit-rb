@@ -27,14 +27,15 @@ module Kit
         one(:get, "/v4/account/creator_profile", "profile", Objects::CreatorProfile)
       end
 
-      # GET /v4/account/email_stats — returns the raw stats hash.
+      # GET /v4/account/email_stats — account-wide email engagement stats.
       def email_stats
-        http_get("/v4/account/email_stats").fetch("stats")
+        one(:get, "/v4/account/email_stats", "stats", Objects::EmailStats)
       end
 
-      # GET /v4/account/growth_stats — raw stats hash; accepts starting/ending.
+      # GET /v4/account/growth_stats — subscriber-growth stats; accepts
+      # starting/ending to bound the window.
       def growth_stats(**params)
-        http_get("/v4/account/growth_stats", params: params).fetch("stats")
+        one(:get, "/v4/account/growth_stats", "stats", Objects::GrowthStats, params: params)
       end
     end
   end

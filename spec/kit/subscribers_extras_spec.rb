@@ -35,11 +35,15 @@ RSpec.describe "Kit::Resources::Subscribers extras" do
   end
 
   describe "#stats" do
-    it "returns the raw subscriber stats hash" do
+    it "returns typed SubscriberStats, flattening the nested stats" do
       stub_kit(:get, "/v4/subscribers/42/stats",
-               body: { "subscriber" => { "id" => 42, "stats" => { "sent" => 10, "opened" => 4 } } })
+               body: { "subscriber" => { "id" => 42,
+                                         "stats" => { "sent" => 10, "opened" => 4, "open_rate" => 0.4 } } })
       stats = client.subscribers.stats(42)
-      expect(stats["stats"]).to eq("sent" => 10, "opened" => 4)
+      expect(stats).to be_a(Kit::Objects::SubscriberStats)
+      expect(stats.id).to eq(42)
+      expect(stats.sent).to eq(10)
+      expect(stats.open_rate).to eq(0.4)
     end
   end
 

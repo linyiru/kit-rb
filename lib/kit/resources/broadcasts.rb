@@ -31,21 +31,25 @@ module Kit
         nil
       end
 
-      # GET /v4/broadcasts/stats — a cursor-paginated list of per-broadcast stats
-      # ({ "id", "stats", "subject", "send_at" } hashes), not full broadcasts.
+      # GET /v4/broadcasts/stats — a cursor-paginated list of per-broadcast stats.
       def stats_list(**params)
-        collection("/v4/broadcasts/stats", "broadcasts", Objects::Raw, params)
+        collection("/v4/broadcasts/stats", "broadcasts", Objects::BroadcastStats, params)
       end
 
-      # GET /v4/broadcasts/:id/stats — the raw stats hash for one broadcast.
+      # GET /v4/broadcasts/:id/stats — one broadcast's performance stats.
       def stats(id)
-        http_get("/v4/broadcasts/#{id}/stats").fetch("broadcast")
+        one(:get, "/v4/broadcasts/#{id}/stats", "broadcast", Objects::BroadcastStats)
       end
 
-      # GET /v4/broadcasts/:id/clicks — the raw link-click report ({ "id",
-      # "clicks" => [...] }); accepts pagination params.
+      # GET /v4/broadcasts/:id/clicks — a cursor-paginated Collection of the
+      # broadcast's clicked links. The API nests the array under "broadcast", so
+      # this is built directly rather than through Base#collection.
       def clicks(id, **params)
-        http_get("/v4/broadcasts/#{id}/clicks", params: params).fetch("broadcast")
+        body = http_get("/v4/broadcasts/#{id}/clicks", params: params)
+        rows = body.fetch("broadcast").fetch("clicks").map { |row| Objects::BroadcastClick.from(row) }
+        Collection.new(data: rows, pagination: Pagination.from(body.fetch("pagination"))) do |after|
+          clicks(id, **params, after: after)
+        end
       end
     end
   end

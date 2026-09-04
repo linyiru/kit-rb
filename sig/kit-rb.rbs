@@ -126,9 +126,6 @@ module Kit
   end
 
   module Objects
-    module Raw
-      def self.from: (Hash[String, untyped] hash) -> Hash[String, untyped]
-    end
     class User
       attr_reader email: String?
       attr_reader id: Integer?
@@ -314,6 +311,71 @@ module Kit
       attr_reader stats: Hash[String, untyped]?
       def self.from: (Hash[String, untyped] hash) -> SequenceEmail
     end
+    class BroadcastStats
+      attr_reader id: Integer?
+      attr_reader subject: String?
+      attr_reader send_at: String?
+      attr_reader recipients: Integer?
+      attr_reader open_rate: Numeric?
+      attr_reader emails_opened: Integer?
+      attr_reader click_rate: Numeric?
+      attr_reader unsubscribe_rate: Numeric?
+      attr_reader unsubscribes: Integer?
+      attr_reader total_clicks: Integer?
+      attr_reader show_total_clicks: bool?
+      attr_reader status: String?
+      attr_reader progress: Numeric?
+      attr_reader open_tracking_disabled: bool?
+      attr_reader click_tracking_disabled: bool?
+      def self.from: (Hash[String, untyped] hash) -> BroadcastStats
+    end
+    class BroadcastClick
+      attr_reader id: Integer?
+      attr_reader url: String?
+      attr_reader unique_clicks: Integer?
+      attr_reader click_to_delivery_rate: Numeric?
+      attr_reader click_to_open_rate: Numeric?
+      def self.from: (Hash[String, untyped] hash) -> BroadcastClick
+    end
+    class SubscriberStats
+      attr_reader id: Integer?
+      attr_reader sent: Integer?
+      attr_reader opened: Integer?
+      attr_reader clicked: Integer?
+      attr_reader bounced: Integer?
+      attr_reader open_rate: Numeric?
+      attr_reader click_rate: Numeric?
+      attr_reader last_sent: String?
+      attr_reader last_opened: String?
+      attr_reader last_clicked: String?
+      attr_reader sends_since_last_open: Integer?
+      attr_reader sends_since_last_click: Integer?
+      def self.from: (Hash[String, untyped] hash) -> SubscriberStats
+    end
+    class EmailStats
+      attr_reader sent: Integer?
+      attr_reader clicked: Integer?
+      attr_reader opened: Integer?
+      attr_reader email_stats_mode: String?
+      attr_reader open_tracking_enabled: bool?
+      attr_reader click_tracking_enabled: bool?
+      attr_reader starting: String?
+      attr_reader ending: String?
+      attr_reader open_rate: Numeric?
+      attr_reader click_rate: Numeric?
+      attr_reader unsubscribe_rate: Numeric?
+      attr_reader bounce_rate: Numeric?
+      def self.from: (Hash[String, untyped] hash) -> EmailStats
+    end
+    class GrowthStats
+      attr_reader cancellations: Integer?
+      attr_reader net_new_subscribers: Integer?
+      attr_reader new_subscribers: Integer?
+      attr_reader subscribers: Integer?
+      attr_reader starting: String?
+      attr_reader ending: String?
+      def self.from: (Hash[String, untyped] hash) -> GrowthStats
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -336,8 +398,8 @@ module Kit
       def colors: () -> Array[String]
       def update_colors: (Array[String] colors) -> Array[String]
       def creator_profile: () -> Objects::CreatorProfile
-      def email_stats: () -> Hash[String, untyped]
-      def growth_stats: (**untyped params) -> Hash[String, untyped]
+      def email_stats: () -> Objects::EmailStats
+      def growth_stats: (**untyped params) -> Objects::GrowthStats
     end
     class Subscribers < Base
       def list: (**untyped params) -> Collection[Objects::Subscriber]
@@ -347,7 +409,7 @@ module Kit
       def unsubscribe: (Integer id) -> Objects::Subscriber
       def filter: (**untyped params) -> Collection[Objects::Subscriber]
       def tags: (Integer id, **untyped params) -> Collection[Objects::Tag]
-      def stats: (Integer id) -> Hash[String, untyped]
+      def stats: (Integer id) -> Objects::SubscriberStats
       def set_location: (Integer id, location: Hash[untyped, untyped]) -> Objects::Subscriber
       def remove_location: (Integer id) -> void
     end
@@ -394,9 +456,9 @@ module Kit
       def create: (**untyped attributes) -> Objects::Broadcast
       def update: (Integer id, **untyped attributes) -> Objects::Broadcast
       def delete: (Integer id) -> void
-      def stats_list: (**untyped params) -> Collection[Hash[String, untyped]]
-      def stats: (Integer id) -> Hash[String, untyped]
-      def clicks: (Integer id, **untyped params) -> Hash[String, untyped]
+      def stats_list: (**untyped params) -> Collection[Objects::BroadcastStats]
+      def stats: (Integer id) -> Objects::BroadcastStats
+      def clicks: (Integer id, **untyped params) -> Collection[Objects::BroadcastClick]
     end
     class EmailTemplates < Base
       def list: (**untyped params) -> Collection[Objects::EmailTemplate]
