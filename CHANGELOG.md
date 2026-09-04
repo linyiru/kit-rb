@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-04
+
+### Changed
+- **Breaking:** the stats and analytics endpoints now return typed value objects
+  instead of raw hashes, matching every other resource:
+  `broadcasts.stats`/`stats_list` → `Objects::BroadcastStats` (the nested metrics
+  flattened), `broadcasts.clicks` → `Collection[Objects::BroadcastClick]`,
+  `subscribers.stats` → `Objects::SubscriberStats`, `account.email_stats` →
+  `Objects::EmailStats`, and `account.growth_stats` → `Objects::GrowthStats`.
+
+### Removed
+- `Objects::Raw` (the identity used by the old raw-hash stats returns).
+
 ## [0.1.0] - 2026-09-04
 
 First feature-complete release: the entire Kit API v4 surface — all 81 documented
