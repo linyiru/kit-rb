@@ -2,8 +2,8 @@
 
 module Kit
   module Resources
-    # The /v4/sequences endpoints. Sequences (formerly "courses") plus their
-    # subscribers. Sequence emails are a separate resource.
+    # The /v4/sequences endpoints. Sequences (formerly "courses"), their
+    # subscribers, and the emails that make up each sequence.
     class Sequences < Base
       # GET /v4/sequences
       def list(**params)
@@ -45,6 +45,33 @@ module Kit
       def add_subscriber_by_email(sequence_id, email_address:)
         one(:post, "/v4/sequences/#{sequence_id}/subscribers", "subscriber", Objects::Subscriber,
             body: { email_address: email_address })
+      end
+
+      # GET /v4/sequences/:sequence_id/emails
+      def emails(sequence_id, **params)
+        collection("/v4/sequences/#{sequence_id}/emails", "emails", Objects::SequenceEmail, params)
+      end
+
+      # GET /v4/sequences/:sequence_id/emails/:id
+      def email(sequence_id, id)
+        one(:get, "/v4/sequences/#{sequence_id}/emails/#{id}", "email", Objects::SequenceEmail)
+      end
+
+      # POST /v4/sequences/:sequence_id/emails — subject/delay_value/delay_unit
+      # are required; content/position/send_days and the rest are optional.
+      def create_email(sequence_id, **attributes)
+        one(:post, "/v4/sequences/#{sequence_id}/emails", "email", Objects::SequenceEmail, body: attributes)
+      end
+
+      # PUT /v4/sequences/:sequence_id/emails/:id
+      def update_email(sequence_id, id, **attributes)
+        one(:put, "/v4/sequences/#{sequence_id}/emails/#{id}", "email", Objects::SequenceEmail, body: attributes)
+      end
+
+      # DELETE /v4/sequences/:sequence_id/emails/:id
+      def delete_email(sequence_id, id)
+        http_delete("/v4/sequences/#{sequence_id}/emails/#{id}")
+        nil
       end
     end
   end

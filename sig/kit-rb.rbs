@@ -286,6 +286,21 @@ module Kit
       attr_reader source: String?
       def self.from: (Hash[String, untyped] hash) -> Purchase
     end
+    class SequenceEmail
+      attr_reader id: Integer?
+      attr_reader sequence_id: Integer?
+      attr_reader subject: String?
+      attr_reader preview_text: String?
+      attr_reader email_address: String?
+      attr_reader email_template_id: Integer?
+      attr_reader published: bool?
+      attr_reader position: Integer?
+      attr_reader delay_value: Integer?
+      attr_reader delay_unit: String?
+      attr_reader send_days: Array[untyped]?
+      attr_reader stats: Hash[String, untyped]?
+      def self.from: (Hash[String, untyped] hash) -> SequenceEmail
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -342,6 +357,11 @@ module Kit
       def subscribers: (Integer sequence_id, **untyped params) -> Collection[Objects::Subscriber]
       def add_subscriber: (Integer sequence_id, Integer subscriber_id) -> Objects::Subscriber
       def add_subscriber_by_email: (Integer sequence_id, email_address: String) -> Objects::Subscriber
+      def emails: (Integer sequence_id, **untyped params) -> Collection[Objects::SequenceEmail]
+      def email: (Integer sequence_id, Integer id) -> Objects::SequenceEmail
+      def create_email: (Integer sequence_id, **untyped attributes) -> Objects::SequenceEmail
+      def update_email: (Integer sequence_id, Integer id, **untyped attributes) -> Objects::SequenceEmail
+      def delete_email: (Integer sequence_id, Integer id) -> void
     end
     class Broadcasts < Base
       def list: (**untyped params) -> Collection[Objects::Broadcast]

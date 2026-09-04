@@ -32,6 +32,8 @@ module ContractRegistry
       invoke: ->(c) { c.sequences.list }, klass: Kit::Objects::Sequence },
     { spec_path: "/v4/sequences/{sequence_id}/subscribers", runtime_path: "/v4/sequences/5/subscribers",
       invoke: ->(c) { c.sequences.subscribers(5) }, klass: Kit::Objects::Subscriber },
+    { spec_path: "/v4/sequences/{sequence_id}/emails", runtime_path: "/v4/sequences/5/emails",
+      invoke: ->(c) { c.sequences.emails(5) }, klass: Kit::Objects::SequenceEmail },
     { spec_path: "/v4/broadcasts", runtime_path: "/v4/broadcasts",
       invoke: ->(c) { c.broadcasts.list }, klass: Kit::Objects::Broadcast },
     { spec_path: "/v4/webhooks", runtime_path: "/v4/webhooks",
