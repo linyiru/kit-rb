@@ -149,6 +149,13 @@ module Kit
       attr_reader subscriber_count: Integer?
       def self.from: (Hash[String, untyped] hash) -> Tag
     end
+    class CustomField
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader key: String?
+      attr_reader label: String?
+      def self.from: (Hash[String, untyped] hash) -> CustomField
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -184,6 +191,12 @@ module Kit
       def remove_subscriber: (Integer tag_id, Integer subscriber_id) -> untyped
       def subscribers: (Integer tag_id, **untyped params) -> Collection[Objects::Subscriber]
     end
+    class CustomFields < Base
+      def list: (**untyped params) -> Collection[Objects::CustomField]
+      def create: (label: String) -> Objects::CustomField
+      def update: (Integer id, label: String) -> Objects::CustomField
+      def delete: (Integer id) -> void
+    end
   end
 
   class Client
@@ -192,5 +205,6 @@ module Kit
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
     def tags: () -> Resources::Tags
+    def custom_fields: () -> Resources::CustomFields
   end
 end

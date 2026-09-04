@@ -29,5 +29,9 @@ module Kit
     def tags
       @tags ||= Resources::Tags.new(@connection)
     end
+
+    def custom_fields
+      @custom_fields ||= Resources::CustomFields.new(@connection)
+    end
   end
 end
