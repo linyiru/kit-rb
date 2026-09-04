@@ -62,6 +62,26 @@ module Kit
     def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
   end
 
+  class Pagination
+    attr_reader has_previous_page: bool
+    attr_reader has_next_page: bool
+    attr_reader start_cursor: String?
+    attr_reader end_cursor: String?
+    attr_reader per_page: Integer?
+    def self.from: (Hash[String, untyped] hash) -> Pagination
+  end
+
+  class Collection[T]
+    include Enumerable[T]
+    attr_reader data: Array[T]
+    attr_reader pagination: Pagination
+    def initialize: (data: Array[T], pagination: Pagination) { (String end_cursor) -> Collection[T] } -> void
+    def each: () { (T) -> void } -> void
+    def next_page: () -> Collection[T]?
+    def auto_paging_each: () { (T) -> void } -> void
+                        | () -> Enumerator[T, void]
+  end
+
   module Objects
     class User
       attr_reader email: String?
