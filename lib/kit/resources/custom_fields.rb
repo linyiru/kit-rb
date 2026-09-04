@@ -11,14 +11,12 @@ module Kit
 
       # POST /v4/custom_fields
       def create(label:)
-        object = http_post("/v4/custom_fields", body: { label: label }).fetch("custom_field")
-        Objects::CustomField.from(object)
+        one(:post, "/v4/custom_fields", "custom_field", Objects::CustomField, body: { label: label })
       end
 
       # PUT /v4/custom_fields/:id
       def update(id, label:)
-        object = http_put("/v4/custom_fields/#{id}", body: { label: label }).fetch("custom_field")
-        Objects::CustomField.from(object)
+        one(:put, "/v4/custom_fields/#{id}", "custom_field", Objects::CustomField, body: { label: label })
       end
 
       # DELETE /v4/custom_fields/:id

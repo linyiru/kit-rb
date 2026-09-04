@@ -17,16 +17,14 @@ module Kit
 
       # POST /v4/forms/:form_id/subscribers/:subscriber_id
       def add_subscriber(form_id, subscriber_id, referrer: nil)
-        object = http_post("/v4/forms/#{form_id}/subscribers/#{subscriber_id}",
-                           body: { referrer: referrer }.compact).fetch("subscriber")
-        Objects::Subscriber.from(object)
+        one(:post, "/v4/forms/#{form_id}/subscribers/#{subscriber_id}", "subscriber",
+            Objects::Subscriber, body: { referrer: referrer }.compact)
       end
 
       # POST /v4/forms/:form_id/subscribers
       def add_subscriber_by_email(form_id, email_address:, referrer: nil)
-        object = http_post("/v4/forms/#{form_id}/subscribers",
-                           body: { email_address: email_address, referrer: referrer }.compact).fetch("subscriber")
-        Objects::Subscriber.from(object)
+        one(:post, "/v4/forms/#{form_id}/subscribers", "subscriber", Objects::Subscriber,
+            body: { email_address: email_address, referrer: referrer }.compact)
       end
     end
   end

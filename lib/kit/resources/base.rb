@@ -12,20 +12,24 @@ module Kit
 
       private
 
+      # Non-enveloped read (whole body) and list reads go through http_get;
+      # deletes return no object and go through http_delete. Enveloped
+      # single-object and list responses are built by `one` and `collection`.
       def http_get(path, params: {})
         @connection.request(:get, path, params: params)
       end
 
-      def http_post(path, body: nil, params: {})
-        @connection.request(:post, path, params: params, body: body)
-      end
-
-      def http_put(path, body: nil, params: {})
-        @connection.request(:put, path, params: params, body: body)
-      end
-
       def http_delete(path, params: {})
         @connection.request(:delete, path, params: params)
+      end
+
+      # Sends one request that returns a single wrapped object and builds it.
+      # `key` is the envelope key (e.g. "subscriber"), `klass` the object built
+      # via `klass.from`. Centralised so a resource never hand-writes the read/
+      # build/return plumbing — it declares only verb, path, key, class, body.
+      def one(verb, path, key, klass, body: nil, params: {})
+        response = @connection.request(verb, path, params: params, body: body)
+        klass.from(response.fetch(key))
       end
 
       # Fetches a cursor-paginated list and wraps it in a Collection whose next

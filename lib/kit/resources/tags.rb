@@ -11,20 +11,17 @@ module Kit
 
       # POST /v4/tags
       def create(name:)
-        object = http_post("/v4/tags", body: { name: name }).fetch("tag")
-        Objects::Tag.from(object)
+        one(:post, "/v4/tags", "tag", Objects::Tag, body: { name: name })
       end
 
       # PUT /v4/tags/:id
       def update(id, name:)
-        object = http_put("/v4/tags/#{id}", body: { name: name }).fetch("tag")
-        Objects::Tag.from(object)
+        one(:put, "/v4/tags/#{id}", "tag", Objects::Tag, body: { name: name })
       end
 
       # POST /v4/tags/:tag_id/subscribers/:id
       def tag_subscriber(tag_id, subscriber_id)
-        object = http_post("/v4/tags/#{tag_id}/subscribers/#{subscriber_id}")
-        Objects::Subscriber.from(object.fetch("subscriber"))
+        one(:post, "/v4/tags/#{tag_id}/subscribers/#{subscriber_id}", "subscriber", Objects::Subscriber)
       end
 
       # DELETE /v4/tags/:tag_id/subscribers/:id
