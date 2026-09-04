@@ -410,6 +410,16 @@ module Kit
       def get: (Integer id) -> Objects::Purchase
       def create: (**untyped attributes) -> Objects::Purchase
     end
+    class Bulk < Base
+      def create_subscribers: (Array[untyped] subscribers, ?callback_url: String?) -> Hash[String, untyped]
+      def create_custom_fields: (Array[untyped] custom_fields, ?callback_url: String?) -> Hash[String, untyped]
+      def update_custom_field_values: (Array[untyped] custom_field_values, ?callback_url: String?) -> Hash[String, untyped]
+      def add_subscribers_to_forms: (Array[untyped] additions, ?callback_url: String?) -> Hash[String, untyped]
+      def create_tags: (Array[untyped] tags, ?callback_url: String?) -> Hash[String, untyped]
+      def delete_tags: (Array[untyped] tags, ?callback_url: String?) -> Hash[String, untyped]
+      def tag_subscribers: (Array[untyped] taggings, ?callback_url: String?) -> Hash[String, untyped]
+      def remove_tag_subscribers: (Array[untyped] taggings, ?callback_url: String?) -> Hash[String, untyped]
+    end
     class Snippets < Base
       def list: (**untyped params) -> Collection[Objects::Snippet]
       def get: (Integer id) -> Objects::Snippet
@@ -451,5 +461,6 @@ module Kit
     def posts: () -> Resources::Posts
     def snippets: () -> Resources::Snippets
     def purchases: () -> Resources::Purchases
+    def bulk: () -> Resources::Bulk
   end
 end

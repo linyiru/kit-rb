@@ -19,14 +19,20 @@ module Kit
         @connection.request(:get, path, params: params)
       end
 
-      # For a PUT whose payload is not a single wrapped object (e.g. the account
-      # colors array); enveloped objects go through `one`.
+      # Raw POST/PUT for payloads that are not a single wrapped object — the
+      # account colors array, and the bulk endpoints' composite
+      # { <resource>, failures } result. Enveloped objects go through `one`.
+      def http_post(path, body: nil, params: {})
+        @connection.request(:post, path, params: params, body: body)
+      end
+
       def http_put(path, body: nil, params: {})
         @connection.request(:put, path, params: params, body: body)
       end
 
-      def http_delete(path, params: {})
-        @connection.request(:delete, path, params: params)
+      # Bulk deletes carry a body (the items to remove), so body is accepted.
+      def http_delete(path, body: nil, params: {})
+        @connection.request(:delete, path, params: params, body: body)
       end
 
       # Sends one request that returns a single wrapped object and builds it.

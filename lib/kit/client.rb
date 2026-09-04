@@ -73,5 +73,9 @@ module Kit
     def purchases
       @purchases ||= Resources::Purchases.new(@connection)
     end
+
+    def bulk
+      @bulk ||= Resources::Bulk.new(@connection)
+    end
   end
 end
