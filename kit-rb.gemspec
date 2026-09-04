@@ -10,12 +10,12 @@ Gem::Specification.new do |spec|
 
   spec.summary = "A modern, fully-typed Ruby client for the Kit (ConvertKit) API v4."
   spec.description = "kit-rb wraps the Kit v4 REST API with API-key and OAuth 2.0 auth, cursor pagination, typed errors, and immutable value objects."
-  spec.homepage = "https://github.com/solcreek/kit-rb"
+  spec.homepage = "https://github.com/linyiru/kit-rb"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/solcreek/kit-rb"
-  spec.metadata["changelog_uri"] = "https://github.com/solcreek/kit-rb/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/linyiru/kit-rb"
+  spec.metadata["changelog_uri"] = "https://github.com/linyiru/kit-rb/blob/main/CHANGELOG.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   # Uncomment the line below to require MFA for gem pushes.
