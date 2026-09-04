@@ -188,6 +188,26 @@ module Kit
       attr_reader stats: Hash[String, untyped]?
       def self.from: (Hash[String, untyped] hash) -> Sequence
     end
+    class Broadcast
+      attr_reader id: Integer?
+      attr_reader publication_id: Integer?
+      attr_reader created_at: String?
+      attr_reader subject: String?
+      attr_reader preview_text: String?
+      attr_reader description: String?
+      attr_reader content: String?
+      attr_reader public: bool?
+      attr_reader published_at: String?
+      attr_reader send_at: String?
+      attr_reader thumbnail_alt: String?
+      attr_reader thumbnail_url: String?
+      attr_reader public_url: String?
+      attr_reader email_address: String?
+      attr_reader email_template: Hash[String, untyped]?
+      attr_reader subscriber_filter: Array[untyped]?
+      attr_reader status: String?
+      def self.from: (Hash[String, untyped] hash) -> Broadcast
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -245,6 +265,13 @@ module Kit
       def add_subscriber: (Integer sequence_id, Integer subscriber_id) -> Objects::Subscriber
       def add_subscriber_by_email: (Integer sequence_id, email_address: String) -> Objects::Subscriber
     end
+    class Broadcasts < Base
+      def list: (**untyped params) -> Collection[Objects::Broadcast]
+      def get: (Integer id) -> Objects::Broadcast
+      def create: (**untyped attributes) -> Objects::Broadcast
+      def update: (Integer id, **untyped attributes) -> Objects::Broadcast
+      def delete: (Integer id) -> void
+    end
   end
 
   class Client
@@ -256,5 +283,6 @@ module Kit
     def custom_fields: () -> Resources::CustomFields
     def forms: () -> Resources::Forms
     def sequences: () -> Resources::Sequences
+    def broadcasts: () -> Resources::Broadcasts
   end
 end

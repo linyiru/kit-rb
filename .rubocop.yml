@@ -37,3 +37,9 @@ Style/ArgumentsForwarding:
 # A configuration object legitimately takes many keyword options.
 Metrics/ParameterLists:
   CountKeywordArgs: false
+
+# Value-object `.from` factories are flat field mappings: their ABC size scales
+# with the number of fields and carries no complexity signal.
+Metrics/AbcSize:
+  Exclude:
+    - "lib/kit/objects/**/*"

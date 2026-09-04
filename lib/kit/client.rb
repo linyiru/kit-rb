@@ -41,5 +41,9 @@ module Kit
     def sequences
       @sequences ||= Resources::Sequences.new(@connection)
     end
+
+    def broadcasts
+      @broadcasts ||= Resources::Broadcasts.new(@connection)
+    end
   end
 end
