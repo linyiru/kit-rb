@@ -36,11 +36,14 @@ module Kit
       # page follows end_cursor. `key` is the array key in the envelope (e.g.
       # "subscribers"), `klass` the object built from each element. Centralised
       # here so every list resource paginates identically and correctly.
-      def collection(path, key, klass, params)
-        body = http_get(path, params: params)
-        data = body.fetch(key).map { |element| klass.from(element) }
-        Collection.new(data: data, pagination: Pagination.from(body.fetch("pagination"))) do |after|
-          collection(path, key, klass, params.merge(after: after))
+      #
+      # `verb`/`body` default to a GET with no body; the POST-based filter
+      # endpoints pass verb: :post with a filter body, still paging by cursor.
+      def collection(path, key, klass, params, verb: :get, body: nil)
+        response = @connection.request(verb, path, params: params, body: body)
+        data = response.fetch(key).map { |element| klass.from(element) }
+        Collection.new(data: data, pagination: Pagination.from(response.fetch("pagination"))) do |after|
+          collection(path, key, klass, params.merge(after: after), verb: verb, body: body)
         end
       end
     end

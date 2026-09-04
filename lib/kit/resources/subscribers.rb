@@ -33,6 +33,36 @@ module Kit
       def unsubscribe(id)
         one(:post, "/v4/subscribers/#{id}/unsubscribe", "subscriber", Objects::Subscriber)
       end
+
+      # POST /v4/subscribers/filter — the same filters as #list, sent in the
+      # request rather than the query string; returns a cursor-paginated Collection.
+      def filter(**params)
+        collection("/v4/subscribers/filter", "subscribers", Objects::Subscriber, params, verb: :post)
+      end
+
+      # GET /v4/subscribers/:id/tags — the tags applied to a subscriber.
+      def tags(id, **params)
+        collection("/v4/subscribers/#{id}/tags", "tags", Objects::Tag, params)
+      end
+
+      # GET /v4/subscribers/:id/stats — engagement stats. Returns the raw
+      # `subscriber` hash ({ "id" => ..., "stats" => { ... } }).
+      def stats(id)
+        http_get("/v4/subscribers/#{id}/stats").fetch("subscriber")
+      end
+
+      # POST /v4/subscribers/:id/location — set the subscriber's location
+      # (a hash of city/state_province/country_code/latitude/longitude/timezone).
+      def set_location(id, location:)
+        one(:post, "/v4/subscribers/#{id}/location", "subscriber", Objects::Subscriber,
+            body: { location: location })
+      end
+
+      # DELETE /v4/subscribers/:id/location
+      def remove_location(id)
+        http_delete("/v4/subscribers/#{id}/location")
+        nil
+      end
     end
   end
 end

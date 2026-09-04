@@ -22,6 +22,8 @@ module ContractRegistry
       invoke: ->(c) { c.tags.list }, klass: Kit::Objects::Tag },
     { spec_path: "/v4/tags/{tag_id}/subscribers", runtime_path: "/v4/tags/9/subscribers",
       invoke: ->(c) { c.tags.subscribers(9) }, klass: Kit::Objects::Subscriber },
+    { spec_path: "/v4/subscribers/{subscriber_id}/tags", runtime_path: "/v4/subscribers/42/tags",
+      invoke: ->(c) { c.subscribers.tags(42) }, klass: Kit::Objects::Tag },
     { spec_path: "/v4/custom_fields", runtime_path: "/v4/custom_fields",
       invoke: ->(c) { c.custom_fields.list }, klass: Kit::Objects::CustomField },
     { spec_path: "/v4/forms", runtime_path: "/v4/forms",

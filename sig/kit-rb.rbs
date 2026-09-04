@@ -327,6 +327,11 @@ module Kit
       def create: (email_address: String, ?first_name: String?, ?state: String?, ?fields: Hash[untyped, untyped]?) -> Objects::Subscriber
       def update: (Integer id, ?first_name: String?, ?email_address: String?, ?fields: Hash[untyped, untyped]?) -> Objects::Subscriber
       def unsubscribe: (Integer id) -> Objects::Subscriber
+      def filter: (**untyped params) -> Collection[Objects::Subscriber]
+      def tags: (Integer id, **untyped params) -> Collection[Objects::Tag]
+      def stats: (Integer id) -> Hash[String, untyped]
+      def set_location: (Integer id, location: Hash[untyped, untyped]) -> Objects::Subscriber
+      def remove_location: (Integer id) -> void
     end
     class Tags < Base
       def list: (**untyped params) -> Collection[Objects::Tag]
