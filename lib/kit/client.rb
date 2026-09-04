@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+module Kit
+  # The entry point. Construct with one credential, then reach resources:
+  #
+  #   client = Kit::Client.new(api_key: ENV.fetch("KIT_API_KEY"))
+  #   client.account.get.account.plan_type
+  #
+  #   client = Kit::Client.new(access_token: oauth_token) # OAuth
+  #
+  # A client is thread-safe to share: it holds immutable config and a stateless
+  # connection, and resource accessors are memoized per client.
+  class Client
+    attr_reader :config
+
+    def initialize(api_key: nil, access_token: nil, **options)
+      @config = Configuration.new(api_key: api_key, access_token: access_token, **options)
+      @connection = Connection.new(@config)
+    end
+
+    def account
+      @account ||= Resources::Account.new(@connection)
+    end
+  end
+end
