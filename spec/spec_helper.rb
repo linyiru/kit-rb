@@ -27,13 +27,27 @@ VCR.configure do |c|
   c.filter_sensitive_data("<KIT_API_KEY>") do |interaction|
     interaction.request.headers["X-Kit-Api-Key"]&.first
   end
+  # OAuth app credentials, if present, must never reach a committed cassette.
+  { "KIT_OAUTH_CLIENT_ID" => "<OAUTH_CLIENT_ID>",
+    "KIT_OAUTH_CLIENT_SECRET" => "<OAUTH_CLIENT_SECRET>" }.each do |var, placeholder|
+    value = ENV.fetch(var, nil)
+    c.filter_sensitive_data(placeholder) { value } if value && !value.empty?
+  end
+  # Scrub any minted access_token wherever it appears (token response + Bearer).
+  c.filter_sensitive_data("<OAUTH_ACCESS_TOKEN>") do |interaction|
+    body = interaction.response.body
+    body[/"access_token"\s*:\s*"([^"]+)"/, 1] if body
+  end
   c.filter_sensitive_data("Bearer <OAUTH_TOKEN>") do |interaction|
     interaction.request.headers["Authorization"]&.first
   end
-  # Scrub the account owner's email from recorded response bodies.
-  c.filter_sensitive_data("<EMAIL>") do |interaction|
-    body = interaction.response.body
-    body[/"email"\s*:\s*"([^"]+)"/, 1] if body
+  # Scrub every email address from recorded request and response bodies — an
+  # account can expose several distinct emails, so a value-based filter is not
+  # enough; rewrite them all at record time.
+  email_pattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/
+  c.before_record do |interaction|
+    interaction.response.body = interaction.response.body&.gsub(email_pattern, "<EMAIL>")
+    interaction.request.body = interaction.request.body&.gsub(email_pattern, "<EMAIL>")
   end
 end
 
