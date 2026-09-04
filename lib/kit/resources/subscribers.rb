@@ -8,7 +8,7 @@ module Kit
       # Accepts filters as params: after, before, per_page, email_address,
       # status, created_after, created_before, sort_field, sort_order.
       def list(**params)
-        page(http_get("/v4/subscribers", params: params), params)
+        collection("/v4/subscribers", "subscribers", Objects::Subscriber, params)
       end
 
       # GET /v4/subscribers/:id
@@ -32,16 +32,6 @@ module Kit
       # POST /v4/subscribers/:id/unsubscribe
       def unsubscribe(id)
         Objects::Subscriber.from(http_post("/v4/subscribers/#{id}/unsubscribe").fetch("subscriber"))
-      end
-
-      private
-
-      # Wraps a list response into a Collection whose next page follows end_cursor.
-      def page(body, params)
-        data = body.fetch("subscribers").map { |h| Objects::Subscriber.from(h) }
-        Collection.new(data: data, pagination: Pagination.from(body.fetch("pagination"))) do |after|
-          page(http_get("/v4/subscribers", params: params.merge(after: after)), params)
-        end
       end
     end
   end

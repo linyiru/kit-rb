@@ -27,6 +27,18 @@ module Kit
       def http_delete(path, params: {})
         @connection.request(:delete, path, params: params)
       end
+
+      # Fetches a cursor-paginated list and wraps it in a Collection whose next
+      # page follows end_cursor. `key` is the array key in the envelope (e.g.
+      # "subscribers"), `klass` the object built from each element. Centralised
+      # here so every list resource paginates identically and correctly.
+      def collection(path, key, klass, params)
+        body = http_get(path, params: params)
+        data = body.fetch(key).map { |element| klass.from(element) }
+        Collection.new(data: data, pagination: Pagination.from(body.fetch("pagination"))) do |after|
+          collection(path, key, klass, params.merge(after: after))
+        end
+      end
     end
   end
 end
