@@ -22,6 +22,7 @@ module Kit
     class Client
       AUTHORIZE_PATH = "/v4/oauth/authorize"
       TOKEN_PATH = "/v4/oauth/token"
+      REVOKE_PATH = "/v4/oauth/revoke"
 
       def initialize(client_id:, client_secret: nil, redirect_uri: nil, base_url: DEFAULT_BASE_URL)
         raise ConfigurationError, "client_id is required" if client_id.nil? || client_id.empty?
@@ -87,24 +88,41 @@ module Kit
         )
       end
 
+      # Revokes an access or refresh token (RFC 7009). Returns true on success;
+      # per the RFC a 200 means the token is no longer valid regardless of its
+      # prior state, so an unknown/expired/already-revoked token also succeeds.
+      # token_type_hint is "access_token" or "refresh_token".
+      def revoke(token, token_type_hint: nil)
+        response = post_form(REVOKE_PATH, token: token, client_id: @client_id,
+                                          client_secret: @client_secret, token_type_hint: token_type_hint)
+        return true if (200..299).cover?(response.status.to_i)
+
+        raise OAuthError.new(status: response.status.to_i, body: parse_body(response), response: response)
+      end
+
       private
 
       def token_request(**form)
-        response = HTTP
-                   .headers("Accept" => "application/json", "User-Agent" => "kit-rb/#{Kit::VERSION}")
-                   .post("#{@base_url}#{TOKEN_PATH}", form: form.compact)
-        parse_token(response)
+        parse_token(post_form(TOKEN_PATH, form))
+      end
+
+      def post_form(path, form)
+        HTTP
+          .headers("Accept" => "application/json", "User-Agent" => "kit-rb/#{Kit::VERSION}")
+          .post("#{@base_url}#{path}", form: form.compact)
       rescue HTTP::Error => e
         raise Error, "HTTP transport error: #{e.message}"
       end
 
+      def parse_body(response)
+        JSON.parse(response.body.to_s)
+      rescue JSON::ParserError
+        nil
+      end
+
       def parse_token(response)
         status = response.status.to_i
-        body = begin
-          JSON.parse(response.body.to_s)
-        rescue JSON::ParserError
-          nil
-        end
+        body = parse_body(response)
         return Token.from(body) if (200..299).cover?(status) && body
 
         raise OAuthError.new(status: status, body: body, response: response)

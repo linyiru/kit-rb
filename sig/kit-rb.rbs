@@ -68,6 +68,7 @@ module Kit
       def exchange_code: (String code, ?code_verifier: String?, ?redirect_uri: String?) -> Token
       def client_credentials: (?scope: String?) -> Token
       def refresh: (String refresh_token) -> Token
+      def revoke: (String token, ?token_type_hint: String?) -> bool
     end
   end
 

@@ -116,6 +116,34 @@ RSpec.describe Kit::OAuth do
       expect(token.refresh_token).to eq("new-rt")
     end
 
+    it "revokes a token and returns true on 200 (empty body)" do
+      stub = stub_request(:post, "https://api.kit.com/v4/oauth/revoke")
+             .with(body: hash_including("token" => "the-token", "client_id" => "cid",
+                                        "client_secret" => "secret",
+                                        "token_type_hint" => "refresh_token"))
+             .to_return(status: 200, body: "")
+      expect(oauth.revoke("the-token", token_type_hint: "refresh_token")).to be(true)
+      expect(stub).to have_been_requested
+    end
+
+    it "omits token_type_hint when not given" do
+      stub = stub_request(:post, "https://api.kit.com/v4/oauth/revoke")
+             .with { |req| !req.body.include?("token_type_hint") }
+             .to_return(status: 200, body: "")
+      expect(oauth.revoke("t")).to be(true)
+      expect(stub).to have_been_requested
+    end
+
+    it "raises OAuthError when revocation fails" do
+      stub_request(:post, "https://api.kit.com/v4/oauth/revoke")
+        .to_return(status: 401, headers: { "Content-Type" => "application/json" },
+                   body: JSON.generate("error" => "invalid_client"))
+      expect { oauth.revoke("t") }.to raise_error(Kit::OAuthError) do |e|
+        expect(e.status).to eq(401)
+        expect(e.oauth_error).to eq("invalid_client")
+      end
+    end
+
     it "raises OAuthError with the RFC 6749 error code on failure" do
       stub_request(:post, "https://api.kit.com/v4/oauth/token")
         .to_return(status: 400, headers: { "Content-Type" => "application/json" },
