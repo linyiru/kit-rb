@@ -1,0 +1,30 @@
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  SuggestExtensions: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+# RSpec example blocks are legitimately long; the metric fights the DSL.
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - "*.gemspec"
+
+# The gem is `kit-rb`; this dashed entry file is the canonical require path.
+Naming/FileName:
+  Exclude:
+    - "lib/kit-rb.rb"
+
+# Named keyword forwarding reads better in a public constructor than anonymous **.
+Style/ArgumentsForwarding:
+  Enabled: false

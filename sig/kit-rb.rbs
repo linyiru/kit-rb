@@ -1,0 +1,100 @@
+# RBS type signatures for the public surface of kit-rb (P0: account slice).
+# Expanded per-resource as coverage grows in P1/P2.
+
+module Kit
+  VERSION: String
+  DEFAULT_BASE_URL: String
+
+  class Error < StandardError
+    def self.class_for: (Integer status) -> singleton(APIError)
+  end
+  class ConfigurationError < Error
+  end
+
+  class APIError < Error
+    attr_reader status: Integer
+    attr_reader body: untyped
+    attr_reader errors: Array[untyped]
+    attr_reader response: untyped
+    def initialize: (?String? message, status: Integer, ?body: untyped, ?response: untyped) -> void
+  end
+  class AuthenticationError < APIError
+  end
+  class AuthorizationError < APIError
+  end
+  class NotFoundError < APIError
+  end
+  class UnprocessableEntityError < APIError
+  end
+  class RateLimitError < APIError
+    attr_reader retry_after: Integer?
+    def initialize: (?String? message, status: Integer, ?body: untyped, ?response: untyped, ?retry_after: Integer?) -> void
+  end
+  class ServerError < APIError
+  end
+
+  module Auth
+    class ApiKey
+      HEADER: String
+      def initialize: (String key) -> void
+      def headers: () -> Hash[String, String]
+    end
+
+    class OAuth
+      AUTHORIZE_URL: String
+      TOKEN_URL: String
+      def initialize: (String access_token) -> void
+      def headers: () -> Hash[String, String]
+    end
+  end
+
+  class Configuration
+    attr_reader auth: (Auth::ApiKey | Auth::OAuth)
+    attr_reader base_url: String
+    attr_reader open_timeout: Integer
+    attr_reader read_timeout: Integer
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer) -> void
+  end
+
+  class Connection
+    JSON_TYPE: String
+    def initialize: (Configuration config) -> void
+    def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
+  end
+
+  module Objects
+    class User
+      attr_reader email: String?
+      attr_reader id: Integer?
+      def self.from: (Hash[String, untyped] hash) -> User
+    end
+    class Account
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader plan_type: String?
+      attr_reader primary_email_address: String?
+      attr_reader created_at: String?
+      def self.from: (Hash[String, untyped] hash) -> Account
+    end
+    class AccountInfo
+      attr_reader user: User
+      attr_reader account: Account
+      def self.from: (Hash[String, untyped] hash) -> AccountInfo
+    end
+  end
+
+  module Resources
+    class Base
+      def initialize: (Connection connection) -> void
+    end
+    class Account < Base
+      def get: () -> Objects::AccountInfo
+    end
+  end
+
+  class Client
+    attr_reader config: Configuration
+    def initialize: (?api_key: String?, ?access_token: String?, **untyped options) -> void
+    def account: () -> Resources::Account
+  end
+end
