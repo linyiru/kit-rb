@@ -169,6 +169,25 @@ module Kit
       attr_reader subscriber_count: Integer?
       def self.from: (Hash[String, untyped] hash) -> Form
     end
+    class Sequence
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader hold: bool?
+      attr_reader repeat: bool?
+      attr_reader created_at: String?
+      attr_reader updated_at: String?
+      attr_reader email_address: String?
+      attr_reader email_template_id: Integer?
+      attr_reader send_days: Array[untyped]?
+      attr_reader send_hour: Integer?
+      attr_reader time_zone: String?
+      attr_reader active: bool?
+      attr_reader exclude_subscriber_sources: Array[untyped]?
+      attr_reader email_count: Integer?
+      attr_reader subscriber_count: Integer?
+      attr_reader stats: Hash[String, untyped]?
+      def self.from: (Hash[String, untyped] hash) -> Sequence
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -216,6 +235,16 @@ module Kit
       def add_subscriber: (Integer form_id, Integer subscriber_id, ?referrer: String?) -> Objects::Subscriber
       def add_subscriber_by_email: (Integer form_id, email_address: String, ?referrer: String?) -> Objects::Subscriber
     end
+    class Sequences < Base
+      def list: (**untyped params) -> Collection[Objects::Sequence]
+      def get: (Integer id) -> Objects::Sequence
+      def create: (name: String, **untyped attributes) -> Objects::Sequence
+      def update: (Integer id, **untyped attributes) -> Objects::Sequence
+      def delete: (Integer id) -> void
+      def subscribers: (Integer sequence_id, **untyped params) -> Collection[Objects::Subscriber]
+      def add_subscriber: (Integer sequence_id, Integer subscriber_id) -> Objects::Subscriber
+      def add_subscriber_by_email: (Integer sequence_id, email_address: String) -> Objects::Subscriber
+    end
   end
 
   class Client
@@ -226,5 +255,6 @@ module Kit
     def tags: () -> Resources::Tags
     def custom_fields: () -> Resources::CustomFields
     def forms: () -> Resources::Forms
+    def sequences: () -> Resources::Sequences
   end
 end

@@ -37,5 +37,9 @@ module Kit
     def forms
       @forms ||= Resources::Forms.new(@connection)
     end
+
+    def sequences
+      @sequences ||= Resources::Sequences.new(@connection)
+    end
   end
 end

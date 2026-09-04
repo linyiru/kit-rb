@@ -27,7 +27,11 @@ module ContractRegistry
     { spec_path: "/v4/forms", runtime_path: "/v4/forms",
       invoke: ->(c) { c.forms.list }, klass: Kit::Objects::Form },
     { spec_path: "/v4/forms/{form_id}/subscribers", runtime_path: "/v4/forms/7/subscribers",
-      invoke: ->(c) { c.forms.subscribers(7) }, klass: Kit::Objects::Subscriber }
+      invoke: ->(c) { c.forms.subscribers(7) }, klass: Kit::Objects::Subscriber },
+    { spec_path: "/v4/sequences", runtime_path: "/v4/sequences",
+      invoke: ->(c) { c.sequences.list }, klass: Kit::Objects::Sequence },
+    { spec_path: "/v4/sequences/{sequence_id}/subscribers", runtime_path: "/v4/sequences/5/subscribers",
+      invoke: ->(c) { c.sequences.subscribers(5) }, klass: Kit::Objects::Subscriber }
   ].freeze
 end
 
