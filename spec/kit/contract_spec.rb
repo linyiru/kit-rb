@@ -37,7 +37,11 @@ module ContractRegistry
     { spec_path: "/v4/webhooks", runtime_path: "/v4/webhooks",
       invoke: ->(c) { c.webhooks.list }, klass: Kit::Objects::Webhook },
     { spec_path: "/v4/webhook_endpoints", runtime_path: "/v4/webhook_endpoints",
-      invoke: ->(c) { c.webhook_endpoints.list }, klass: Kit::Objects::WebhookEndpoint }
+      invoke: ->(c) { c.webhook_endpoints.list }, klass: Kit::Objects::WebhookEndpoint },
+    { spec_path: "/v4/email_templates", runtime_path: "/v4/email_templates",
+      invoke: ->(c) { c.email_templates.list }, klass: Kit::Objects::EmailTemplate },
+    { spec_path: "/v4/segments", runtime_path: "/v4/segments",
+      invoke: ->(c) { c.segments.list }, klass: Kit::Objects::Segment }
   ].freeze
 end
 

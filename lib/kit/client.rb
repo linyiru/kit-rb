@@ -53,5 +53,13 @@ module Kit
     def webhook_endpoints
       @webhook_endpoints ||= Resources::WebhookEndpoints.new(@connection)
     end
+
+    def email_templates
+      @email_templates ||= Resources::EmailTemplates.new(@connection)
+    end
+
+    def segments
+      @segments ||= Resources::Segments.new(@connection)
+    end
   end
 end

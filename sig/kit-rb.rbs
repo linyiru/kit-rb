@@ -228,6 +228,19 @@ module Kit
       attr_reader previous_secret_expires_at: String?
       def self.from: (Hash[String, untyped] hash) -> WebhookEndpoint
     end
+    class EmailTemplate
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader is_default: bool?
+      attr_reader category: String?
+      def self.from: (Hash[String, untyped] hash) -> EmailTemplate
+    end
+    class Segment
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader created_at: String?
+      def self.from: (Hash[String, untyped] hash) -> Segment
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -292,6 +305,12 @@ module Kit
       def update: (Integer id, **untyped attributes) -> Objects::Broadcast
       def delete: (Integer id) -> void
     end
+    class EmailTemplates < Base
+      def list: (**untyped params) -> Collection[Objects::EmailTemplate]
+    end
+    class Segments < Base
+      def list: (**untyped params) -> Collection[Objects::Segment]
+    end
     class Webhooks < Base
       def list: (**untyped params) -> Collection[Objects::Webhook]
       def create: (target_url: String, event: Hash[untyped, untyped]) -> Objects::Webhook
@@ -319,5 +338,7 @@ module Kit
     def broadcasts: () -> Resources::Broadcasts
     def webhooks: () -> Resources::Webhooks
     def webhook_endpoints: () -> Resources::WebhookEndpoints
+    def email_templates: () -> Resources::EmailTemplates
+    def segments: () -> Resources::Segments
   end
 end
