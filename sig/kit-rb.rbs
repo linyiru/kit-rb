@@ -66,6 +66,7 @@ module Kit
       def initialize: (client_id: String, ?client_secret: String?, ?redirect_uri: String?, ?base_url: String) -> void
       def authorization_url: (?scope: String, ?state: String?, ?code_challenge: String?, ?code_challenge_method: String?, ?tenant_name: String?, ?redirect_uri: String?) -> String
       def exchange_code: (String code, ?code_verifier: String?, ?redirect_uri: String?) -> Token
+      def client_credentials: (?scope: String?) -> Token
       def refresh: (String refresh_token) -> Token
     end
   end

@@ -80,6 +80,31 @@ RSpec.describe Kit::OAuth do
       expect(stub).to have_been_requested
     end
 
+    it "mints an app-level token via the client_credentials grant" do
+      stub = stub_request(:post, "https://api.kit.com/v4/oauth/token")
+             .with(body: hash_including("grant_type" => "client_credentials",
+                                        "client_id" => "cid", "client_secret" => "secret"))
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("access_token" => "app-at", "token_type" => "Bearer",
+                                            "expires_in" => 172_799, "scope" => "public",
+                                            "created_at" => 1_700_000_000))
+
+      token = oauth.client_credentials
+      expect(token).to be_a(Kit::OAuth::Token)
+      expect(token.access_token).to eq("app-at")
+      expect(token.refresh_token).to be_nil
+      expect(stub).to have_been_requested
+    end
+
+    it "passes an explicit scope on the client_credentials grant" do
+      stub = stub_request(:post, "https://api.kit.com/v4/oauth/token")
+             .with(body: hash_including("grant_type" => "client_credentials", "scope" => "public"))
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("access_token" => "app-at"))
+      oauth.client_credentials(scope: "public")
+      expect(stub).to have_been_requested
+    end
+
     it "refreshes and returns the new single-use refresh_token" do
       stub_request(:post, "https://api.kit.com/v4/oauth/token")
         .with(body: hash_including("grant_type" => "refresh_token", "refresh_token" => "old-rt"))

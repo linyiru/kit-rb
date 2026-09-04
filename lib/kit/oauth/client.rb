@@ -60,6 +60,22 @@ module Kit
         )
       end
 
+      # Client-credentials grant: exchanges the app's client_id/client_secret for
+      # a Bearer token with no user-consent step. Kit issues one (scope "public",
+      # ~48h, no refresh_token), but — verified 2026-09-04 — that token is
+      # rejected (401) by the v4 resource endpoints: reaching a creator's account
+      # data still requires the authorization-code flow (the app must first be
+      # authorized on that account). Use this only where a bare app token is
+      # expected; for account access, use #authorization_url + #exchange_code.
+      def client_credentials(scope: nil)
+        token_request(
+          grant_type: "client_credentials",
+          client_id: @client_id,
+          client_secret: @client_secret,
+          scope: scope
+        )
+      end
+
       # Refreshes a token. Kit refresh tokens are single-use; the returned Token
       # carries a new refresh_token to persist.
       def refresh(refresh_token)
