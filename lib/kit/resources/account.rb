@@ -9,7 +9,7 @@ module Kit
       #
       # @return [Kit::Objects::AccountInfo]
       def get
-        Objects::AccountInfo.from(super("/v4/account"))
+        Objects::AccountInfo.from(http_get("/v4/account"))
       end
     end
   end
