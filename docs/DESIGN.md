@@ -3,6 +3,10 @@
 A modern, fully-typed Ruby client for the **Kit** (formerly ConvertKit) **API v4**.
 The existing Ruby gems all stop at API v3/v2; kit-rb targets v4 to a high bar.
 
+> **Status: shipped.** All phases below are complete. v0.2.0 is on RubyGems with
+> the entire v4 surface — every one of the 81 documented operations across all
+> resources, verified programmatically against the vendored OpenAPI document.
+
 ## Locked decisions
 
 | area | choice | why |
@@ -19,7 +23,7 @@ The existing Ruby gems all stop at API v3/v2; kit-rb targets v4 to a high bar.
 Kit::Client            # entry: picks an auth strategy, holds one Connection
  ├─ Kit::Configuration # immutable; validates exactly-one-credential
  ├─ Kit::Auth::ApiKey  # X-Kit-Api-Key header
- ├─ Kit::Auth::OAuth   # Bearer; authorize/refresh/PKCE land in P1
+ ├─ Kit::Auth::OAuth   # Bearer; authorize/exchange/refresh/PKCE/revoke/client_credentials
  ├─ Kit::Connection    # http.rb transport, JSON, auth injection, error mapping
  ├─ Kit::Error (tree)  # typed exceptions mapped from HTTP status
  ├─ Kit::Objects::*    # Data value objects, `.from(hash)` constructors
@@ -27,24 +31,34 @@ Kit::Client            # entry: picks an auth strategy, holds one Connection
 ```
 
 Facts pinned from the OpenAPI spec (`developers.kit.com/api-reference/v4.json`,
-OpenAPI 3.0.3, "Kit API 4.0", host `https://api.kit.com`, 52 paths): API-key
+OpenAPI 3.0.3, "Kit API 4.0", host `https://api.kit.com`, 52 paths / 81 operations,
+vendored to `spec/support/kit-v4.openapi.json`): API-key
 header `X-Kit-Api-Key`; OAuth authorize/token at `/v4/oauth/*`, scopes read/write;
 rate limits 120/60s (key) and 600/60s (OAuth); cursor pagination (`after`/`before`
 + `per_page`, response carries a `pagination` object).
 
-## Phases
+## Phases — all complete ✅
 
-- **P0 — foundations (this).** Gem skeleton on the clean `Kit` namespace, gates
+- **P0 — foundations. ✅** Gem skeleton on the clean `Kit` namespace, gates
   (rspec + rubocop + steep) green in CI (Ruby 3.2–3.4), and a walking-skeleton
   vertical slice: `GET /v4/account` end to end (auth → request → typed error →
   `Data` object) with full spec coverage.
-- **P1 — core, by hand.** Flesh out the transport: cursor auto-pagination
-  (lazy Enumerator), 429 rate-limit-aware retry with backoff, the full OAuth
-  authorization-code grant + refresh + PKCE, and instrumentation hooks.
-- **P2 — resources, spec-driven + local models.** One class + objects + specs per
-  resource group (subscribers, tags, custom fields, forms, sequences, broadcasts,
-  purchases, webhooks, email templates, segments, snippets), generated against
-  the OpenAPI spec via `forge`, gated by `rspec`/`steep`.
-- **P3 — quality.** Contract tests against the OpenAPI spec, edge cases
-  (pagination tail, nulls, large payloads), coverage floor.
-- **P4 — DX & release.** YARD docs, examples, signed gem, release automation.
+- **P1 — core, by hand. ✅** Cursor auto-pagination (lazy Enumerator, POST-based
+  lists supported), 429/5xx retry with backoff, and the full OAuth suite:
+  authorization-code grant, single-use refresh, PKCE (S256), RFC 7009 revocation,
+  and the client_credentials grant.
+- **P2 — resources, spec-driven + local models. ✅** Every resource group shipped
+  with objects + specs — subscribers, tags, custom fields, forms, sequences (+
+  emails), broadcasts (+ stats/clicks), purchases, webhooks, webhook endpoints,
+  email templates, segments, posts, snippets, account extras, and bulk. Early
+  batches were dogfooded through `forge` against a local model on mbp; that
+  surfaced the `Base#one`/`#collection` abstractions, after which the surface was
+  completed by hand. **All 81 operations covered** (verified programmatically).
+- **P3 — quality. ✅** An OpenAPI list-envelope contract test (each list resource
+  pinned to the vendored spec), plus VCR integration cassettes (secrets scrubbed)
+  replayed in CI, `rake smoke` (live read-only), and an opt-in e2e lifecycle.
+  99%+ line coverage; full RBS checked by Steep.
+- **P4 — DX & release. ✅** README with usage/OAuth/testing docs, `rubygems_mfa_
+  required`, and a GitHub Actions **OIDC Trusted Publishing** workflow (tag `v*`
+  → gated release, no stored key). v0.1.0 and v0.2.0 published this way.
+  Deferred (optional): a hosted YARD site and cryptographic gem signing.
