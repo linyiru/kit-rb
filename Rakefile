@@ -25,4 +25,10 @@ namespace :contract do
   end
 end
 
+desc "Live read-only smoke test against the real API (needs KIT_API_KEY)"
+task :smoke do
+  require_relative "spec/support/smoke"
+  Kit::Smoke.run
+end
+
 task default: %i[spec rubocop steep]
