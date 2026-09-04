@@ -126,6 +126,9 @@ module Kit
   end
 
   module Objects
+    module Raw
+      def self.from: (Hash[String, untyped] hash) -> Hash[String, untyped]
+    end
     class User
       attr_reader email: String?
       attr_reader id: Integer?
@@ -391,6 +394,9 @@ module Kit
       def create: (**untyped attributes) -> Objects::Broadcast
       def update: (Integer id, **untyped attributes) -> Objects::Broadcast
       def delete: (Integer id) -> void
+      def stats_list: (**untyped params) -> Collection[Hash[String, untyped]]
+      def stats: (Integer id) -> Hash[String, untyped]
+      def clicks: (Integer id, **untyped params) -> Hash[String, untyped]
     end
     class EmailTemplates < Base
       def list: (**untyped params) -> Collection[Objects::EmailTemplate]

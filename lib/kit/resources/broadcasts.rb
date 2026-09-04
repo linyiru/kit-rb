@@ -2,8 +2,8 @@
 
 module Kit
   module Resources
-    # The /v4/broadcasts endpoints — one-off emails. Stats and click reports are
-    # a separate concern, added later.
+    # The /v4/broadcasts endpoints — one-off emails, plus their stats and link
+    # click reports.
     class Broadcasts < Base
       # GET /v4/broadcasts
       def list(**params)
@@ -29,6 +29,23 @@ module Kit
       def delete(id)
         http_delete("/v4/broadcasts/#{id}")
         nil
+      end
+
+      # GET /v4/broadcasts/stats — a cursor-paginated list of per-broadcast stats
+      # ({ "id", "stats", "subject", "send_at" } hashes), not full broadcasts.
+      def stats_list(**params)
+        collection("/v4/broadcasts/stats", "broadcasts", Objects::Raw, params)
+      end
+
+      # GET /v4/broadcasts/:id/stats — the raw stats hash for one broadcast.
+      def stats(id)
+        http_get("/v4/broadcasts/#{id}/stats").fetch("broadcast")
+      end
+
+      # GET /v4/broadcasts/:id/clicks — the raw link-click report ({ "id",
+      # "clicks" => [...] }); accepts pagination params.
+      def clicks(id, **params)
+        http_get("/v4/broadcasts/#{id}/clicks", params: params).fetch("broadcast")
       end
     end
   end
