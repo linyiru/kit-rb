@@ -61,5 +61,13 @@ module Kit
     def segments
       @segments ||= Resources::Segments.new(@connection)
     end
+
+    def posts
+      @posts ||= Resources::Posts.new(@connection)
+    end
+
+    def snippets
+      @snippets ||= Resources::Snippets.new(@connection)
+    end
   end
 end

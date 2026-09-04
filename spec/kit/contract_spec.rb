@@ -41,7 +41,11 @@ module ContractRegistry
     { spec_path: "/v4/email_templates", runtime_path: "/v4/email_templates",
       invoke: ->(c) { c.email_templates.list }, klass: Kit::Objects::EmailTemplate },
     { spec_path: "/v4/segments", runtime_path: "/v4/segments",
-      invoke: ->(c) { c.segments.list }, klass: Kit::Objects::Segment }
+      invoke: ->(c) { c.segments.list }, klass: Kit::Objects::Segment },
+    { spec_path: "/v4/posts", runtime_path: "/v4/posts",
+      invoke: ->(c) { c.posts.list }, klass: Kit::Objects::Post },
+    { spec_path: "/v4/snippets", runtime_path: "/v4/snippets",
+      invoke: ->(c) { c.snippets.list }, klass: Kit::Objects::Snippet }
   ].freeze
 end
 

@@ -241,6 +241,35 @@ module Kit
       attr_reader created_at: String?
       def self.from: (Hash[String, untyped] hash) -> Segment
     end
+    class Post
+      attr_reader id: Integer?
+      attr_reader publication_id: Integer?
+      attr_reader created_at: String?
+      attr_reader title: String?
+      attr_reader slug: String?
+      attr_reader description: String?
+      attr_reader meta_description: String?
+      attr_reader status: String?
+      attr_reader published_at: String?
+      attr_reader sent_at: String?
+      attr_reader thumbnail_alt: String?
+      attr_reader thumbnail_url: String?
+      attr_reader is_paid: bool?
+      attr_reader public_url: String?
+      def self.from: (Hash[String, untyped] hash) -> Post
+    end
+    class Snippet
+      attr_reader id: Integer?
+      attr_reader name: String?
+      attr_reader snippet_type: String?
+      attr_reader archived: bool?
+      attr_reader key: String?
+      attr_reader created_at: String?
+      attr_reader updated_at: String?
+      attr_reader content: String?
+      attr_reader document: untyped
+      def self.from: (Hash[String, untyped] hash) -> Snippet
+    end
     class Subscriber
       attr_reader id: Integer?
       attr_reader first_name: String?
@@ -308,6 +337,16 @@ module Kit
     class EmailTemplates < Base
       def list: (**untyped params) -> Collection[Objects::EmailTemplate]
     end
+    class Posts < Base
+      def list: (**untyped params) -> Collection[Objects::Post]
+      def get: (Integer id) -> Objects::Post
+    end
+    class Snippets < Base
+      def list: (**untyped params) -> Collection[Objects::Snippet]
+      def get: (Integer id) -> Objects::Snippet
+      def create: (**untyped attributes) -> Objects::Snippet
+      def update: (Integer id, **untyped attributes) -> Objects::Snippet
+    end
     class Segments < Base
       def list: (**untyped params) -> Collection[Objects::Segment]
     end
@@ -340,5 +379,7 @@ module Kit
     def webhook_endpoints: () -> Resources::WebhookEndpoints
     def email_templates: () -> Resources::EmailTemplates
     def segments: () -> Resources::Segments
+    def posts: () -> Resources::Posts
+    def snippets: () -> Resources::Snippets
   end
 end
