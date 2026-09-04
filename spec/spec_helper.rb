@@ -10,6 +10,8 @@ require "webmock/rspec"
 require "vcr"
 require "kit-rb"
 
+require_relative "support/openapi_contract"
+
 WebMock.disable_net_connect!
 
 # VCR records real Kit API interactions into spec/cassettes and replays them.
