@@ -160,12 +160,40 @@ module Kit
       attr_reader id: Integer?
       def self.from: (Hash[String, untyped] hash) -> User
     end
+    class Timezone
+      attr_reader name: String?
+      attr_reader friendly_name: String?
+      attr_reader utc_offset: String?
+      def self.from: (Hash[String, untyped] hash) -> Timezone
+    end
+    class Plan
+      attr_reader plan_type: String?
+      attr_reader interval: String?
+      attr_reader subscriber_limit: Integer?
+      attr_reader on_trial: bool?
+      attr_reader trial_lapse_date: String?
+      attr_reader renews_at: String?
+      attr_reader cancels_at: String?
+      def self.from: (Hash[String, untyped] hash) -> Plan
+    end
+    class SendingAddress
+      attr_reader email_address: String?
+      attr_reader from_name: String?
+      attr_reader status: String?
+      attr_reader is_default: bool?
+      attr_reader is_verified: bool?
+      attr_reader is_dmarc_configured: bool?
+      def self.from: (Hash[String, untyped] hash) -> SendingAddress
+    end
     class Account
       attr_reader id: Integer?
       attr_reader name: String?
       attr_reader plan_type: String?
       attr_reader primary_email_address: String?
       attr_reader created_at: String?
+      attr_reader timezone: Timezone?
+      attr_reader plan: Plan?
+      attr_reader sending_addresses: Array[SendingAddress]
       def self.from: (Hash[String, untyped] hash) -> Account
     end
     class AccountInfo
@@ -186,6 +214,7 @@ module Kit
       attr_reader name: String?
       attr_reader created_at: String?
       attr_reader subscriber_count: Integer?
+      attr_reader tagged_at: String?
       def self.from: (Hash[String, untyped] hash) -> Tag
     end
     class CustomField
@@ -193,6 +222,7 @@ module Kit
       attr_reader name: String?
       attr_reader key: String?
       attr_reader label: String?
+      attr_reader created_at: String?
       def self.from: (Hash[String, untyped] hash) -> CustomField
     end
     class Form
@@ -296,6 +326,7 @@ module Kit
       attr_reader thumbnail_url: String?
       attr_reader is_paid: bool?
       attr_reader public_url: String?
+      attr_reader content: String?
       def self.from: (Hash[String, untyped] hash) -> Post
     end
     class Snippet
@@ -352,6 +383,7 @@ module Kit
       attr_reader delay_unit: String?
       attr_reader send_days: Array[untyped]?
       attr_reader stats: Hash[String, untyped]?
+      attr_reader content: String?
       def self.from: (Hash[String, untyped] hash) -> SequenceEmail
     end
     class BroadcastStats
@@ -428,6 +460,15 @@ module Kit
       attr_reader canceled_at: String?
       attr_reader location: Hash[String, untyped]?
       attr_reader fields: Hash[String, untyped]?
+      attr_reader added_at: String?
+      attr_reader tagged_at: String?
+      attr_reader referrer: String?
+      attr_reader referrer_utm_parameters: Hash[String, untyped]?
+      attr_reader attribution: Hash[String, untyped]?
+      attr_reader tags: Array[Hash[String, untyped]]?
+      attr_reader tag_names: Array[String]?
+      attr_reader tag_ids: Array[Integer]?
+      attr_reader stats: Hash[String, untyped]?
       def self.from: (Hash[String, untyped] hash) -> Subscriber
     end
   end

@@ -5,9 +5,11 @@ module Kit
     # An email within a sequence, as returned by
     # /v4/sequences/:sequence_id/emails. `position` is its order in the sequence;
     # `delay_value`/`delay_unit` set how long after the previous step it sends.
+    # `content` (the HTML body) is present on a single-email read, on
+    # create/update responses, and on list reads with include_content: true.
     SequenceEmail = Data.define(
       :id, :sequence_id, :subject, :preview_text, :email_address, :email_template_id,
-      :published, :position, :delay_value, :delay_unit, :send_days, :stats
+      :published, :position, :delay_value, :delay_unit, :send_days, :content, :stats
     ) do
       def self.from(hash)
         new(
@@ -15,7 +17,8 @@ module Kit
           preview_text: hash["preview_text"], email_address: hash["email_address"],
           email_template_id: hash["email_template_id"], published: hash["published"],
           position: hash["position"], delay_value: hash["delay_value"],
-          delay_unit: hash["delay_unit"], send_days: hash["send_days"], stats: hash["stats"]
+          delay_unit: hash["delay_unit"], send_days: hash["send_days"], content: hash["content"],
+          stats: hash["stats"]
         )
       end
     end
