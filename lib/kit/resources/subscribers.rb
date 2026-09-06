@@ -29,9 +29,14 @@ module Kit
         one(:put, "/v4/subscribers/#{id}", "subscriber", Objects::Subscriber, body: body)
       end
 
-      # POST /v4/subscribers/:id/unsubscribe
+      # POST /v4/subscribers/:id/unsubscribe — the API answers 204 with no body,
+      # so this returns nil. Should Kit ever echo the subscriber back, it is
+      # returned as a Subscriber instead of being discarded.
       def unsubscribe(id)
-        one(:post, "/v4/subscribers/#{id}/unsubscribe", "subscriber", Objects::Subscriber)
+        body = http_post("/v4/subscribers/#{id}/unsubscribe")
+        return nil unless body.is_a?(Hash) && body.key?("subscriber")
+
+        Objects::Subscriber.from(body.fetch("subscriber"))
       end
 
       # POST /v4/subscribers/filter — the same filters as #list, sent in the

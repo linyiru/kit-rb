@@ -82,7 +82,13 @@ RSpec.describe Kit::Resources::Subscribers do
   end
 
   describe "#unsubscribe" do
-    it "posts to the unsubscribe endpoint and returns the subscriber" do
+    it "posts to the unsubscribe endpoint and returns nil on the spec's 204 no-content" do
+      stub = stub_kit(:post, "/v4/subscribers/7/unsubscribe", status: 204, body: "")
+      expect(client.subscribers.unsubscribe(7)).to be_nil
+      expect(stub).to have_been_requested
+    end
+
+    it "returns the subscriber when the API echoes one back" do
       stub_kit(:post, "/v4/subscribers/7/unsubscribe",
                body: { "subscriber" => subscriber(id: 7, state: "cancelled") })
       expect(client.subscribers.unsubscribe(7).state).to eq("cancelled")
