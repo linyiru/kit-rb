@@ -8,6 +8,15 @@ module Kit
   # (e.g. no credentials supplied).
   class ConfigurationError < Error; end
 
+  # Base for failures below HTTP: the request never got a response. `cause`
+  # is the underlying http.rb exception.
+  class TransportError < Error; end
+  # The connection or read timed out (config.open_timeout / read_timeout).
+  class TimeoutError < TransportError; end
+  # The connection could not be established or was dropped (DNS, refused,
+  # reset, TLS).
+  class ConnectionError < TransportError; end
+
   # Raised when a 2xx response does not have the shape the resource expects
   # (a missing envelope key, a non-JSON body). Distinct from APIError because
   # the request succeeded; the client and the API disagree about the payload.

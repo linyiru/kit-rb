@@ -37,7 +37,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 ## P3 — engineering quality / DX
 
 - [x] `Collection` lacks `size`, `empty?`, `[]`, and a readable `inspect`. (`feat: Collection#size, #empty?, #[] and a readable inspect`)
-- [ ] Transport errors (timeouts, connection refused) collapse into the generic `Kit::Error`.
+- [x] Transport errors (timeouts, connection refused) collapse into the generic `Kit::Error`. (`feat: typed transport errors, retried for idempotent requests`)
 - [ ] One `HTTP::Client` per request: no persistent connections.
 - [ ] Stale P0/P1 comments in `auth/oauth.rb`, `resources/account.rb`, `sig/kit-rb.rbs`; unused `Auth::OAuth::*_URL` constants; template comments in the gemspec.
 - [ ] README / DESIGN.md claim 81 operations; the spec has 83.

@@ -10,7 +10,7 @@ module Kit
   # Resources talk to the API only through this.
   class Connection
     JSON_TYPE = "application/json"
-    RETRYABLE = [RateLimitError, ServerError].freeze
+    RETRYABLE = [RateLimitError, ServerError, TransportError].freeze
     # Verbs safe to replay after a 5xx: the server may have applied the request
     # before failing, and replaying these cannot create a second resource.
     IDEMPOTENT = %i[get head put delete].freeze
@@ -24,8 +24,9 @@ module Kit
     # give up after `config.max_retries` and re-raise the typed error.
     #
     # A 429 is retried for every verb (Kit rejected the request, so nothing was
-    # applied). A 5xx is retried only for idempotent verbs: a POST that created
-    # a subscriber before the gateway failed would be created twice.
+    # applied). A 5xx or a transport failure (timeout, dropped connection) is
+    # retried only for idempotent verbs: a POST that created a subscriber
+    # before the gateway failed would be created twice.
     #
     # @param method [Symbol] :get, :post, :put, :delete
     # @param path [String] e.g. "/v4/account" (leading slash, no host)
@@ -58,8 +59,12 @@ module Kit
 
     def perform(method, path, params, body)
       client.request(method, "#{@config.base_url}#{path}", params: params, json: body)
+    rescue HTTP::TimeoutError => e
+      raise TimeoutError, "#{method.to_s.upcase} #{path} timed out: #{e.message}"
+    rescue HTTP::ConnectionError => e
+      raise ConnectionError, "#{method.to_s.upcase} #{path} could not connect: #{e.message}"
     rescue HTTP::Error => e
-      raise Error, "HTTP transport error: #{e.message}"
+      raise TransportError, "#{method.to_s.upcase} #{path} failed in transport: #{e.message}"
     end
 
     def client

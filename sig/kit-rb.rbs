@@ -11,6 +11,12 @@ module Kit
   end
   class ConfigurationError < Error
   end
+  class TransportError < Error
+  end
+  class TimeoutError < TransportError
+  end
+  class ConnectionError < TransportError
+  end
   class UnexpectedResponseError < Error
     attr_reader body: untyped
     def initialize: (String message, ?body: untyped) -> void
@@ -167,7 +173,7 @@ module Kit
 
   class Connection
     JSON_TYPE: String
-    RETRYABLE: Array[singleton(APIError)]
+    RETRYABLE: Array[singleton(Error)]
     IDEMPOTENT: Array[Symbol]
     def initialize: (Configuration config) -> void
     def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
