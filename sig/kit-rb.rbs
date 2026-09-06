@@ -176,6 +176,7 @@ module Kit
     def initialize: (Configuration config) -> void
     def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
     def request_with_status: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> [Integer, untyped]
+    def inspect: () -> String
   end
 
   class Pagination

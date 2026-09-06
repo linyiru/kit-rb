@@ -17,6 +17,13 @@ module Kit
 
     def initialize(config)
       @config = config
+      # Built once: an http.rb client is an immutable options chain, safe to
+      # share across threads, and each request still opens its own socket.
+      # (HTTP.persistent would keep one socket alive but is not thread-safe,
+      # and a Client is documented as shareable — so it is not used.)
+      @client = HTTP
+                .headers(default_headers)
+                .timeout(connect: @config.open_timeout, read: @config.read_timeout)
     end
 
     # Issues a request and returns the parsed JSON body (a Hash) on success.
@@ -51,6 +58,12 @@ module Kit
       end
     end
 
+    # The memoised http.rb client carries the auth header, so the default
+    # inspect would print the credential.
+    def inspect
+      "#<#{self.class.name} base_url=#{@config.base_url.inspect} auth=#{@config.auth.inspect}>"
+    end
+
     private
 
     def retryable?(method, error)
@@ -58,19 +71,13 @@ module Kit
     end
 
     def perform(method, path, params, body)
-      client.request(method, "#{@config.base_url}#{path}", params: params, json: body)
+      @client.request(method, "#{@config.base_url}#{path}", params: params, json: body)
     rescue HTTP::TimeoutError => e
       raise TimeoutError, "#{method.to_s.upcase} #{path} timed out: #{e.message}"
     rescue HTTP::ConnectionError => e
       raise ConnectionError, "#{method.to_s.upcase} #{path} could not connect: #{e.message}"
     rescue HTTP::Error => e
       raise TransportError, "#{method.to_s.upcase} #{path} failed in transport: #{e.message}"
-    end
-
-    def client
-      HTTP
-        .headers(default_headers)
-        .timeout(connect: @config.open_timeout, read: @config.read_timeout)
     end
 
     def default_headers

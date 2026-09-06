@@ -38,7 +38,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 
 - [x] `Collection` lacks `size`, `empty?`, `[]`, and a readable `inspect`. (`feat: Collection#size, #empty?, #[] and a readable inspect`)
 - [x] Transport errors (timeouts, connection refused) collapse into the generic `Kit::Error`. (`feat: typed transport errors, retried for idempotent requests`)
-- [ ] One `HTTP::Client` per request: no persistent connections.
+- [x] One `HTTP::Client` per request: no persistent connections. Client is now built once per Connection; true keep-alive (`HTTP.persistent`) is deliberately not used because it is not thread-safe while `Kit::Client` is documented as shareable. (`perf: build the http.rb client once per Connection`)
 - [x] Stale P0/P1 comments in `auth/oauth.rb`, `resources/account.rb`, `sig/kit-rb.rbs`; unused `Auth::OAuth::*_URL` constants; template comments in the gemspec. (`chore: drop stale phase comments, dead constants, and gemspec boilerplate`)
 - [ ] README / DESIGN.md claim 81 operations; the spec has 83.
 - [ ] CI matrix lacks Ruby 3.5; no Dependabot; no branch coverage.

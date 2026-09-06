@@ -107,6 +107,15 @@ RSpec.describe "Connection retries" do
     expect(connection).to have_received(:backoff_sleep).twice
   end
 
+  it "reuses one configured HTTP client across requests" do
+    stub_request(:get, "https://api.kit.com/v4/account")
+      .to_return(status: 200, body: "{}", headers: { "Content-Type" => "application/json" })
+    before = connection.instance_variable_get(:@client)
+    2.times { account_request }
+    expect(connection.instance_variable_get(:@client)).to equal(before)
+    expect(before).to be_a(HTTP::Client)
+  end
+
   it "does not retry a non-transient 4xx" do
     stub = stub_request(:get, "https://api.kit.com/v4/account")
            .to_return(status: 404, body: "{}", headers: { "Content-Type" => "application/json" })

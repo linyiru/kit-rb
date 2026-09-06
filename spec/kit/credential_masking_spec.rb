@@ -7,7 +7,8 @@ RSpec.describe "Credential masking" do
 
   it "masks the API key in the client, its config, and the auth strategy" do
     client = Kit::Client.new(api_key: key)
-    [client, client.config, client.config.auth].each do |object|
+    connection = client.instance_variable_get(:@connection)
+    [client, client.config, client.config.auth, connection].each do |object|
       expect(object.inspect).not_to include(key)
       expect(object.inspect).to include("****cdef")
     end
