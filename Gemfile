@@ -13,7 +13,7 @@ gem "rspec", "~> 3.0"
 gem "rubocop", "~> 1.21"
 
 gem "rbs", "~> 3.5"
-gem "simplecov", "~> 0.22", require: false
+gem "simplecov", "~> 1.1", require: false
 gem "steep", "~> 1.7"
 gem "vcr", "~> 6.3"
 gem "webmock", "~> 3.23"
