@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Kit::Resources::Account do
-  let(:client) { Kit::Client.new(api_key: "secret") }
+  # max_retries: 0 — these specs assert the error mapping, not the retry policy
+  # (retry_spec.rb covers that), so a 429/5xx must not really sleep.
+  let(:client) { Kit::Client.new(api_key: "secret", max_retries: 0) }
 
   describe "#get" do
     it "returns a typed AccountInfo and sends the API-key header" do
