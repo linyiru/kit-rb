@@ -32,6 +32,12 @@ module Kit
     # @param params [Hash] query string params
     # @param body [Hash, nil] JSON request body
     def request(method, path, params: {}, body: nil)
+      request_with_status(method, path, params: params, body: body).last
+    end
+
+    # As #request, but returns [status, body] for the callers that must tell a
+    # 200 (applied now) from a 202 (queued; the bulk endpoints).
+    def request_with_status(method, path, params: {}, body: nil)
       attempt = 0
       begin
         handle(perform(method, path, params, body), method, path)
@@ -73,7 +79,7 @@ module Kit
     def handle(response, method, path)
       status = response.status.to_i
       parsed = parse(response)
-      return parsed if (200..299).cover?(status)
+      return [status, parsed] if (200..299).cover?(status)
 
       raise error_for(status, parsed, response, method, path)
     end

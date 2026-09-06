@@ -127,6 +127,7 @@ module Kit
     IDEMPOTENT: Array[Symbol]
     def initialize: (Configuration config) -> void
     def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
+    def request_with_status: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> [Integer, untyped]
   end
 
   class Pagination
@@ -308,6 +309,19 @@ module Kit
       attr_reader content: String?
       attr_reader document: untyped
       def self.from: (Hash[String, untyped] hash) -> Snippet
+    end
+    class BulkFailure
+      attr_reader item: untyped
+      attr_reader errors: Array[String]
+      def self.from: (Hash[String, untyped] hash) -> BulkFailure
+    end
+    class BulkResult
+      attr_reader items: Array[Hash[String, untyped]]
+      attr_reader failures: Array[BulkFailure]
+      attr_reader async: bool
+      def self.from: (Integer status, untyped body, String? key) -> BulkResult
+      def async?: () -> bool
+      def success?: () -> bool
     end
     class Purchase
       attr_reader id: Integer?
@@ -502,14 +516,14 @@ module Kit
       def create: (**untyped attributes) -> Objects::Purchase
     end
     class Bulk < Base
-      def create_subscribers: (Array[untyped] subscribers, ?callback_url: String?) -> Hash[String, untyped]
-      def create_custom_fields: (Array[untyped] custom_fields, ?callback_url: String?) -> Hash[String, untyped]
-      def update_custom_field_values: (Array[untyped] custom_field_values, ?callback_url: String?) -> Hash[String, untyped]
-      def add_subscribers_to_forms: (Array[untyped] additions, ?callback_url: String?) -> Hash[String, untyped]
-      def create_tags: (Array[untyped] tags, ?callback_url: String?) -> Hash[String, untyped]
-      def delete_tags: (Array[untyped] tags, ?callback_url: String?) -> Hash[String, untyped]
-      def tag_subscribers: (Array[untyped] taggings, ?callback_url: String?) -> Hash[String, untyped]
-      def remove_tag_subscribers: (Array[untyped] taggings, ?callback_url: String?) -> Hash[String, untyped]
+      def create_subscribers: (Array[untyped] subscribers, ?callback_url: String?) -> Objects::BulkResult
+      def create_custom_fields: (Array[untyped] custom_fields, ?callback_url: String?) -> Objects::BulkResult
+      def update_custom_field_values: (Array[untyped] custom_field_values, ?callback_url: String?) -> Objects::BulkResult
+      def add_subscribers_to_forms: (Array[untyped] additions, ?callback_url: String?) -> Objects::BulkResult
+      def create_tags: (Array[untyped] tags, ?callback_url: String?) -> Objects::BulkResult
+      def delete_tags: (Array[untyped] tags, ?callback_url: String?) -> Objects::BulkResult
+      def tag_subscribers: (Array[untyped] taggings, ?callback_url: String?) -> Objects::BulkResult
+      def remove_tag_subscribers: (Array[untyped] taggings, ?callback_url: String?) -> Objects::BulkResult
     end
     class Snippets < Base
       def list: (**untyped params) -> Collection[Objects::Snippet]
