@@ -6,6 +6,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-06
+
+The hardening pass (`docs/TASKS.md`): two real-API bugs fixed, the surface
+completed to all 83 documented operations, receiver-side webhook support, and
+contract tests over every envelope, request body and 204.
+
 ### Added
 - The two operations 0.2.0 lacked: `subscribers.update_location` (PATCH) and
   `webhook_endpoints.update` (PATCH: rename, change URL, pause/resume with
@@ -117,7 +123,8 @@ vertical slice. Not yet feature-complete — resources land in 0.1.0 per docs/DE
   429/5xx retry with backoff.
 - RBS signatures for the public surface.
 
-[Unreleased]: https://github.com/linyiru/kit-rb/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/linyiru/kit-rb/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/linyiru/kit-rb/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/linyiru/kit-rb/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/linyiru/kit-rb/compare/7ce3329...v0.1.0
 [0.0.0]: https://rubygems.org/gems/kit-rb/versions/0.0.0
