@@ -29,6 +29,15 @@ RSpec.describe Kit::Resources::Sequences do
       stub_kit(:get, "/v4/sequences/5", body: { "sequence" => sequence(id: 5) })
       expect(client.sequences.get(5).id).to eq(5)
     end
+
+    it "sends include=stats when asked" do
+      stub = stub_request(:get, "https://api.kit.com/v4/sequences/5")
+             .with(query: { "include" => "stats" })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("sequence" => sequence(id: 5)))
+      client.sequences.get(5, include: "stats")
+      expect(stub).to have_been_requested
+    end
   end
 
   describe "#create" do

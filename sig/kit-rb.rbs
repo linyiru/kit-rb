@@ -481,7 +481,7 @@ module Kit
     end
     class Sequences < Base
       def list: (**untyped params) -> Collection[Objects::Sequence]
-      def get: (Integer id) -> Objects::Sequence
+      def get: (Integer id, ?include: String?) -> Objects::Sequence
       def create: (name: String, **untyped attributes) -> Objects::Sequence
       def update: (Integer id, **untyped attributes) -> Objects::Sequence
       def delete: (Integer id) -> void
@@ -489,7 +489,7 @@ module Kit
       def add_subscriber: (Integer sequence_id, Integer subscriber_id) -> Objects::Subscriber
       def add_subscriber_by_email: (Integer sequence_id, email_address: String) -> Objects::Subscriber
       def emails: (Integer sequence_id, **untyped params) -> Collection[Objects::SequenceEmail]
-      def email: (Integer sequence_id, Integer id) -> Objects::SequenceEmail
+      def email: (Integer sequence_id, Integer id, ?include: String?) -> Objects::SequenceEmail
       def create_email: (Integer sequence_id, **untyped attributes) -> Objects::SequenceEmail
       def update_email: (Integer sequence_id, Integer id, **untyped attributes) -> Objects::SequenceEmail
       def delete_email: (Integer sequence_id, Integer id) -> void

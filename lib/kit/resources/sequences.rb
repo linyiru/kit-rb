@@ -10,9 +10,10 @@ module Kit
         collection("/v4/sequences", "sequences", Objects::Sequence, params)
       end
 
-      # GET /v4/sequences/:id
-      def get(id)
-        one(:get, "/v4/sequences/#{path_id(id)}", "sequence", Objects::Sequence)
+      # GET /v4/sequences/:id — pass include: "stats" to embed the sequence's
+      # performance stats.
+      def get(id, include: nil)
+        one(:get, "/v4/sequences/#{path_id(id)}", "sequence", Objects::Sequence, params: { include: include }.compact)
       end
 
       # GET /v4/sequences/:sequence_id/subscribers
@@ -52,9 +53,11 @@ module Kit
         collection("/v4/sequences/#{path_id(sequence_id)}/emails", "emails", Objects::SequenceEmail, params)
       end
 
-      # GET /v4/sequences/:sequence_id/emails/:id
-      def email(sequence_id, id)
-        one(:get, "/v4/sequences/#{path_id(sequence_id)}/emails/#{path_id(id)}", "email", Objects::SequenceEmail)
+      # GET /v4/sequences/:sequence_id/emails/:id — include: "stats" embeds the
+      # email's performance stats.
+      def email(sequence_id, id, include: nil)
+        one(:get, "/v4/sequences/#{path_id(sequence_id)}/emails/#{path_id(id)}", "email", Objects::SequenceEmail,
+            params: { include: include }.compact)
       end
 
       # POST /v4/sequences/:sequence_id/emails — subject/delay_value/delay_unit

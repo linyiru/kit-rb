@@ -29,6 +29,15 @@ RSpec.describe "Kit::Resources::Sequences email management" do
       stub_kit(:get, "/v4/sequences/5/emails/7", body: { "email" => email(id: 7) })
       expect(client.sequences.email(5, 7).id).to eq(7)
     end
+
+    it "sends include=stats when asked" do
+      stub = stub_request(:get, "https://api.kit.com/v4/sequences/5/emails/7")
+             .with(query: { "include" => "stats" })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("email" => email(id: 7)))
+      client.sequences.email(5, 7, include: "stats")
+      expect(stub).to have_been_requested
+    end
   end
 
   describe "#create_email" do
