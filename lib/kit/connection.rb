@@ -34,7 +34,7 @@ module Kit
     def request(method, path, params: {}, body: nil)
       attempt = 0
       begin
-        handle(perform(method, path, params, body))
+        handle(perform(method, path, params, body), method, path)
       rescue *RETRYABLE => e
         attempt += 1
         raise if attempt > @config.max_retries || !retryable?(method, e)
@@ -70,12 +70,12 @@ module Kit
       }.merge(@config.auth.headers)
     end
 
-    def handle(response)
+    def handle(response, method, path)
       status = response.status.to_i
       parsed = parse(response)
       return parsed if (200..299).cover?(status)
 
-      raise error_for(status, parsed, response)
+      raise error_for(status, parsed, response, method, path)
     end
 
     def parse(response)
@@ -87,13 +87,13 @@ module Kit
       raw
     end
 
-    def error_for(status, body, response)
+    def error_for(status, body, response, method, path)
       klass = Error.class_for(status)
       if klass == RateLimitError
-        klass.new(status: status, body: body, response: response,
+        klass.new(status: status, body: body, response: response, method: method, path: path,
                   retry_after: response.headers["Retry-After"]&.to_i)
       else
-        klass.new(status: status, body: body, response: response)
+        klass.new(status: status, body: body, response: response, method: method, path: path)
       end
     end
 

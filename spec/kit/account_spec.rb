@@ -54,6 +54,9 @@ RSpec.describe Kit::Resources::Account do
         expect { client.account.get }.to raise_error(klass) do |e|
           expect(e.status).to eq(status)
           expect(e.errors).to eq(["boom"])
+          expect(e.method).to eq(:get)
+          expect(e.path).to eq("/v4/account")
+          expect(e.message).to eq("GET /v4/account failed with status #{status}: boom")
         end
       end
     end

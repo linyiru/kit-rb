@@ -23,22 +23,27 @@ module Kit
 
   # Base for every error that carries an HTTP response. `status` is the code,
   # `body` the parsed JSON body (or the raw string when it wasn't JSON), and
-  # `errors` the `errors` array Kit returns on validation failures.
+  # `errors` the `errors` array Kit returns on validation failures. `method`
+  # and `path` identify the request that failed (nil for OAuth token errors).
   class APIError < Error
-    attr_reader :status, :body, :errors, :response
+    attr_reader :status, :body, :errors, :response, :method, :path
 
-    def initialize(message = nil, status:, body: nil, response: nil)
+    def initialize(message = nil, status:, body: nil, response: nil, method: nil, path: nil)
       @status = status
       @body = body
       @response = response
+      @method = method
+      @path = path
       @errors = body.is_a?(Hash) ? Array(body["errors"]) : []
       super(message || default_message)
     end
 
     private
 
+    # e.g. "GET /v4/subscribers/1 failed with status 404: Not Found"
     def default_message
-      base = "Kit API request failed with status #{status}"
+      request = method && path ? "#{method.to_s.upcase} #{path}" : "Kit API request"
+      base = "#{request} failed with status #{status}"
       @errors.empty? ? base : "#{base}: #{@errors.join(", ")}"
     end
   end
@@ -56,9 +61,9 @@ module Kit
   class RateLimitError < APIError
     attr_reader :retry_after
 
-    def initialize(message = nil, status:, body: nil, response: nil, retry_after: nil)
+    def initialize(message = nil, status:, body: nil, response: nil, method: nil, path: nil, retry_after: nil)
       @retry_after = retry_after
-      super(message, status: status, body: body, response: response)
+      super(message, status: status, body: body, response: response, method: method, path: path)
     end
   end
 

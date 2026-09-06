@@ -20,7 +20,9 @@ module Kit
     attr_reader body: untyped
     attr_reader errors: Array[untyped]
     attr_reader response: untyped
-    def initialize: (?String? message, status: Integer, ?body: untyped, ?response: untyped) -> void
+    attr_reader method: Symbol?
+    attr_reader path: String?
+    def initialize: (?String? message, status: Integer, ?body: untyped, ?response: untyped, ?method: Symbol?, ?path: String?) -> void
   end
   class AuthenticationError < APIError
   end
@@ -32,7 +34,7 @@ module Kit
   end
   class RateLimitError < APIError
     attr_reader retry_after: Integer?
-    def initialize: (?String? message, status: Integer, ?body: untyped, ?response: untyped, ?retry_after: Integer?) -> void
+    def initialize: (?String? message, status: Integer, ?body: untyped, ?response: untyped, ?method: Symbol?, ?path: String?, ?retry_after: Integer?) -> void
   end
   class ServerError < APIError
   end
