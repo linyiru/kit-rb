@@ -6,6 +6,62 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- The two operations 0.2.0 lacked: `subscribers.update_location` (PATCH) and
+  `webhook_endpoints.update` (PATCH: rename, change URL, pause/resume with
+  `status`, replace `events`). All 83 documented operations now have a method.
+- Incoming webhooks: `Kit::Webhooks::Signature.verify!`/`verify?` (HMAC-SHA256
+  `X-Kit-Signature`, replay window, rotation-aware, multiple secrets),
+  `Kit::Webhooks::Delivery.from_request`/`parse` with typed `Event`s, and the
+  event-name constants `Kit::Webhooks::Events` (28) / `LegacyEvents` (15, with
+  `REQUIRED_PARAM`).
+- `Kit::Objects::WebhookEndpoint#secret` — the signing secret Kit returns only on
+  `create` and `rotate_secret`.
+- `Pagination#total_count` / `Collection#total_count` (send
+  `include_total_count: true`); `Collection#size`, `#length`, `#empty?`, `#[]`
+  and a compact `#inspect`.
+- Response fields the spec declares: `Account#timezone`/`#plan` (typed) and
+  `#sending_addresses`; `Post#content`; `SequenceEmail#content`;
+  `Subscriber#added_at`/`#tagged_at`/`#referrer`/`#referrer_utm_parameters`/
+  `#attribution`/`#tags`/`#tag_names`/`#tag_ids`/`#stats`; `Tag#tagged_at`;
+  `CustomField#created_at`.
+- `sequences.get`/`sequences.email` accept `include: "stats"`;
+  `subscribers.stats` accepts `email_sent_after`/`email_sent_before`.
+- Error classes: `ConflictError` (409), `PayloadTooLargeError` (413),
+  `UnexpectedResponseError` (a 2xx whose body is not the documented shape),
+  `TransportError` with `TimeoutError` and `ConnectionError` (the http.rb
+  exception is kept as `cause`). `APIError#method`/`#path`; messages now read
+  `"GET /v4/subscribers/1 failed with status 404: ..."`.
+- `Connection#request_with_status`.
+
+### Changed
+- **Breaking:** the `bulk` methods return `Kit::Objects::BulkResult`
+  (`items`, typed `failures`, `async?` for a 202) instead of the raw Hash.
+- **Breaking:** `broadcasts.create/update`, `sequences.create/update`,
+  `sequences.create_email/update_email`, `snippets.create/update` and
+  `purchases.create` take explicit keyword arguments (the fields the spec
+  documents) instead of `**attributes`; an unknown field raises
+  `ArgumentError`. Fields not passed are omitted; an explicit `nil` is sent,
+  which Kit uses to clear `send_days`/`email_template_id`/`send_at`.
+- **Breaking:** `subscribers.unsubscribe` returns `nil` (the API answers 204).
+- Retries: `Retry-After` is capped at `max_backoff`; a 5xx or transport
+  failure is retried only for idempotent verbs (never a POST); a 429 is still
+  retried for every verb.
+- Follow-up page requests drop `include_total_count` and any `before` cursor.
+- `Client`, `Configuration`, `Connection`, `Auth::*` and `OAuth::Token`
+  mask credentials in `#inspect`.
+- Path ids are percent-encoded; a nil/blank id raises `ArgumentError`.
+- One http.rb client is built per `Connection` instead of per request.
+
+### Fixed
+- `subscribers.unsubscribe` raised `NoMethodError` against the real API (204,
+  no body).
+- `webhook_endpoints.create`/`rotate_secret` silently discarded the one-time
+  signing secret.
+- A response with an unexpected shape raised `KeyError`/`NoMethodError`
+  instead of a `Kit::Error`.
+- The error-mapping specs really slept through retries (60 s per CI run).
+
 ## [0.2.0] - 2026-09-04
 
 ### Changed

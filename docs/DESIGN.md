@@ -3,9 +3,10 @@
 A modern, fully-typed Ruby client for the **Kit** (formerly ConvertKit) **API v4**.
 The existing Ruby gems all stop at API v3/v2; kit-rb targets v4 to a high bar.
 
-> **Status: shipped.** All phases below are complete. v0.2.0 is on RubyGems with
-> the entire v4 surface — every one of the 81 documented operations across all
-> resources, verified programmatically against the vendored OpenAPI document.
+> **Status: shipped.** All phases below are complete. v0.2.0 is on RubyGems;
+> the post-0.2.0 hardening pass (`docs/TASKS.md`) completed the surface to all
+> 83 documented operations, each pinned to the vendored OpenAPI document by
+> contract tests.
 
 ## Locked decisions
 
@@ -31,7 +32,7 @@ Kit::Client            # entry: picks an auth strategy, holds one Connection
 ```
 
 Facts pinned from the OpenAPI spec (`developers.kit.com/api-reference/v4.json`,
-OpenAPI 3.0.3, "Kit API 4.0", host `https://api.kit.com`, 52 paths / 81 operations,
+OpenAPI 3.0.3, "Kit API 4.0", host `https://api.kit.com`, 52 paths / 83 operations,
 vendored to `spec/support/kit-v4.openapi.json`): API-key
 header `X-Kit-Api-Key`; OAuth authorize/token at `/v4/oauth/*`, scopes read/write;
 rate limits 120/60s (key) and 600/60s (OAuth); cursor pagination (`after`/`before`
@@ -53,7 +54,9 @@ rate limits 120/60s (key) and 600/60s (OAuth); cursor pagination (`after`/`befor
   email templates, segments, posts, snippets, account extras, and bulk. Early
   batches were dogfooded through `forge` against a local model on mbp; that
   surfaced the `Base#one`/`#collection` abstractions, after which the surface was
-  completed by hand. **All 81 operations covered** (verified programmatically).
+  completed by hand. 81 operations shipped in 0.2.0; the two PATCH operations
+  landed in the hardening pass. **All 83 operations covered**, pinned by the
+  contract specs.
 - **P3 — quality. ✅** An OpenAPI list-envelope contract test (each list resource
   pinned to the vendored spec), plus VCR integration cassettes (secrets scrubbed)
   replayed in CI, `rake smoke` (live read-only), and an opt-in e2e lifecycle.
@@ -62,3 +65,10 @@ rate limits 120/60s (key) and 600/60s (OAuth); cursor pagination (`after`/`befor
   required`, and a GitHub Actions **OIDC Trusted Publishing** workflow (tag `v*`
   → gated release, no stored key). v0.1.0 and v0.2.0 published this way.
   Deferred (optional): a hosted YARD site and cryptographic gem signing.
+- **P5 — hardening (2026-09-06). ✅** A full audit against the OpenAPI document
+  and the live docs, tracked row by row in `docs/TASKS.md`: two real-API bugs
+  (204 unsubscribe, dropped webhook secret), safety (credential masking, path
+  id validation, no POST replay, Retry-After cap), the missing PATCH
+  operations and response fields, incoming-webhook verification, typed bulk
+  results and transport errors, explicit keyword bodies with tightened RBS,
+  and contract tests over object envelopes, request bodies and 204s.
