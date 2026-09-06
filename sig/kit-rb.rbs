@@ -61,6 +61,8 @@ module Kit
       attr_reader scope: String?
       attr_reader created_at: Integer?
       def self.from: (Hash[String, untyped] hash) -> Token
+      def inspect: () -> String
+      def to_s: () -> String
       def expires_at: () -> Integer?
       def expired?: (?now: Integer, ?leeway: Integer) -> bool
     end
@@ -77,10 +79,18 @@ module Kit
   end
 
   module Auth
+    module Credential
+      MASK: String
+      VISIBLE: Integer
+      def self.mask: (untyped secret) -> String
+    end
+
     class ApiKey
       HEADER: String
       def initialize: (String key) -> void
       def headers: () -> Hash[String, String]
+      def inspect: () -> String
+      def to_s: () -> String
     end
 
     class OAuth
@@ -88,6 +98,8 @@ module Kit
       TOKEN_URL: String
       def initialize: (String access_token) -> void
       def headers: () -> Hash[String, String]
+      def inspect: () -> String
+      def to_s: () -> String
     end
   end
 

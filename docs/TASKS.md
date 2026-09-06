@@ -19,7 +19,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 
 ## P1 — security / correctness
 
-- [ ] `Client`, `Configuration`, `Auth::*`, `OAuth::Token` `#inspect` print the credential in plaintext.
+- [x] `Client`, `Configuration`, `Auth::*`, `OAuth::Token` `#inspect` print the credential in plaintext. (`fix: mask credentials in inspect output`)
 - [ ] `total_count` is discarded by `Pagination.from`; auto-paging resends `include_total_count` on every page; a `before:` param leaks into `after:` follow-ups.
 - [ ] No error classes for 409 (rotate_secret conflict) and 413 (bulk quota); 202 (async bulk) indistinguishable from 200.
 - [ ] Error messages omit the request method and path.

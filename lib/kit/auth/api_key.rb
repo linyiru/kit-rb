@@ -19,6 +19,13 @@ module Kit
       def headers
         { HEADER => @key }
       end
+
+      # Never print the key: a client or config that ends up in a log line or an
+      # exception message must not leak the credential.
+      def inspect
+        "#<#{self.class.name} key=#{Credential.mask(@key)}>"
+      end
+      alias to_s inspect
     end
   end
 end

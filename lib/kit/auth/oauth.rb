@@ -23,6 +23,11 @@ module Kit
       def headers
         { "Authorization" => "Bearer #{@access_token}" }
       end
+
+      def inspect
+        "#<#{self.class.name} access_token=#{Credential.mask(@access_token)}>"
+      end
+      alias to_s inspect
     end
   end
 end

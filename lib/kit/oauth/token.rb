@@ -19,6 +19,15 @@ module Kit
         )
       end
 
+      # Both tokens are masked in #inspect; #to_h still returns the real values
+      # for persistence.
+      def inspect
+        "#<data #{self.class.name} access_token=#{Auth::Credential.mask(access_token)}, " \
+          "refresh_token=#{Auth::Credential.mask(refresh_token)}, token_type=#{token_type.inspect}, " \
+          "expires_in=#{expires_in.inspect}, scope=#{scope.inspect}, created_at=#{created_at.inspect}>"
+      end
+      alias_method :to_s, :inspect
+
       # Unix time the access token expires, or nil when the fields are absent.
       def expires_at
         return nil unless created_at && expires_in

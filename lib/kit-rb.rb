@@ -15,6 +15,7 @@ end
 require "kit/version"
 require "kit/errors"
 require "kit/configuration"
+require "kit/auth/credential"
 require "kit/auth/api_key"
 require "kit/auth/oauth"
 require "kit/connection"
