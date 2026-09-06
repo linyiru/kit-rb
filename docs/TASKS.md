@@ -27,9 +27,9 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 
 ## P2 — API coverage
 
-- [ ] `PATCH /v4/subscribers/{id}/location` (`subscribers.update_location`).
+- [x] `PATCH /v4/subscribers/{id}/location` (`subscribers.update_location`). (`feat: subscribers.update_location and stats date window`)
 - [ ] `PATCH /v4/webhook_endpoints/{id}` (`webhook_endpoints.update`).
-- [ ] `sequences.get` / `sequences.email` cannot send `include=stats`; `subscribers.stats` cannot send `email_sent_after/before`.
+- [ ] `sequences.get` / `sequences.email` cannot send `include=stats`. (`subscribers.stats` window done in `feat: subscribers.update_location and stats date window`)
 - [ ] Missing response fields: `Account` (`timezone`, `plan`, `sending_addresses`), `Post#content`, `SequenceEmail#content`, `Subscriber` (`added_at`, `referrer`, `referrer_utm_parameters`, `tagged_at`, `attribution`, `tags`), `Tag#tagged_at`, `CustomField#created_at`.
 - [ ] Incoming webhooks: `X-Kit-Signature` HMAC-SHA256 verification and delivery-envelope parsing.
 - [ ] Webhook event-name constants.

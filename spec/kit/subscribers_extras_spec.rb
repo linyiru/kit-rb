@@ -59,6 +59,30 @@ RSpec.describe "Kit::Resources::Subscribers extras" do
     end
   end
 
+  describe "#update_location" do
+    it "PATCHes the full location and returns the Subscriber" do
+      location = { "city" => "Austin", "state_province" => "TX", "country_code" => "US",
+                   "latitude" => 30.27, "longitude" => -97.74, "timezone" => "America/Chicago" }
+      stub = stub_request(:patch, "https://api.kit.com/v4/subscribers/42/location")
+             .with(body: { "location" => location })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("subscriber" => sub(id: 42)))
+      expect(client.subscribers.update_location(42, location: location)).to be_a(Kit::Objects::Subscriber)
+      expect(stub).to have_been_requested
+    end
+  end
+
+  describe "#stats window" do
+    it "sends email_sent_after/before as query params" do
+      stub = stub_request(:get, "https://api.kit.com/v4/subscribers/42/stats")
+             .with(query: { "email_sent_after" => "2026-01-01", "email_sent_before" => "2026-02-01" })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("subscriber" => { "id" => 42, "stats" => {} }))
+      client.subscribers.stats(42, email_sent_after: "2026-01-01", email_sent_before: "2026-02-01")
+      expect(stub).to have_been_requested
+    end
+  end
+
   describe "#remove_location" do
     it "deletes the location and returns nil" do
       stub = stub_kit(:delete, "/v4/subscribers/42/location", status: 204, body: "")

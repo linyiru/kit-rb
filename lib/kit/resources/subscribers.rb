@@ -51,14 +51,23 @@ module Kit
       end
 
       # GET /v4/subscribers/:id/stats — the subscriber's engagement stats.
-      def stats(id)
-        one(:get, "/v4/subscribers/#{path_id(id)}/stats", "subscriber", Objects::SubscriberStats)
+      # Bound the window with email_sent_after / email_sent_before (yyyy-mm-dd).
+      def stats(id, email_sent_after: nil, email_sent_before: nil)
+        params = { email_sent_after: email_sent_after, email_sent_before: email_sent_before }.compact
+        one(:get, "/v4/subscribers/#{path_id(id)}/stats", "subscriber", Objects::SubscriberStats, params: params)
       end
 
       # POST /v4/subscribers/:id/location — set the subscriber's location
       # (a hash of city/state_province/country_code/latitude/longitude/timezone).
       def set_location(id, location:)
         one(:post, "/v4/subscribers/#{path_id(id)}/location", "subscriber", Objects::Subscriber,
+            body: { location: location })
+      end
+
+      # PATCH /v4/subscribers/:id/location — replace a pinned location. Kit
+      # requires the full location (all six keys) on update, not a partial.
+      def update_location(id, location:)
+        one(:patch, "/v4/subscribers/#{path_id(id)}/location", "subscriber", Objects::Subscriber,
             body: { location: location })
       end
 
