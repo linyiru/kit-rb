@@ -21,7 +21,8 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 
 - [x] `Client`, `Configuration`, `Auth::*`, `OAuth::Token` `#inspect` print the credential in plaintext. (`fix: mask credentials in inspect output`)
 - [x] `total_count` is discarded by `Pagination.from`; auto-paging resends `include_total_count` on every page; a `before:` param leaks into `after:` follow-ups. (`feat: surface total_count and fix follow-up page params`)
-- [ ] No error classes for 409 (rotate_secret conflict) and 413 (bulk quota); 202 (async bulk) indistinguishable from 200.
+- [x] No error classes for 409 (rotate_secret conflict) and 413 (bulk quota). (`feat: typed errors for 409 and 413`)
+- [ ] 202 (async bulk) indistinguishable from 200; bulk methods return raw Hashes.
 - [x] Error messages omit the request method and path. (`feat: name the failed request in APIError messages`)
 
 ## P2 — API coverage
@@ -36,7 +37,6 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 ## P3 — engineering quality / DX
 
 - [ ] `Collection` lacks `size`, `empty?`, `[]`, and a readable `inspect`.
-- [ ] Bulk methods return raw Hashes; typed result object with `failures`.
 - [ ] Transport errors (timeouts, connection refused) collapse into the generic `Kit::Error`.
 - [ ] One `HTTP::Client` per request: no persistent connections.
 - [ ] Stale P0/P1 comments in `auth/oauth.rb`, `resources/account.rb`, `sig/kit-rb.rbs`; unused `Auth::OAuth::*_URL` constants; template comments in the gemspec.

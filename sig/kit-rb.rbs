@@ -6,6 +6,7 @@ module Kit
   DEFAULT_BASE_URL: String
 
   class Error < StandardError
+    STATUS_CLASSES: Hash[Integer, singleton(APIError)]
     def self.class_for: (Integer status) -> singleton(APIError)
   end
   class ConfigurationError < Error
@@ -29,6 +30,10 @@ module Kit
   class AuthorizationError < APIError
   end
   class NotFoundError < APIError
+  end
+  class ConflictError < APIError
+  end
+  class PayloadTooLargeError < APIError
   end
   class UnprocessableEntityError < APIError
   end

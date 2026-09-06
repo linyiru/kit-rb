@@ -54,6 +54,12 @@ module Kit
   class AuthorizationError < APIError; end
   # 404 — no such resource.
   class NotFoundError < APIError; end
+  # 409 — the request conflicts with current state (e.g. rotating a webhook
+  # endpoint secret while a previous rotation is still in its grace period).
+  class ConflictError < APIError; end
+  # 413 — the request exceeds Kit's size quota (the bulk endpoints' enqueued
+  # data cap); split the batch.
+  class PayloadTooLargeError < APIError; end
   # 422 — the request was well-formed but semantically invalid.
   class UnprocessableEntityError < APIError; end
 
@@ -87,16 +93,20 @@ module Kit
 
   # Maps an HTTP status to the most specific error class above.
   class Error
+    STATUS_CLASSES = {
+      401 => AuthenticationError,
+      403 => AuthorizationError,
+      404 => NotFoundError,
+      409 => ConflictError,
+      413 => PayloadTooLargeError,
+      422 => UnprocessableEntityError,
+      429 => RateLimitError
+    }.freeze
+
     def self.class_for(status)
-      case status
-      when 401 then AuthenticationError
-      when 403 then AuthorizationError
-      when 404 then NotFoundError
-      when 422 then UnprocessableEntityError
-      when 429 then RateLimitError
-      when 500..599 then ServerError
-      else APIError
-      end
+      return ServerError if (500..599).cover?(status)
+
+      STATUS_CLASSES.fetch(status, APIError)
     end
   end
 end

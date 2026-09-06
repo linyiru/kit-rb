@@ -46,6 +46,8 @@ RSpec.describe Kit::Resources::Account do
       401 => Kit::AuthenticationError,
       403 => Kit::AuthorizationError,
       404 => Kit::NotFoundError,
+      409 => Kit::ConflictError,
+      413 => Kit::PayloadTooLargeError,
       422 => Kit::UnprocessableEntityError,
       500 => Kit::ServerError
     }.each do |status, klass|
