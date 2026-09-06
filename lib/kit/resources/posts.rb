@@ -11,7 +11,7 @@ module Kit
 
       # GET /v4/posts/:id
       def get(id)
-        one(:get, "/v4/posts/#{id}", "post", Objects::Post)
+        one(:get, "/v4/posts/#{path_id(id)}", "post", Objects::Post)
       end
     end
   end

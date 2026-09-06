@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "erb"
+
 module Kit
   module Resources
     # Shared base for every resource group. Holds the connection and exposes
@@ -33,6 +35,16 @@ module Kit
       # Bulk deletes carry a body (the items to remove), so body is accepted.
       def http_delete(path, body: nil, params: {})
         @connection.request(:delete, path, params: params, body: body)
+      end
+
+      # Renders an id into a path segment. Kit ids are integers; a String is
+      # accepted but percent-encoded so a value like "1/unsubscribe" cannot
+      # rewrite the route, and nil/blank raises before any request is made
+      # (a blank id would silently hit the parent list endpoint).
+      def path_id(value)
+        raise ArgumentError, "id must not be nil or blank" if value.nil? || value.to_s.strip.empty?
+
+        ERB::Util.url_encode(value.to_s)
       end
 
       # Sends one request that returns a single wrapped object and builds it.

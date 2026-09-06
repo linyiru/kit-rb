@@ -16,7 +16,7 @@ module Kit
 
       # GET /v4/webhook_endpoints/:id
       def get(id)
-        one(:get, "/v4/webhook_endpoints/#{id}", "webhook_endpoint", Objects::WebhookEndpoint)
+        one(:get, "/v4/webhook_endpoints/#{path_id(id)}", "webhook_endpoint", Objects::WebhookEndpoint)
       end
 
       # POST /v4/webhook_endpoints
@@ -27,19 +27,19 @@ module Kit
 
       # DELETE /v4/webhook_endpoints/:id
       def delete(id)
-        http_delete("/v4/webhook_endpoints/#{id}")
+        http_delete("/v4/webhook_endpoints/#{path_id(id)}")
         nil
       end
 
       # POST /v4/webhook_endpoints/:id/rotate_secret
       def rotate_secret(id, force: nil)
-        one(:post, "/v4/webhook_endpoints/#{id}/rotate_secret", "webhook_endpoint", Objects::WebhookEndpoint,
+        one(:post, "/v4/webhook_endpoints/#{path_id(id)}/rotate_secret", "webhook_endpoint", Objects::WebhookEndpoint,
             body: { force: force }.compact)
       end
 
       # POST /v4/webhook_endpoints/:id/revoke_previous_secret
       def revoke_previous_secret(id)
-        one(:post, "/v4/webhook_endpoints/#{id}/revoke_previous_secret", "webhook_endpoint", Objects::WebhookEndpoint)
+        one(:post, "/v4/webhook_endpoints/#{path_id(id)}/revoke_previous_secret", "webhook_endpoint", Objects::WebhookEndpoint)
       end
     end
   end

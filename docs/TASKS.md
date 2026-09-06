@@ -14,7 +14,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 - [x] `Retry-After` on 429 is honoured without the `max_backoff` cap (a 30 s header blocks the caller for 60 s). (`fix: cap Retry-After at max_backoff`)
 - [x] Error-mapping specs really sleep: the 429 example alone costs 60 s per CI run. (`test: stop error-mapping specs from really sleeping`)
 - [x] Unexpected response shapes surface as `KeyError` / `NoMethodError` instead of a `Kit::Error`. (`fix: raise Kit::UnexpectedResponseError on drifted 2xx bodies`)
-- [ ] Path ids are interpolated unescaped and unvalidated (`get("1/unsubscribe?x")`, `get(nil)`).
+- [x] Path ids are interpolated unescaped and unvalidated (`get("1/unsubscribe?x")`, `get(nil)`). (`fix: validate and percent-encode path ids`)
 - [ ] Non-idempotent POSTs are retried on 5xx (duplicate creates).
 
 ## P1 — security / correctness

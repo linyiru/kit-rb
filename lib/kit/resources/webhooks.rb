@@ -16,7 +16,7 @@ module Kit
 
       # DELETE /v4/webhooks/:id
       def delete(id)
-        http_delete("/v4/webhooks/#{id}")
+        http_delete("/v4/webhooks/#{path_id(id)}")
         nil
       end
     end

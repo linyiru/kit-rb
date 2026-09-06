@@ -16,12 +16,12 @@ module Kit
 
       # PUT /v4/custom_fields/:id
       def update(id, label:)
-        one(:put, "/v4/custom_fields/#{id}", "custom_field", Objects::CustomField, body: { label: label })
+        one(:put, "/v4/custom_fields/#{path_id(id)}", "custom_field", Objects::CustomField, body: { label: label })
       end
 
       # DELETE /v4/custom_fields/:id
       def delete(id)
-        http_delete("/v4/custom_fields/#{id}")
+        http_delete("/v4/custom_fields/#{path_id(id)}")
         nil
       end
     end

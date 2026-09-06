@@ -12,7 +12,7 @@ module Kit
 
       # GET /v4/purchases/:id
       def get(id)
-        one(:get, "/v4/purchases/#{id}", "purchase", Objects::Purchase)
+        one(:get, "/v4/purchases/#{path_id(id)}", "purchase", Objects::Purchase)
       end
 
       # POST /v4/purchases — the request wraps the fields under a "purchase" key.

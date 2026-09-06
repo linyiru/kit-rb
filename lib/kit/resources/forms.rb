@@ -12,18 +12,18 @@ module Kit
 
       # GET /v4/forms/:form_id/subscribers
       def subscribers(form_id, **params)
-        collection("/v4/forms/#{form_id}/subscribers", "subscribers", Objects::Subscriber, params)
+        collection("/v4/forms/#{path_id(form_id)}/subscribers", "subscribers", Objects::Subscriber, params)
       end
 
       # POST /v4/forms/:form_id/subscribers/:subscriber_id
       def add_subscriber(form_id, subscriber_id, referrer: nil)
-        one(:post, "/v4/forms/#{form_id}/subscribers/#{subscriber_id}", "subscriber",
+        one(:post, "/v4/forms/#{path_id(form_id)}/subscribers/#{path_id(subscriber_id)}", "subscriber",
             Objects::Subscriber, body: { referrer: referrer }.compact)
       end
 
       # POST /v4/forms/:form_id/subscribers
       def add_subscriber_by_email(form_id, email_address:, referrer: nil)
-        one(:post, "/v4/forms/#{form_id}/subscribers", "subscriber", Objects::Subscriber,
+        one(:post, "/v4/forms/#{path_id(form_id)}/subscribers", "subscriber", Objects::Subscriber,
             body: { email_address: email_address, referrer: referrer }.compact)
       end
     end

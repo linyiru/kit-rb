@@ -13,7 +13,7 @@ module Kit
 
       # GET /v4/subscribers/:id
       def get(id)
-        one(:get, "/v4/subscribers/#{id}", "subscriber", Objects::Subscriber)
+        one(:get, "/v4/subscribers/#{path_id(id)}", "subscriber", Objects::Subscriber)
       end
 
       # POST /v4/subscribers — email_address required; first_name, state, fields optional.
@@ -26,14 +26,14 @@ module Kit
       # PUT /v4/subscribers/:id
       def update(id, first_name: nil, email_address: nil, fields: nil)
         body = { first_name: first_name, email_address: email_address, fields: fields }.compact
-        one(:put, "/v4/subscribers/#{id}", "subscriber", Objects::Subscriber, body: body)
+        one(:put, "/v4/subscribers/#{path_id(id)}", "subscriber", Objects::Subscriber, body: body)
       end
 
       # POST /v4/subscribers/:id/unsubscribe — the API answers 204 with no body,
       # so this returns nil. Should Kit ever echo the subscriber back, it is
       # returned as a Subscriber instead of being discarded.
       def unsubscribe(id)
-        body = http_post("/v4/subscribers/#{id}/unsubscribe")
+        body = http_post("/v4/subscribers/#{path_id(id)}/unsubscribe")
         return nil unless body.is_a?(Hash) && body.key?("subscriber")
 
         Objects::Subscriber.from(body.fetch("subscriber"))
@@ -47,24 +47,24 @@ module Kit
 
       # GET /v4/subscribers/:id/tags — the tags applied to a subscriber.
       def tags(id, **params)
-        collection("/v4/subscribers/#{id}/tags", "tags", Objects::Tag, params)
+        collection("/v4/subscribers/#{path_id(id)}/tags", "tags", Objects::Tag, params)
       end
 
       # GET /v4/subscribers/:id/stats — the subscriber's engagement stats.
       def stats(id)
-        one(:get, "/v4/subscribers/#{id}/stats", "subscriber", Objects::SubscriberStats)
+        one(:get, "/v4/subscribers/#{path_id(id)}/stats", "subscriber", Objects::SubscriberStats)
       end
 
       # POST /v4/subscribers/:id/location — set the subscriber's location
       # (a hash of city/state_province/country_code/latitude/longitude/timezone).
       def set_location(id, location:)
-        one(:post, "/v4/subscribers/#{id}/location", "subscriber", Objects::Subscriber,
+        one(:post, "/v4/subscribers/#{path_id(id)}/location", "subscriber", Objects::Subscriber,
             body: { location: location })
       end
 
       # DELETE /v4/subscribers/:id/location
       def remove_location(id)
-        http_delete("/v4/subscribers/#{id}/location")
+        http_delete("/v4/subscribers/#{path_id(id)}/location")
         nil
       end
     end

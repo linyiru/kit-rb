@@ -11,7 +11,7 @@ module Kit
 
       # GET /v4/snippets/:id
       def get(id)
-        one(:get, "/v4/snippets/#{id}", "snippet", Objects::Snippet)
+        one(:get, "/v4/snippets/#{path_id(id)}", "snippet", Objects::Snippet)
       end
 
       # POST /v4/snippets — pass name/snippet_type and content (inline) or
@@ -22,7 +22,7 @@ module Kit
 
       # PUT /v4/snippets/:id
       def update(id, **attributes)
-        one(:put, "/v4/snippets/#{id}", "snippet", Objects::Snippet, body: attributes)
+        one(:put, "/v4/snippets/#{path_id(id)}", "snippet", Objects::Snippet, body: attributes)
       end
     end
   end
