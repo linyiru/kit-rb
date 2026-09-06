@@ -105,6 +105,7 @@ module Kit
   class Connection
     JSON_TYPE: String
     RETRYABLE: Array[singleton(APIError)]
+    IDEMPOTENT: Array[Symbol]
     def initialize: (Configuration config) -> void
     def request: (Symbol method, String path, ?params: Hash[untyped, untyped], ?body: Hash[untyped, untyped]?) -> untyped
   end

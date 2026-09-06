@@ -15,7 +15,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 - [x] Error-mapping specs really sleep: the 429 example alone costs 60 s per CI run. (`test: stop error-mapping specs from really sleeping`)
 - [x] Unexpected response shapes surface as `KeyError` / `NoMethodError` instead of a `Kit::Error`. (`fix: raise Kit::UnexpectedResponseError on drifted 2xx bodies`)
 - [x] Path ids are interpolated unescaped and unvalidated (`get("1/unsubscribe?x")`, `get(nil)`). (`fix: validate and percent-encode path ids`)
-- [ ] Non-idempotent POSTs are retried on 5xx (duplicate creates).
+- [x] Non-idempotent POSTs are retried on 5xx (duplicate creates). (`fix: do not replay POSTs after a 5xx`)
 
 ## P1 — security / correctness
 

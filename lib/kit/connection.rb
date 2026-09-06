@@ -11,6 +11,9 @@ module Kit
   class Connection
     JSON_TYPE = "application/json"
     RETRYABLE = [RateLimitError, ServerError].freeze
+    # Verbs safe to replay after a 5xx: the server may have applied the request
+    # before failing, and replaying these cannot create a second resource.
+    IDEMPOTENT = %i[get head put delete].freeze
 
     def initialize(config)
       @config = config
@@ -19,6 +22,10 @@ module Kit
     # Issues a request and returns the parsed JSON body (a Hash) on success.
     # 429s honour `Retry-After`; 5xx use exponential backoff with jitter; both
     # give up after `config.max_retries` and re-raise the typed error.
+    #
+    # A 429 is retried for every verb (Kit rejected the request, so nothing was
+    # applied). A 5xx is retried only for idempotent verbs: a POST that created
+    # a subscriber before the gateway failed would be created twice.
     #
     # @param method [Symbol] :get, :post, :put, :delete
     # @param path [String] e.g. "/v4/account" (leading slash, no host)
@@ -30,7 +37,7 @@ module Kit
         handle(perform(method, path, params, body))
       rescue *RETRYABLE => e
         attempt += 1
-        raise if attempt > @config.max_retries
+        raise if attempt > @config.max_retries || !retryable?(method, e)
 
         backoff_sleep(backoff_for(e, attempt))
         retry
@@ -38,6 +45,10 @@ module Kit
     end
 
     private
+
+    def retryable?(method, error)
+      error.is_a?(RateLimitError) || IDEMPOTENT.include?(method)
+    end
 
     def perform(method, path, params, body)
       client.request(method, "#{@config.base_url}#{path}", params: params, json: body)

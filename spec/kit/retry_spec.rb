@@ -77,6 +77,36 @@ RSpec.describe "Connection retries" do
     expect(conn).not_to have_received(:backoff_sleep)
   end
 
+  it "does not replay a POST after a 5xx, since the server may have applied it" do
+    stub = stub_request(:post, "https://api.kit.com/v4/subscribers")
+           .to_return(status: 502, body: "{}", headers: { "Content-Type" => "application/json" })
+
+    expect { connection.request(:post, "/v4/subscribers", body: { email_address: "a@b.c" }) }
+      .to raise_error(Kit::ServerError)
+    expect(stub).to have_been_requested.once
+    expect(connection).not_to have_received(:backoff_sleep)
+  end
+
+  it "still retries a POST after a 429, which Kit rejected without applying" do
+    stub_request(:post, "https://api.kit.com/v4/subscribers")
+      .to_return({ status: 429, body: "{}", headers: { "Content-Type" => "application/json" } },
+                 { status: 201, body: JSON.generate({ "ok" => true }),
+                   headers: { "Content-Type" => "application/json" } })
+
+    expect(connection.request(:post, "/v4/subscribers", body: {})).to eq("ok" => true)
+    expect(connection).to have_received(:backoff_sleep).once
+  end
+
+  it "retries an idempotent PUT and DELETE after a 5xx" do
+    %i[put delete].each do |verb|
+      stub_request(verb, "https://api.kit.com/v4/tags/1")
+        .to_return({ status: 503, body: "{}", headers: { "Content-Type" => "application/json" } },
+                   { status: 200, body: "{}", headers: { "Content-Type" => "application/json" } })
+      expect { connection.request(verb, "/v4/tags/1") }.not_to raise_error
+    end
+    expect(connection).to have_received(:backoff_sleep).twice
+  end
+
   it "does not retry a non-transient 4xx" do
     stub = stub_request(:get, "https://api.kit.com/v4/account")
            .to_return(status: 404, body: "{}", headers: { "Content-Type" => "application/json" })
