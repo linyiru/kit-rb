@@ -8,11 +8,20 @@ module Kit
     # verb helpers under `http_*` names so a resource can define public methods
     # like `get(id)` or `list` without colliding with the transport helpers.
     class Base
+      # Default for optional body keywords: "not given", as distinct from nil,
+      # which Kit accepts on some fields to clear them (e.g. send_days: nil).
+      OMIT = Object.new.freeze
+
       def initialize(connection)
         @connection = connection
       end
 
       private
+
+      # Drops the keywords the caller did not pass, keeping explicit nils.
+      def given(**attributes)
+        attributes.reject { |_, value| value.equal?(OMIT) }
+      end
 
       # Non-enveloped read (whole body) and list reads go through http_get;
       # deletes return no object and go through http_delete. Enveloped

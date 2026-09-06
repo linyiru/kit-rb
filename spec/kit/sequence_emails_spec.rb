@@ -57,6 +57,19 @@ RSpec.describe "Kit::Resources::Sequences email management" do
       stub_kit(:put, "/v4/sequences/5/emails/9", body: { "email" => email(id: 9, subject: "Edited") })
       expect(client.sequences.update_email(5, 9, subject: "Edited").subject).to eq("Edited")
     end
+
+    it "sends an explicit nil to clear a field, but omits fields not passed" do
+      stub = stub_request(:put, "https://api.kit.com/v4/sequences/5/emails/9")
+             .with(body: { "send_days" => nil })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("email" => email(id: 9)))
+      client.sequences.update_email(5, 9, send_days: nil)
+      expect(stub).to have_been_requested
+    end
+
+    it "rejects a field the API does not document" do
+      expect { client.sequences.update_email(5, 9, subjekt: "typo") }.to raise_error(ArgumentError, /subjekt/)
+    end
   end
 
   describe "#delete_email" do

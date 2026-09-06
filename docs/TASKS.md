@@ -42,6 +42,6 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 - [x] Stale P0/P1 comments in `auth/oauth.rb`, `resources/account.rb`, `sig/kit-rb.rbs`; unused `Auth::OAuth::*_URL` constants; template comments in the gemspec. (`chore: drop stale phase comments, dead constants, and gemspec boilerplate`)
 - [ ] README / DESIGN.md claim 81 operations; the spec has 83.
 - [ ] CI matrix lacks Ruby 3.5; no Dependabot; no branch coverage.
-- [ ] RBS: 22 methods take `**untyped`; tighten the fixed-key bodies (broadcasts, sequences, sequence emails, snippets, purchases).
+- [x] RBS: 22 methods take `**untyped`; tighten the fixed-key bodies (broadcasts, sequences, sequence emails, snippets, purchases). List query params stay `**params`. (`refactor: explicit keyword bodies for create/update methods`)
 - [ ] OpenAPI contract test covers only list envelopes; extend to single-object envelopes and request bodies.
 - [ ] `rake contract:fetch` is manual; add a scheduled drift check.

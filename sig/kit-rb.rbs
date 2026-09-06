@@ -528,6 +528,7 @@ module Kit
 
   module Resources
     class Base
+      OMIT: Object
       def initialize: (Connection connection) -> void
     end
     class Account < Base
@@ -576,23 +577,23 @@ module Kit
     class Sequences < Base
       def list: (**untyped params) -> Collection[Objects::Sequence]
       def get: (Integer id, ?include: String?) -> Objects::Sequence
-      def create: (name: String, **untyped attributes) -> Objects::Sequence
-      def update: (Integer id, **untyped attributes) -> Objects::Sequence
+      def create: (name: String, ?email_address: String?, ?email_template_id: Integer?, ?send_days: Array[String]?, ?send_hour: Integer?, ?time_zone: String?, ?active: bool?, ?repeat: bool?, ?hold: bool?, ?exclude_subscriber_sources: Array[Hash[Symbol | String, untyped]]?) -> Objects::Sequence
+      def update: (Integer id, ?name: String?, ?email_address: String?, ?email_template_id: Integer?, ?send_days: Array[String]?, ?send_hour: Integer?, ?time_zone: String?, ?active: bool?, ?repeat: bool?, ?hold: bool?, ?exclude_subscriber_sources: Array[Hash[Symbol | String, untyped]]?) -> Objects::Sequence
       def delete: (Integer id) -> void
       def subscribers: (Integer sequence_id, **untyped params) -> Collection[Objects::Subscriber]
       def add_subscriber: (Integer sequence_id, Integer subscriber_id) -> Objects::Subscriber
       def add_subscriber_by_email: (Integer sequence_id, email_address: String) -> Objects::Subscriber
       def emails: (Integer sequence_id, **untyped params) -> Collection[Objects::SequenceEmail]
       def email: (Integer sequence_id, Integer id, ?include: String?) -> Objects::SequenceEmail
-      def create_email: (Integer sequence_id, **untyped attributes) -> Objects::SequenceEmail
-      def update_email: (Integer sequence_id, Integer id, **untyped attributes) -> Objects::SequenceEmail
+      def create_email: (Integer sequence_id, subject: String, delay_value: Integer, delay_unit: String, ?preview_text: String?, ?content: String?, ?email_template_id: Integer?, ?published: bool?, ?send_days: Array[String]?, ?position: Integer?) -> Objects::SequenceEmail
+      def update_email: (Integer sequence_id, Integer id, ?subject: String?, ?delay_value: Integer?, ?delay_unit: String?, ?preview_text: String?, ?content: String?, ?email_template_id: Integer?, ?published: bool?, ?send_days: Array[String]?, ?position: Integer?) -> Objects::SequenceEmail
       def delete_email: (Integer sequence_id, Integer id) -> void
     end
     class Broadcasts < Base
       def list: (**untyped params) -> Collection[Objects::Broadcast]
       def get: (Integer id) -> Objects::Broadcast
-      def create: (**untyped attributes) -> Objects::Broadcast
-      def update: (Integer id, **untyped attributes) -> Objects::Broadcast
+      def create: (?subject: String?, ?preview_text: String?, ?content: String?, ?description: String?, ?public: bool?, ?published_at: String?, ?send_at: String?, ?email_address: String?, ?email_template_id: Integer?, ?thumbnail_alt: String?, ?thumbnail_url: String?, ?subscriber_filter: Array[Hash[Symbol | String, untyped]]?) -> Objects::Broadcast
+      def update: (Integer id, ?subject: String?, ?preview_text: String?, ?content: String?, ?description: String?, ?public: bool?, ?published_at: String?, ?send_at: String?, ?email_address: String?, ?email_template_id: Integer?, ?thumbnail_alt: String?, ?thumbnail_url: String?, ?subscriber_filter: Array[Hash[Symbol | String, untyped]]?) -> Objects::Broadcast
       def delete: (Integer id) -> void
       def stats_list: (**untyped params) -> Collection[Objects::BroadcastStats]
       def stats: (Integer id) -> Objects::BroadcastStats
@@ -608,7 +609,7 @@ module Kit
     class Purchases < Base
       def list: (**untyped params) -> Collection[Objects::Purchase]
       def get: (Integer id) -> Objects::Purchase
-      def create: (**untyped attributes) -> Objects::Purchase
+      def create: (email_address: String, transaction_id: String, status: String, currency: String, ?transaction_time: String?, ?subtotal: Numeric?, ?tax: Numeric?, ?shipping: Numeric?, ?discount: Numeric?, ?total: Numeric?, ?products: Array[Hash[Symbol | String, untyped]]?) -> Objects::Purchase
     end
     class Bulk < Base
       def create_subscribers: (Array[untyped] subscribers, ?callback_url: String?) -> Objects::BulkResult
@@ -623,8 +624,8 @@ module Kit
     class Snippets < Base
       def list: (**untyped params) -> Collection[Objects::Snippet]
       def get: (Integer id) -> Objects::Snippet
-      def create: (**untyped attributes) -> Objects::Snippet
-      def update: (Integer id, **untyped attributes) -> Objects::Snippet
+      def create: (name: String, snippet_type: String, ?content: String?, ?document_attributes: Hash[Symbol | String, untyped]?) -> Objects::Snippet
+      def update: (Integer id, ?name: String?, ?archived: bool?, ?content: String?, ?document_attributes: Hash[Symbol | String, untyped]?) -> Objects::Snippet
     end
     class Segments < Base
       def list: (**untyped params) -> Collection[Objects::Segment]
@@ -647,7 +648,7 @@ module Kit
 
   class Client
     attr_reader config: Configuration
-    def initialize: (?api_key: String?, ?access_token: String?, **untyped options) -> void
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
     def tags: () -> Resources::Tags

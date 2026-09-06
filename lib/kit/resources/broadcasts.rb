@@ -15,14 +15,33 @@ module Kit
         one(:get, "/v4/broadcasts/#{path_id(id)}", "broadcast", Objects::Broadcast)
       end
 
-      # POST /v4/broadcasts
-      def create(**attributes)
-        one(:post, "/v4/broadcasts", "broadcast", Objects::Broadcast, body: attributes)
+      BROADCAST_FIELDS = %i[
+        subject preview_text content description public published_at send_at
+        email_address email_template_id thumbnail_alt thumbnail_url subscriber_filter
+      ].freeze
+
+      # POST /v4/broadcasts. `subscriber_filter` is an array of one group
+      # ({ all: | any: | none: [{ type: "segment"|"tag", ids: [...] }] }); omit
+      # it to send to every subscriber. Timestamps are ISO 8601 (UTC assumed).
+      def create(subject: OMIT, preview_text: OMIT, content: OMIT, description: OMIT, public: OMIT,
+                 published_at: OMIT, send_at: OMIT, email_address: OMIT, email_template_id: OMIT,
+                 thumbnail_alt: OMIT, thumbnail_url: OMIT, subscriber_filter: OMIT)
+        body = given(subject: subject, preview_text: preview_text, content: content, description: description,
+                     public: public, published_at: published_at, send_at: send_at, email_address: email_address,
+                     email_template_id: email_template_id, thumbnail_alt: thumbnail_alt,
+                     thumbnail_url: thumbnail_url, subscriber_filter: subscriber_filter)
+        one(:post, "/v4/broadcasts", "broadcast", Objects::Broadcast, body: body)
       end
 
-      # PUT /v4/broadcasts/:id
-      def update(id, **attributes)
-        one(:put, "/v4/broadcasts/#{path_id(id)}", "broadcast", Objects::Broadcast, body: attributes)
+      # PUT /v4/broadcasts/:id — same fields as #create; only those passed change.
+      def update(id, subject: OMIT, preview_text: OMIT, content: OMIT, description: OMIT, public: OMIT,
+                 published_at: OMIT, send_at: OMIT, email_address: OMIT, email_template_id: OMIT,
+                 thumbnail_alt: OMIT, thumbnail_url: OMIT, subscriber_filter: OMIT)
+        body = given(subject: subject, preview_text: preview_text, content: content, description: description,
+                     public: public, published_at: published_at, send_at: send_at, email_address: email_address,
+                     email_template_id: email_template_id, thumbnail_alt: thumbnail_alt,
+                     thumbnail_url: thumbnail_url, subscriber_filter: subscriber_filter)
+        one(:put, "/v4/broadcasts/#{path_id(id)}", "broadcast", Objects::Broadcast, body: body)
       end
 
       # DELETE /v4/broadcasts/:id

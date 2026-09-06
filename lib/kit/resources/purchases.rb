@@ -15,11 +15,15 @@ module Kit
         one(:get, "/v4/purchases/#{path_id(id)}", "purchase", Objects::Purchase)
       end
 
-      # POST /v4/purchases — the request wraps the fields under a "purchase" key.
-      # Pass email_address/transaction_id/status/currency/transaction_time,
-      # the monetary totals, and a products array.
-      def create(**attributes)
-        one(:post, "/v4/purchases", "purchase", Objects::Purchase, body: { purchase: attributes })
+      # POST /v4/purchases — the request wraps the fields under a "purchase"
+      # key. The spec marks every field required; `products` is an array of
+      # { name, pid, lid, quantity, unit_price, sku }.
+      def create(email_address:, transaction_id:, status:, currency:, transaction_time: OMIT, subtotal: OMIT,
+                 tax: OMIT, shipping: OMIT, discount: OMIT, total: OMIT, products: OMIT)
+        purchase = given(email_address: email_address, transaction_id: transaction_id, status: status,
+                         currency: currency, transaction_time: transaction_time, subtotal: subtotal, tax: tax,
+                         shipping: shipping, discount: discount, total: total, products: products)
+        one(:post, "/v4/purchases", "purchase", Objects::Purchase, body: { purchase: purchase })
       end
     end
   end

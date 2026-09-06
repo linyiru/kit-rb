@@ -43,6 +43,15 @@ RSpec.describe Kit::Resources::Broadcasts do
       expect(client.broadcasts.create(subject: "Hello", public: true)).to be_a(Kit::Objects::Broadcast)
       expect(stub).to have_been_requested
     end
+
+    it "keeps false values and drops only the fields not passed" do
+      stub = stub_request(:post, "https://api.kit.com/v4/broadcasts")
+             .with(body: { "subject" => "Hi", "public" => false, "send_at" => nil })
+             .to_return(status: 201, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("broadcast" => broadcast(id: 1)))
+      client.broadcasts.create(subject: "Hi", public: false, send_at: nil)
+      expect(stub).to have_been_requested
+    end
   end
 
   describe "#update" do

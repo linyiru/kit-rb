@@ -14,15 +14,20 @@ module Kit
         one(:get, "/v4/snippets/#{path_id(id)}", "snippet", Objects::Snippet)
       end
 
-      # POST /v4/snippets — pass name/snippet_type and content (inline) or
-      # document (document); the API validates the combination.
-      def create(**attributes)
-        one(:post, "/v4/snippets", "snippet", Objects::Snippet, body: attributes)
+      # POST /v4/snippets. An "inline" snippet carries Liquid text in
+      # `content`; a "block" snippet carries HTML in
+      # `document_attributes: { value_html: ... }`.
+      def create(name:, snippet_type:, content: OMIT, document_attributes: OMIT)
+        body = given(name: name, snippet_type: snippet_type, content: content,
+                     document_attributes: document_attributes)
+        one(:post, "/v4/snippets", "snippet", Objects::Snippet, body: body)
       end
 
-      # PUT /v4/snippets/:id
-      def update(id, **attributes)
-        one(:put, "/v4/snippets/#{path_id(id)}", "snippet", Objects::Snippet, body: attributes)
+      # PUT /v4/snippets/:id — rename, archive/restore, or replace the content
+      # (snippet_type cannot change).
+      def update(id, name: OMIT, archived: OMIT, content: OMIT, document_attributes: OMIT)
+        body = given(name: name, archived: archived, content: content, document_attributes: document_attributes)
+        one(:put, "/v4/snippets/#{path_id(id)}", "snippet", Objects::Snippet, body: body)
       end
     end
   end
