@@ -113,7 +113,10 @@ RSpec.describe "Connection retries" do
     before = connection.instance_variable_get(:@client)
     2.times { account_request }
     expect(connection.instance_variable_get(:@client)).to equal(before)
-    expect(before).to be_a(HTTP::Client)
+    # http 5 returns an HTTP::Client from the chainable methods, http 6 an
+    # HTTP::Session; both are the request-issuing object we keep.
+    expect(before).to respond_to(:request)
+    expect(before).to be_a(HTTP::Chainable)
   end
 
   it "does not retry a non-transient 4xx" do
