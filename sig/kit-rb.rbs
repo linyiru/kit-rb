@@ -236,6 +236,7 @@ module Kit
       attr_reader created_by_app: untyped
       attr_reader created_at: String?
       attr_reader previous_secret_expires_at: String?
+      attr_reader secret: String?
       def self.from: (Hash[String, untyped] hash) -> WebhookEndpoint
     end
     class EmailTemplate

@@ -10,7 +10,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 ## P0 — breaks against the real API
 
 - [x] `subscribers.unsubscribe` calls `one(...)` on a 204 no-body response → `NoMethodError`. (`fix: subscribers.unsubscribe handles the 204 no-content response`)
-- [ ] `WebhookEndpoint` drops `secret`, the only time Kit returns the signing secret (`create`, `rotate_secret`).
+- [x] `WebhookEndpoint` drops `secret`, the only time Kit returns the signing secret (`create`, `rotate_secret`). (`fix: WebhookEndpoint carries the one-time signing secret`)
 - [ ] `Retry-After` on 429 is honoured without the `max_backoff` cap (a 30 s header blocks the caller for 60 s).
 - [x] Error-mapping specs really sleep: the 429 example alone costs 60 s per CI run. (`test: stop error-mapping specs from really sleeping`)
 - [ ] Unexpected response shapes surface as `KeyError` / `NoMethodError` instead of a `Kit::Error`.

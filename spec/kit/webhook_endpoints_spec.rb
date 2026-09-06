@@ -41,6 +41,18 @@ RSpec.describe Kit::Resources::WebhookEndpoints do
       expect(result).to be_a(Kit::Objects::WebhookEndpoint)
       expect(stub).to have_been_requested
     end
+
+    it "surfaces the one-time signing secret Kit returns on create" do
+      created_body = { "webhook_endpoint" => endpoint(id: 9).merge("secret" => "whsec_abc123") }
+      stub_kit(:post, "/v4/webhook_endpoints", status: 201, body: created_body)
+      created = client.webhook_endpoints.create(url: "https://example.test/wh", events: %w[subscriber.created])
+      expect(created.secret).to eq("whsec_abc123")
+    end
+  end
+
+  it "reads back with a nil secret, since Kit never returns it again" do
+    stub_kit(:get, "/v4/webhook_endpoints/9", body: { "webhook_endpoint" => endpoint(id: 9) })
+    expect(client.webhook_endpoints.get(9).secret).to be_nil
   end
 
   describe "#delete" do
@@ -59,6 +71,12 @@ RSpec.describe Kit::Resources::WebhookEndpoints do
                         body: JSON.generate("webhook_endpoint" => endpoint(id: 9)))
       expect(client.webhook_endpoints.rotate_secret(9, force: true)).to be_a(Kit::Objects::WebhookEndpoint)
       expect(stub).to have_been_requested
+    end
+
+    it "surfaces the new signing secret" do
+      stub_kit(:post, "/v4/webhook_endpoints/9/rotate_secret",
+               body: { "webhook_endpoint" => endpoint(id: 9).merge("secret" => "whsec_rotated") })
+      expect(client.webhook_endpoints.rotate_secret(9).secret).to eq("whsec_rotated")
     end
   end
 
