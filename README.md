@@ -1,5 +1,13 @@
 # kit-rb
 
+[![Gem Version](https://img.shields.io/gem/v/kit-rb?logo=rubygems&logoColor=white)](https://rubygems.org/gems/kit-rb)
+[![Gem Downloads](https://img.shields.io/gem/dt/kit-rb?logo=rubygems&logoColor=white)](https://rubygems.org/gems/kit-rb)
+[![CI](https://github.com/linyiru/kit-rb/actions/workflows/main.yml/badge.svg)](https://github.com/linyiru/kit-rb/actions/workflows/main.yml)
+[![OpenAPI drift](https://github.com/linyiru/kit-rb/actions/workflows/contract-drift.yml/badge.svg)](https://github.com/linyiru/kit-rb/actions/workflows/contract-drift.yml)
+[![Ruby](https://img.shields.io/badge/ruby-%3E%3D%203.2-CC342D?logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
+[![RBS + Steep](https://img.shields.io/badge/types-RBS%20%2B%20Steep-blue)](sig/kit-rb.rbs)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.txt)
+
 A modern, fully-typed Ruby client for the **Kit** (formerly ConvertKit) **API v4**.
 
 The gem is named `kit-rb`; the public namespace is the clean `Kit`.
