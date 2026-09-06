@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run the full default gate (spec + rubocop + steep) before anything leaves the
+# machine. exec propagates rake's exit code, so a red gate blocks the push.
+exec bundle exec rake

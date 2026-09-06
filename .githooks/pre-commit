@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Lint the Ruby files that are actually staged so the commit gate matches the
+# commit. RuboCop exits non-zero on any offense, which set -e turns into an
+# aborted commit — no output pattern is parsed, so a singular "1 offense
+# detected" can no longer slip through.
+mapfile -t staged < <(
+  git diff --cached --name-only --diff-filter=ACM |
+    grep -E '(\.(rb|rake|gemspec)|Rakefile|Gemfile)$' || true
+)
+
+if [ "${#staged[@]}" -eq 0 ]; then
+  exit 0
+fi
+
+exec bundle exec rubocop --force-exclusion "${staged[@]}"

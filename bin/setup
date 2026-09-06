@@ -5,4 +5,8 @@ set -vx
 
 bundle install
 
+# Route git hooks to the version-controlled .githooks directory so the commit
+# and push gates apply to every clone without a manual copy step.
+git config core.hooksPath .githooks
+
 # Do any other automated setup that you need to do here
