@@ -1,5 +1,5 @@
-# RBS type signatures for the public surface of kit-rb (P0: account slice).
-# Expanded per-resource as coverage grows in P1/P2.
+# RBS type signatures for the public surface of kit-rb, checked by Steep
+# (`bundle exec rake steep`). Keep in step with lib/.
 
 module Kit
   VERSION: String
@@ -151,8 +151,6 @@ module Kit
     end
 
     class OAuth
-      AUTHORIZE_URL: String
-      TOKEN_URL: String
       def initialize: (String access_token) -> void
       def headers: () -> Hash[String, String]
       def inspect: () -> String

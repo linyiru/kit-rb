@@ -2,8 +2,8 @@
 
 module Kit
   module Resources
-    # The /v4/account endpoints. P0 covers the current-account read; colors,
-    # creator_profile, email_stats, and growth_stats follow in P1/P2.
+    # The /v4/account endpoints: the current account, its colour palette,
+    # creator profile, and account-wide email and growth stats.
     class Account < Base
       # GET /v4/account — current account and user info.
       #
