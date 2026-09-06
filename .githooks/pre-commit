@@ -5,7 +5,11 @@ set -euo pipefail
 # commit. RuboCop exits non-zero on any offense, which set -e turns into an
 # aborted commit — no output pattern is parsed, so a singular "1 offense
 # detected" can no longer slip through.
-mapfile -t staged < <(
+# (A while-read loop rather than mapfile: macOS ships bash 3.2, which lacks it.)
+staged=()
+while IFS= read -r file; do
+  staged+=("$file")
+done < <(
   git diff --cached --name-only --diff-filter=ACM |
     grep -E '(\.(rb|rake|gemspec)|Rakefile|Gemfile)$' || true
 )
