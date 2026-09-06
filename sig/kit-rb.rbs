@@ -85,6 +85,40 @@ module Kit
     end
   end
 
+  module Webhooks
+    class SignatureError < Error
+    end
+    module Signature
+      HEADER: String
+      SCHEME: String
+      DEFAULT_TOLERANCE: Integer
+      class Parsed
+        attr_reader timestamp: Integer
+        attr_reader signatures: Array[String]
+      end
+      def self.compute: (String secret, Integer | String timestamp, String payload) -> String
+      def self.parse: (String? header) -> Parsed
+      def self.verify?: (String payload, String? header, secret: String | Array[String], ?tolerance: Integer?, ?now: Integer) -> bool
+      def self.verify!: (String payload, String? header, secret: String | Array[String], ?tolerance: Integer?, ?now: Integer) -> bool
+    end
+    class Event
+      attr_reader id: String?
+      attr_reader type: String?
+      attr_reader created: String?
+      attr_reader data: Hash[String, untyped]
+      def self.from: (Hash[String, untyped] hash) -> Event
+    end
+    DELIVERY_HEADER: String
+    class Delivery
+      attr_reader delivery_id: Integer?
+      attr_reader events: Array[Event]
+      def self.from: (Hash[String, untyped] hash) -> Delivery
+      def self.parse: (String payload) -> Delivery
+      def self.from_request: (String payload, String? signature_header, secret: String | Array[String], ?tolerance: Integer?, ?now: Integer) -> Delivery
+      def type: () -> String?
+    end
+  end
+
   module Auth
     module Credential
       MASK: String
