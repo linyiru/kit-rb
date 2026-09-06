@@ -41,7 +41,7 @@ module Kit
       # build/return plumbing — it declares only verb, path, key, class, body.
       def one(verb, path, key, klass, body: nil, params: {})
         response = @connection.request(verb, path, params: params, body: body)
-        klass.from(response.fetch(key))
+        klass.from(extract(response, key))
       end
 
       # Fetches a cursor-paginated list and wraps it in a Collection whose next
@@ -53,9 +53,30 @@ module Kit
       # endpoints pass verb: :post with a filter body, still paging by cursor.
       def collection(path, key, klass, params, verb: :get, body: nil)
         response = @connection.request(verb, path, params: params, body: body)
-        data = response.fetch(key).map { |element| klass.from(element) }
-        Collection.new(data: data, pagination: Pagination.from(response.fetch("pagination"))) do |after|
+        data = extract(response, key).map { |element| klass.from(element) }
+        Collection.new(data: data, pagination: Pagination.from(extract(response, "pagination"))) do |after|
           collection(path, key, klass, params.merge(after: after), verb: verb, body: body)
+        end
+      end
+
+      # Reads `key` from a 2xx body, raising UnexpectedResponseError (a
+      # Kit::Error, so `rescue Kit::Error` still catches it) instead of the bare
+      # KeyError/NoMethodError a drifted or non-JSON response would otherwise
+      # produce deep inside the resource.
+      def extract(response, key)
+        return response.fetch(key) if response.is_a?(Hash) && response.key?(key)
+
+        raise UnexpectedResponseError.new(
+          "expected a JSON object with #{key.inspect} in the response, got #{describe(response)}",
+          body: response
+        )
+      end
+
+      def describe(response)
+        case response
+        when Hash then "keys #{response.keys.inspect}"
+        when nil then "an empty body"
+        else "a #{response.class} body"
         end
       end
     end

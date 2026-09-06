@@ -14,12 +14,12 @@ module Kit
 
       # GET /v4/account/colors — the account's brand color palette (hex strings).
       def colors
-        http_get("/v4/account/colors").fetch("colors")
+        extract(http_get("/v4/account/colors"), "colors")
       end
 
       # PUT /v4/account/colors — replace the palette; returns the saved colors.
       def update_colors(colors)
-        http_put("/v4/account/colors", body: { colors: colors }).fetch("colors")
+        extract(http_put("/v4/account/colors", body: { colors: colors }), "colors")
       end
 
       # GET /v4/account/creator_profile

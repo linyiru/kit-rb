@@ -46,8 +46,8 @@ module Kit
       # this is built directly rather than through Base#collection.
       def clicks(id, **params)
         body = http_get("/v4/broadcasts/#{id}/clicks", params: params)
-        rows = body.fetch("broadcast").fetch("clicks").map { |row| Objects::BroadcastClick.from(row) }
-        Collection.new(data: rows, pagination: Pagination.from(body.fetch("pagination"))) do |after|
+        rows = extract(extract(body, "broadcast"), "clicks").map { |row| Objects::BroadcastClick.from(row) }
+        Collection.new(data: rows, pagination: Pagination.from(extract(body, "pagination"))) do |after|
           clicks(id, **params, after: after)
         end
       end

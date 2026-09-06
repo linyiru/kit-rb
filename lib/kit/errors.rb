@@ -8,6 +8,19 @@ module Kit
   # (e.g. no credentials supplied).
   class ConfigurationError < Error; end
 
+  # Raised when a 2xx response does not have the shape the resource expects
+  # (a missing envelope key, a non-JSON body). Distinct from APIError because
+  # the request succeeded; the client and the API disagree about the payload.
+  # `body` is the parsed (or raw) response body for diagnosis.
+  class UnexpectedResponseError < Error
+    attr_reader :body
+
+    def initialize(message, body: nil)
+      @body = body
+      super(message)
+    end
+  end
+
   # Base for every error that carries an HTTP response. `status` is the code,
   # `body` the parsed JSON body (or the raw string when it wasn't JSON), and
   # `errors` the `errors` array Kit returns on validation failures.
