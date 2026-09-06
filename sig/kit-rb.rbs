@@ -163,10 +163,11 @@ module Kit
     attr_reader base_url: String
     attr_reader open_timeout: Integer
     attr_reader read_timeout: Integer
+    attr_reader write_timeout: Integer
     attr_reader max_retries: Integer
     attr_reader retry_backoff: Float
     attr_reader max_backoff: Numeric
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
   end
 
   class Connection
@@ -649,7 +650,7 @@ module Kit
 
   class Client
     attr_reader config: Configuration
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
     def tags: () -> Resources::Tags

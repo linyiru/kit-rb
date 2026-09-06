@@ -18,6 +18,7 @@ RSpec.describe Kit::Configuration do
     expect(config.base_url).to eq("https://api.kit.com")
     expect(config.open_timeout).to eq(10)
     expect(config.read_timeout).to eq(30)
+    expect(config.write_timeout).to eq(30)
   end
 
   it "raises when no credential is given" do

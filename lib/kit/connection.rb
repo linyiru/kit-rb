@@ -23,7 +23,7 @@ module Kit
       # and a Client is documented as shareable — so it is not used.)
       @client = HTTP
                 .headers(default_headers)
-                .timeout(connect: @config.open_timeout, read: @config.read_timeout)
+                .timeout(connect: @config.open_timeout, read: @config.read_timeout, write: @config.write_timeout)
     end
 
     # Issues a request and returns the parsed JSON body (a Hash) on success.

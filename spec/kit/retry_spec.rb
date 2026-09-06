@@ -119,6 +119,12 @@ RSpec.describe "Connection retries" do
     expect(before).to be_a(HTTP::Chainable)
   end
 
+  it "sets connect, read and write timeouts explicitly (http 5 defaults write to 0.25 s)" do
+    conn = Kit::Connection.new(Kit::Configuration.new(api_key: "k", open_timeout: 1, read_timeout: 2, write_timeout: 3))
+    options = conn.instance_variable_get(:@client).default_options.timeout_options
+    expect(options).to eq(connect_timeout: 1, read_timeout: 2, write_timeout: 3)
+  end
+
   it "does not retry a non-transient 4xx" do
     stub = stub_request(:get, "https://api.kit.com/v4/account")
            .to_return(status: 404, body: "{}", headers: { "Content-Type" => "application/json" })

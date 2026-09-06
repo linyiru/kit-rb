@@ -6,6 +6,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `write_timeout` (default 30 s) alongside `open_timeout`/`read_timeout`.
+
+### Changed
+- The `http` dependency is `>= 5.2, < 7.0`: http 6.x is supported.
+
+### Fixed
+- The write timeout was never set, so on http 5 it fell back to http.rb's
+  0.25 s default and a large request body (a bulk batch) could time out
+  while being sent.
+
 ## [0.3.0] - 2026-09-06
 
 The hardening pass (`docs/TASKS.md`): two real-API bugs fixed, the surface
