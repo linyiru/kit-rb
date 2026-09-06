@@ -43,5 +43,5 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 - [ ] README / DESIGN.md claim 81 operations; the spec has 83.
 - [x] CI matrix lacks Ruby 3.5; no Dependabot; no branch coverage. (`ci: test on Ruby 3.5, add Dependabot, enforce branch coverage`)
 - [x] RBS: 22 methods take `**untyped`; tighten the fixed-key bodies (broadcasts, sequences, sequence emails, snippets, purchases). List query params stay `**params`. (`refactor: explicit keyword bodies for create/update methods`)
-- [ ] OpenAPI contract test covers only list envelopes; extend to single-object envelopes and request bodies.
+- [x] OpenAPI contract test covers only list envelopes; extend to single-object envelopes and request bodies. (`test: contract-check object envelopes, request bodies, and 204s against the spec`)
 - [ ] `rake contract:fetch` is manual; add a scheduled drift check.

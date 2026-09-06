@@ -15,6 +15,11 @@ Metrics/BlockLength:
     - "spec/**/*"
     - "*.gemspec"
 
+# Contract registries (one row per API operation) are long by design.
+Metrics/ModuleLength:
+  Exclude:
+    - "spec/**/*"
+
 Metrics/MethodLength:
   Max: 15
   Exclude:
