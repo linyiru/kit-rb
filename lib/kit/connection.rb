@@ -87,10 +87,14 @@ module Kit
     end
 
     # Seconds to wait before the next attempt: the server's Retry-After when it
-    # sent one (429), else exponential backoff (base * 2^(n-1)) with jitter,
-    # capped at config.max_backoff.
+    # sent a usable one (429), else exponential backoff (base * 2^(n-1)) with
+    # jitter. Both are capped at config.max_backoff — a Retry-After of 300 must
+    # not block the caller for five minutes; past the cap the typed error is
+    # raised and the caller decides. A Retry-After that parses to 0 (an
+    # HTTP-date, or garbage) falls through to the exponential schedule.
     def backoff_for(error, attempt)
-      return error.retry_after if error.is_a?(RateLimitError) && error.retry_after
+      retry_after = error.retry_after if error.is_a?(RateLimitError)
+      return [retry_after, @config.max_backoff].min if retry_after&.positive?
 
       base = @config.retry_backoff * (2**(attempt - 1))
       [base + (rand * @config.retry_backoff), @config.max_backoff].min

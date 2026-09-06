@@ -27,6 +27,27 @@ RSpec.describe "Connection retries" do
     expect(connection).to have_received(:backoff_sleep).with(7)
   end
 
+  it "caps Retry-After at max_backoff instead of blocking for the server's full wait" do
+    conn = Kit::Connection.new(Kit::Configuration.new(api_key: "k", max_retries: 1, max_backoff: 5))
+    allow(conn).to receive(:backoff_sleep)
+    stub_request(:get, "https://api.kit.com/v4/account")
+      .to_return({ status: 429, headers: { "Retry-After" => "300", "Content-Type" => "application/json" }, body: "{}" },
+                 { status: 200, body: "{}", headers: { "Content-Type" => "application/json" } })
+
+    conn.request(:get, "/v4/account")
+    expect(conn).to have_received(:backoff_sleep).with(5)
+  end
+
+  it "falls back to exponential backoff when Retry-After is not a positive integer" do
+    http_date = { "Retry-After" => "Wed, 21 Oct 2026 07:28:00 GMT", "Content-Type" => "application/json" }
+    stub_request(:get, "https://api.kit.com/v4/account")
+      .to_return({ status: 429, body: "{}", headers: http_date },
+                 { status: 200, body: "{}", headers: { "Content-Type" => "application/json" } })
+
+    account_request
+    expect(connection).to have_received(:backoff_sleep).with(a_value_between(0.5, 1.0))
+  end
+
   it "retries 5xx with exponential backoff" do
     stub_request(:get, "https://api.kit.com/v4/account")
       .to_return({ status: 503, body: "{}", headers: { "Content-Type" => "application/json" } },
