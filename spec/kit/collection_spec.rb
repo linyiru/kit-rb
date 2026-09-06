@@ -36,6 +36,27 @@ RSpec.describe Kit::Collection do
     expect(collection.auto_paging_each.lazy.first(3)).to eq(%w[a b c])
   end
 
+  it "exposes total_count from the pagination object (nil unless requested)" do
+    with_total = described_class.new(data: [], pagination: Kit::Pagination.from(
+      "has_previous_page" => false, "has_next_page" => false, "start_cursor" => nil,
+      "end_cursor" => nil, "per_page" => 500, "total_count" => 1234
+    ))
+    expect(with_total.total_count).to eq(1234)
+    expect(paged([[%w[a], false]]).total_count).to be_nil
+  end
+
+  describe ".next_page_params" do
+    it "adds the after cursor and drops before and include_total_count" do
+      params = { per_page: 100, before: "OLD", include_total_count: true, status: "active" }
+      expect(described_class.next_page_params(params, "C2"))
+        .to eq(per_page: 100, status: "active", after: "C2")
+    end
+
+    it "replaces an existing after cursor" do
+      expect(described_class.next_page_params({ after: "C1" }, "C2")).to eq(after: "C2")
+    end
+  end
+
   it "next_page is nil on the last page" do
     collection = paged([[%w[a], false]])
     expect(collection.next_page).to be_nil

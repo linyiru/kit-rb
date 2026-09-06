@@ -49,6 +49,23 @@ RSpec.describe Kit::Resources::Subscribers do
       ids = client.subscribers.list.auto_paging_each.map(&:id)
       expect(ids).to eq([1, 2])
     end
+
+    it "sends include_total_count on the first page only and surfaces total_count" do
+      first = page([subscriber(id: 1)], has_next: true, end_cursor: "C1")
+      first["pagination"]["total_count"] = 2
+      stub_request(:get, "https://api.kit.com/v4/subscribers")
+        .with(query: { "include_total_count" => "true" })
+        .to_return(status: 200, headers: { "Content-Type" => "application/json" }, body: JSON.generate(first))
+      second = stub_request(:get, "https://api.kit.com/v4/subscribers")
+               .with(query: { "after" => "C1" })
+               .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                          body: JSON.generate(page([subscriber(id: 2)], has_next: false)))
+
+      collection = client.subscribers.list(include_total_count: true)
+      expect(collection.total_count).to eq(2)
+      expect(collection.auto_paging_each.map(&:id)).to eq([1, 2])
+      expect(second).to have_been_requested
+    end
   end
 
   describe "#get" do

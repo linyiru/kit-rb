@@ -128,11 +128,15 @@ module Kit
     attr_reader start_cursor: String?
     attr_reader end_cursor: String?
     attr_reader per_page: Integer?
+    attr_reader total_count: Integer?
     def self.from: (Hash[String, untyped] hash) -> Pagination
   end
 
   class Collection[T]
     include Enumerable[T]
+    FIRST_PAGE_ONLY: Array[Symbol]
+    def self.next_page_params: (Hash[Symbol, untyped] params, String? after) -> Hash[Symbol, untyped]
+    def total_count: () -> Integer?
     attr_reader data: Array[T]
     attr_reader pagination: Pagination
     def initialize: (data: Array[T], pagination: Pagination) { (String end_cursor) -> Collection[T] } -> void

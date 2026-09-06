@@ -67,7 +67,7 @@ module Kit
         response = @connection.request(verb, path, params: params, body: body)
         data = extract(response, key).map { |element| klass.from(element) }
         Collection.new(data: data, pagination: Pagination.from(extract(response, "pagination"))) do |after|
-          collection(path, key, klass, params.merge(after: after), verb: verb, body: body)
+          collection(path, key, klass, Collection.next_page_params(params, after), verb: verb, body: body)
         end
       end
 

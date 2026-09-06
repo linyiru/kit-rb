@@ -3,17 +3,24 @@
 module Kit
   # The `pagination` object Kit returns alongside every list. Kit uses cursor
   # pagination: to walk forward, pass `after: end_cursor`; backward, `before:
-  # start_cursor`.
+  # start_cursor`. `total_count` is present only when the request asked for it
+  # with `include_total_count: true` (nil otherwise).
   Pagination = Data.define(
-    :has_previous_page, :has_next_page, :start_cursor, :end_cursor, :per_page
+    :has_previous_page, :has_next_page, :start_cursor, :end_cursor, :per_page, :total_count
   ) do
+    # total_count is optional so Pagination.new(...) without it keeps working.
+    def initialize(total_count: nil, **rest)
+      super
+    end
+
     def self.from(hash)
       new(
         has_previous_page: hash["has_previous_page"],
         has_next_page: hash["has_next_page"],
         start_cursor: hash["start_cursor"],
         end_cursor: hash["end_cursor"],
-        per_page: hash["per_page"]
+        per_page: hash["per_page"],
+        total_count: hash["total_count"]
       )
     end
   end
@@ -29,7 +36,22 @@ module Kit
   class Collection
     include Enumerable
 
+    # Query params that must not be carried into a follow-up page request: a
+    # `before` cursor contradicts the `after` we add, and Kit asks that
+    # `include_total_count` be sent on the first page only.
+    FIRST_PAGE_ONLY = %i[before include_total_count].freeze
+
+    # The params for the page after `after`, derived from the original request.
+    def self.next_page_params(params, after)
+      params.reject { |key, _| FIRST_PAGE_ONLY.include?(key.to_sym) }.merge(after: after)
+    end
+
     attr_reader :data, :pagination
+
+    # Kit's total across all pages, when the first request asked for it.
+    def total_count
+      @pagination.total_count
+    end
 
     def initialize(data:, pagination:, &fetch_after)
       @data = data

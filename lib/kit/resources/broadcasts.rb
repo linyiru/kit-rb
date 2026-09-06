@@ -48,7 +48,7 @@ module Kit
         body = http_get("/v4/broadcasts/#{path_id(id)}/clicks", params: params)
         rows = extract(extract(body, "broadcast"), "clicks").map { |row| Objects::BroadcastClick.from(row) }
         Collection.new(data: rows, pagination: Pagination.from(extract(body, "pagination"))) do |after|
-          clicks(id, **params, after: after)
+          clicks(id, **Collection.next_page_params(params, after))
         end
       end
     end
