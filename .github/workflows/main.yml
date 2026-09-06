@@ -14,6 +14,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Ruby ${{ matrix.ruby }}
+    # `head` (the next Ruby) is allowed to fail: setup-ruby resolves '3.5' to
+    # 3.5.0-preview1, where the ffi native extension (via http.rb -> llhttp-ffi)
+    # does not build. Real support is only claimed for the released versions.
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
@@ -21,7 +25,10 @@ jobs:
           - '3.2'
           - '3.3'
           - '3.4'
-          - '3.5'
+        experimental: [false]
+        include:
+          - ruby: head
+            experimental: true
 
     steps:
       - uses: actions/checkout@v6
