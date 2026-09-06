@@ -103,6 +103,11 @@ bundle exec rake        # spec + rubocop + steep
 bundle exec rake smoke  # live read-only smoke (needs a key)
 ```
 
+`bin/setup` points `core.hooksPath` at `.githooks/`, so a **pre-commit** hook
+runs RuboCop on staged Ruby files and a **pre-push** hook runs the full
+`bundle exec rake` gate. Both rely on exit codes, not parsed output — a red gate
+cannot be committed or pushed.
+
 ## License
 
 MIT.
