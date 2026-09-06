@@ -25,6 +25,14 @@ module Kit
             body: { url: url, events: events, name: name, description: description }.compact)
       end
 
+      # PATCH /v4/webhook_endpoints/:id — change name/url/description, pause or
+      # resume delivery with status: "active" | "disabled", or replace the
+      # subscribed events (the list given here replaces the whole set).
+      def update(id, name: nil, url: nil, description: nil, status: nil, events: nil)
+        body = { name: name, url: url, description: description, status: status, events: events }.compact
+        one(:patch, "/v4/webhook_endpoints/#{path_id(id)}", "webhook_endpoint", Objects::WebhookEndpoint, body: body)
+      end
+
       # DELETE /v4/webhook_endpoints/:id
       def delete(id)
         http_delete("/v4/webhook_endpoints/#{path_id(id)}")

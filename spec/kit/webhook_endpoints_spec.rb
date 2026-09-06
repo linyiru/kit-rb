@@ -55,6 +55,18 @@ RSpec.describe Kit::Resources::WebhookEndpoints do
     expect(client.webhook_endpoints.get(9).secret).to be_nil
   end
 
+  describe "#update" do
+    it "PATCHes only the given fields and returns the endpoint" do
+      stub = stub_request(:patch, "https://api.kit.com/v4/webhook_endpoints/9")
+             .with(body: { "status" => "disabled", "events" => %w[subscriber.created] })
+             .to_return(status: 200, headers: { "Content-Type" => "application/json" },
+                        body: JSON.generate("webhook_endpoint" => endpoint(id: 9).merge("status" => "disabled")))
+      updated = client.webhook_endpoints.update(9, status: "disabled", events: %w[subscriber.created])
+      expect(updated.status).to eq("disabled")
+      expect(stub).to have_been_requested
+    end
+  end
+
   describe "#delete" do
     it "deletes the endpoint and returns nil" do
       stub = stub_kit(:delete, "/v4/webhook_endpoints/9", status: 204, body: "")

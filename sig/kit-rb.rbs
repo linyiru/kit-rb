@@ -544,6 +544,7 @@ module Kit
       def list: (**untyped params) -> Collection[Objects::WebhookEndpoint]
       def get: (Integer id) -> Objects::WebhookEndpoint
       def create: (url: String, events: Array[untyped], ?name: String?, ?description: String?) -> Objects::WebhookEndpoint
+      def update: (Integer id, ?name: String?, ?url: String?, ?description: String?, ?status: String?, ?events: Array[String]?) -> Objects::WebhookEndpoint
       def delete: (Integer id) -> void
       def rotate_secret: (Integer id, ?force: bool?) -> Objects::WebhookEndpoint
       def revoke_previous_secret: (Integer id) -> Objects::WebhookEndpoint
