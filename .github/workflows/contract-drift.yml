@@ -1,0 +1,56 @@
+name: OpenAPI drift
+
+# Weekly: fetch Kit's current OpenAPI document and compare it with the
+# vendored copy the contract specs pin against. A change fails the run (so it
+# shows up as a red workflow / notification) and attaches the diff; the
+# contract specs are then run against the fresh document to show what broke.
+# Refresh the vendored copy locally with `bundle exec rake contract:fetch`.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - name: Fetch the current OpenAPI document
+        run: bundle exec rake contract:fetch
+      - name: Compare with the vendored copy
+        id: diff
+        run: |
+          if git diff --quiet -- spec/support/kit-v4.openapi.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No drift: the vendored OpenAPI document matches Kit's." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- spec/support/kit-v4.openapi.json > drift.stat
+            git diff -- spec/support/kit-v4.openapi.json > drift.diff
+            { echo "## Kit's OpenAPI document changed"; echo; echo '```'; cat drift.stat; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload the diff
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-drift
+          path: drift.diff
+      - name: Run the contract specs against the fresh document
+        if: steps.diff.outputs.changed == 'true'
+        run: bundle exec rspec spec/kit/contract_spec.rb spec/kit/contract_objects_spec.rb
+      - name: Fail so the drift is noticed
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          echo "::error::Kit's OpenAPI document differs from spec/support/kit-v4.openapi.json — review the openapi-drift artifact and run 'bundle exec rake contract:fetch'."
+          exit 1
