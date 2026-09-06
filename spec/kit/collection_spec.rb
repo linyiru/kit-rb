@@ -57,6 +57,24 @@ RSpec.describe Kit::Collection do
     end
   end
 
+  it "answers size, length, empty? and [] for the current page" do
+    collection = paged([[%w[a b], true], [%w[c], false]])
+    expect(collection.size).to eq(2)
+    expect(collection.length).to eq(2)
+    expect(collection).not_to be_empty
+    expect(collection[0]).to eq("a")
+    expect(collection[-1]).to eq("b")
+    expect(paged([[[], false]])).to be_empty
+  end
+
+  it "has a compact inspect naming the element type, page size, and paging state" do
+    tag = Kit::Objects::Tag.from("id" => 1, "name" => "a")
+    pagination = Kit::Pagination.from("has_next_page" => true, "total_count" => 57)
+    collection = described_class.new(data: [tag, tag], pagination: pagination) { nil }
+    expect(collection.inspect).to eq("#<Kit::Collection[Kit::Objects::Tag] size=2 has_next_page=true total_count=57>")
+    expect(paged([[[], false]]).inspect).to eq("#<Kit::Collection size=0 has_next_page=false total_count=nil>")
+  end
+
   it "next_page is nil on the last page" do
     collection = paged([[%w[a], false]])
     expect(collection.next_page).to be_nil

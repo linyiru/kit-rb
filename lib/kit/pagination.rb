@@ -64,6 +64,28 @@ module Kit
       @data.each(&)
     end
 
+    # Size of the current page (not the total across pages — see total_count).
+    def size
+      @data.size
+    end
+    alias length size
+
+    def empty?
+      @data.empty?
+    end
+
+    # Positional access into the current page.
+    def [](index)
+      @data[index]
+    end
+
+    # e.g. #<Kit::Collection[Kit::Objects::Tag] size=2 has_next_page=true total_count=57>
+    def inspect
+      element = @data.first&.class&.name
+      "#<#{self.class.name}#{"[#{element}]" if element} size=#{size} " \
+        "has_next_page=#{@pagination.has_next_page.inspect} total_count=#{total_count.inspect}>"
+    end
+
     # The next Collection, or nil when there is no next page.
     def next_page
       return nil unless @pagination.has_next_page

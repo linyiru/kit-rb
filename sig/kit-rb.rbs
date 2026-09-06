@@ -189,6 +189,11 @@ module Kit
     FIRST_PAGE_ONLY: Array[Symbol]
     def self.next_page_params: (Hash[Symbol, untyped] params, String? after) -> Hash[Symbol, untyped]
     def total_count: () -> Integer?
+    def size: () -> Integer
+    def length: () -> Integer
+    def empty?: () -> bool
+    def []: (Integer index) -> T?
+    def inspect: () -> String
     attr_reader data: Array[T]
     attr_reader pagination: Pagination
     def initialize: (data: Array[T], pagination: Pagination) { (String end_cursor) -> Collection[T] } -> void
