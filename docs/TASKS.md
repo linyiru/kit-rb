@@ -32,7 +32,7 @@ Legend: `[ ]` todo · `[x]` done (commit noted).
 - [x] `sequences.get` / `sequences.email` cannot send `include=stats`; `subscribers.stats` cannot send `email_sent_after/before`. (`feat: include=stats on sequences.get and sequences.email`, `feat: subscribers.update_location and stats date window`)
 - [x] Missing response fields: `Account` (`timezone`, `plan`, `sending_addresses`), `Post#content`, `SequenceEmail#content`, `Subscriber` (`added_at`, `referrer`, `referrer_utm_parameters`, `tagged_at`, `attribution`, `tags`), `Tag#tagged_at`, `CustomField#created_at`. (`feat: complete the value objects against the spec's response schemas`)
 - [x] Incoming webhooks: `X-Kit-Signature` HMAC-SHA256 verification and delivery-envelope parsing. (`feat: verify and parse incoming webhook deliveries`)
-- [ ] Webhook event-name constants.
+- [x] Webhook event-name constants. (`feat: webhook event-name constants`)
 
 ## P3 — engineering quality / DX
 

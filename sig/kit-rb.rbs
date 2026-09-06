@@ -108,6 +108,16 @@ module Kit
       attr_reader data: Hash[String, untyped]
       def self.from: (Hash[String, untyped] hash) -> Event
     end
+    module Events
+      DATA_KEYS: Hash[String, Array[String]]
+      PLANNED: Array[String]
+      ALL: Array[String]
+      AVAILABLE: Array[String]
+    end
+    module LegacyEvents
+      REQUIRED_PARAM: Hash[String, Symbol]
+      ALL: Array[String]
+    end
     DELIVERY_HEADER: String
     class Delivery
       attr_reader delivery_id: Integer?
