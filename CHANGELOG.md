@@ -6,6 +6,22 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `Kit::OAuth::Client.new` accepts `open_timeout:`, `read_timeout:` and
+  `write_timeout:` with the same defaults as `Kit::Client` (10 / 30 / 30 s).
+  Token and revoke requests previously ran with no timeout, so a stalled
+  token endpoint could block a refresh — and any lock held around it —
+  indefinitely. (#6)
+
+### Fixed
+- `Kit::OAuth::Client` transport failures raise `Kit::TimeoutError` /
+  `Kit::ConnectionError` / `Kit::TransportError`, matching `Kit::Connection`,
+  instead of the base `Kit::Error`. `rescue Kit::TransportError` now means
+  "no response was received" for both clients (whether a retry is safe is
+  operation-specific: a timed-out `refresh` may already have consumed the
+  single-use refresh token), and `Kit::OAuthError` is the only error the
+  token endpoint itself produces. (#7)
+
 ## [0.3.1] - 2026-09-06
 
 ### Added

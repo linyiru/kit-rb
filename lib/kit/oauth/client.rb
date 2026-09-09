@@ -24,13 +24,20 @@ module Kit
       TOKEN_PATH = "/v4/oauth/token"
       REVOKE_PATH = "/v4/oauth/revoke"
 
-      def initialize(client_id:, client_secret: nil, redirect_uri: nil, base_url: DEFAULT_BASE_URL)
+      # Timeouts default to the same values as Kit::Client (Kit::Configuration),
+      # so a stalled token endpoint cannot block a refresh indefinitely — which
+      # matters when the caller holds a lock around the persisted token pair.
+      def initialize(client_id:, client_secret: nil, redirect_uri: nil, base_url: DEFAULT_BASE_URL,
+                     open_timeout: 10, read_timeout: 30, write_timeout: 30)
         raise ConfigurationError, "client_id is required" if client_id.nil? || client_id.empty?
 
         @client_id = client_id
         @client_secret = client_secret
         @redirect_uri = redirect_uri
         @base_url = base_url
+        @http = HTTP
+                .headers("Accept" => "application/json", "User-Agent" => "kit-rb/#{Kit::VERSION}")
+                .timeout(connect: open_timeout, read: read_timeout, write: write_timeout)
       end
 
       # The URL to redirect the Kit account owner to for consent.
@@ -106,12 +113,21 @@ module Kit
         parse_token(post_form(TOKEN_PATH, form))
       end
 
+      # Transport failures map onto the same Kit::TransportError subclasses as
+      # Kit::Connection, so `rescue Kit::TransportError` means "no response was
+      # received" for both clients, and Kit::OAuthError is the only error the
+      # token endpoint itself produces. Whether a retry is safe is up to the
+      # operation: the server may have processed the request before the
+      # connection failed, and a refresh_token is single-use, so replaying a
+      # timed-out #refresh can answer invalid_grant.
       def post_form(path, form)
-        HTTP
-          .headers("Accept" => "application/json", "User-Agent" => "kit-rb/#{Kit::VERSION}")
-          .post("#{@base_url}#{path}", form: form.compact)
+        @http.post("#{@base_url}#{path}", form: form.compact)
+      rescue HTTP::TimeoutError => e
+        raise TimeoutError, "POST #{path} timed out: #{e.message}"
+      rescue HTTP::ConnectionError => e
+        raise ConnectionError, "POST #{path} could not connect: #{e.message}"
       rescue HTTP::Error => e
-        raise Error, "HTTP transport error: #{e.message}"
+        raise TransportError, "POST #{path} failed in transport: #{e.message}"
       end
 
       def parse_body(response)

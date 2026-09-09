@@ -124,6 +124,15 @@ Public clients (SPA/mobile/CLI) use PKCE via `Kit::OAuth::PKCE.generate` and omi
 the client secret. `oauth.client_credentials` mints an app-only token (note: Kit
 rejects it on the resource endpoints — account access needs the consent flow).
 
+`Kit::OAuth::Client.new` takes the same `open_timeout:` / `read_timeout:` /
+`write_timeout:` options (and defaults) as `Kit::Client`, so a stalled token
+endpoint cannot block a refresh indefinitely. Its transport failures raise the
+same `Kit::TimeoutError` / `Kit::ConnectionError` (both `< Kit::TransportError`)
+as the API client; `Kit::OAuthError` is the only error the token endpoint itself
+produces. A transport error means no response was received, not that the request
+was not processed: a timed-out `refresh` may already have consumed the single-use
+refresh token, so treat retrying it as your own decision.
+
 ## Testing
 
 The suite is layered:

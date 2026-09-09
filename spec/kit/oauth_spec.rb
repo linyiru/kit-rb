@@ -159,5 +159,47 @@ RSpec.describe Kit::OAuth do
     it "requires a client_id" do
       expect { described_class.new(client_id: "") }.to raise_error(Kit::ConfigurationError)
     end
+
+    describe "timeouts" do
+      def timeout_options(client)
+        client.instance_variable_get(:@http).default_options.timeout_options
+      end
+
+      it "defaults connect/read/write timeouts to the Kit::Client values" do
+        expect(timeout_options(oauth)).to eq(connect_timeout: 10, read_timeout: 30, write_timeout: 30)
+      end
+
+      it "accepts the same timeout options as Kit::Client" do
+        client = described_class.new(client_id: "cid", open_timeout: 1, read_timeout: 2, write_timeout: 3)
+        expect(timeout_options(client)).to eq(connect_timeout: 1, read_timeout: 2, write_timeout: 3)
+      end
+    end
+
+    describe "transport failures" do
+      it "maps a timeout on the token endpoint to Kit::TimeoutError (a TransportError)" do
+        stub_request(:post, "https://api.kit.com/v4/oauth/token").to_timeout
+        expect { oauth.refresh("r1") }
+          .to raise_error(Kit::TimeoutError, %r{POST /v4/oauth/token timed out}) do |e|
+          expect(e).to be_a(Kit::TransportError)
+          expect(e.cause).to be_a(HTTP::TimeoutError)
+        end
+      end
+
+      it "maps a dropped connection on the revoke endpoint to Kit::ConnectionError" do
+        stub_request(:post, "https://api.kit.com/v4/oauth/revoke")
+          .to_raise(HTTP::ConnectionError.new("refused"))
+        expect { oauth.revoke("a1") }
+          .to raise_error(Kit::ConnectionError, %r{POST /v4/oauth/revoke could not connect: refused})
+      end
+
+      it "maps any other HTTP::Error to Kit::TransportError, not the base Kit::Error" do
+        stub_request(:post, "https://api.kit.com/v4/oauth/token")
+          .to_raise(HTTP::ResponseError.new("bad chunk"))
+        expect { oauth.exchange_code("c") }
+          .to raise_error(Kit::TransportError, /failed in transport: bad chunk/) do |e|
+          expect(e).not_to be_a(Kit::OAuthError)
+        end
+      end
+    end
   end
 end
