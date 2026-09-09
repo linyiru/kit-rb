@@ -4,6 +4,13 @@ module Kit
   module Resources
     # The /v4/subscribers endpoints.
     class Subscribers < Base
+      # `tags` is the client's Tags resource, shared so #upsert_and_tag benefits
+      # from (and warms) the same ensure cache as client.tags.
+      def initialize(connection, tags: nil)
+        super(connection)
+        @tags = tags || Tags.new(connection)
+      end
+
       # GET /v4/subscribers — a cursor-paginated Collection of Subscriber.
       # Accepts filters as params: after, before, per_page, email_address,
       # status, created_after, created_before, sort_field, sort_order.
@@ -23,6 +30,25 @@ module Kit
         body = { email_address: email_address, first_name: first_name,
                  state: state, fields: fields }.compact
         one(:post, "/v4/subscribers", "subscriber", Objects::Subscriber, body: body)
+      end
+
+      # The v4 replacement for v3's tag-subscribe: upsert the subscriber, then
+      # ensure each tag by name and apply it. Names are de-duplicated the way
+      # Kit matches them (case-insensitive, whitespace-normalised: see
+      # Tags.normalize_name), so `["VIP", "vip"]` applies one tag, and the
+      # result lists exactly the tags applied. Tag ids come from the client's
+      # ensure cache; if a cached tag has since been deleted (404 on tagging)
+      # it is re-ensured once and the tagging retried.
+      #
+      # Every step is safe to replay (create is an upsert, tags.create and
+      # tagging are idempotent), so a job may re-run the whole call.
+      #
+      # @return [Kit::Objects::TaggedSubscriber] subscriber + tags applied
+      def upsert_and_tag(email_address:, tag_names:, first_name: nil, state: nil, fields: nil)
+        names = distinct_tag_names(tag_names)
+        subscriber = create(email_address: email_address, first_name: first_name, state: state, fields: fields)
+        applied = names.map { |name| apply_tag(subscriber, name) }
+        Objects::TaggedSubscriber.new(subscriber: subscriber, tags: applied)
       end
 
       # PUT /v4/subscribers/:id
@@ -77,6 +103,25 @@ module Kit
       def remove_location(id)
         http_delete("/v4/subscribers/#{path_id(id)}/location")
         nil
+      end
+
+      private
+
+      # Normalised names, first spelling wins, one per case-insensitive key.
+      def distinct_tag_names(tag_names)
+        Array(tag_names).map { |name| Tags.normalize_name(name) }.uniq(&:downcase)
+      end
+
+      def apply_tag(subscriber, name)
+        tag = @tags.ensure(name: name)
+        begin
+          @tags.tag_subscriber(tag.id, subscriber.id)
+        rescue NotFoundError
+          # The cached tag no longer exists: drop it, ensure again, retry once.
+          tag = @tags.ensure(name: name, refresh: true)
+          @tags.tag_subscriber(tag.id, subscriber.id)
+        end
+        tag
       end
     end
   end

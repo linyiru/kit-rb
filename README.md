@@ -150,6 +150,39 @@ page = client.subscribers.list(status: "active", per_page: 100, include_total_co
 page.total_count                                      # => 1234 (first page only, as Kit asks)
 ```
 
+### Tagging by name
+
+v3's `POST /v3/tags/:id/subscribe` created the subscriber as a side effect; v4
+separates the steps and never 422s on a duplicate tag name, so the v3
+"find_tag_by_name or create" dance is unnecessary:
+
+```ruby
+tag = client.tags.ensure(name: "VIP customer")   # find-or-create, cached per client
+```
+
+`ensure` normalises the name the way Kit matches it — case-insensitively, with
+runs of Unicode whitespace (`[[:space:]]`, so a fullwidth space cannot mint a
+look-alike tag) collapsed and trimmed — and remembers the `Tag` for the
+client's lifetime, so a batch costs one request per distinct tag rather than one
+per subscriber. `tags.update` keeps the cache honest on a rename; `refresh: true`
+drops an entry by hand (a tag deleted outside this client).
+
+The whole v3 "tag this email" feature is one call:
+
+```ruby
+result = client.subscribers.upsert_and_tag(
+  email_address: "ada@example.com", first_name: "Ada",
+  tag_names: ["VIP", "vip", "Launch 2026"]        # ["VIP", "vip"] is one tag
+)
+result.subscriber   # => Kit::Objects::Subscriber (created or updated)
+result.tags         # => the two Tags actually applied, so you can count them
+```
+
+It upserts the subscriber, ensures each distinct tag (de-duplicated the way Kit
+matches names) and applies it. Every step is idempotent, so a job may re-run
+the whole call; a tag deleted outside the client (404 on tagging) is re-ensured
+once. Errors are the usual typed ones.
+
 ### Bulk
 
 The `bulk` endpoints (OAuth only) return a `Kit::Objects::BulkResult`:

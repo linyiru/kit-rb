@@ -9,13 +9,17 @@ module Kit
   #   client = Kit::Client.new(access_token: oauth_token) # OAuth
   #
   # A client is thread-safe to share: it holds immutable config and a stateless
-  # connection, and resource accessors are memoized per client.
+  # connection, and resource accessors are memoized per client. Tags is the one
+  # resource with state (its ensure cache), so it is built eagerly here rather
+  # than lazily: a lazy `||=` racing on first access could hand `subscribers`
+  # and `client.tags` two different caches.
   class Client
-    attr_reader :config
+    attr_reader :config, :tags
 
     def initialize(api_key: nil, access_token: nil, **options)
       @config = Configuration.new(api_key: api_key, access_token: access_token, **options)
       @connection = Connection.new(@config)
+      @tags = Resources::Tags.new(@connection)
     end
 
     def account
@@ -23,11 +27,7 @@ module Kit
     end
 
     def subscribers
-      @subscribers ||= Resources::Subscribers.new(@connection)
-    end
-
-    def tags
-      @tags ||= Resources::Tags.new(@connection)
+      @subscribers ||= Resources::Subscribers.new(@connection, tags: tags)
     end
 
     def custom_fields
