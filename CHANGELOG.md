@@ -15,6 +15,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   free (verified live); OAuth App Store apps need a paid plan, and on a free
   account the consent page redirects to billing without an `error` parameter.
   Also that `account.name` is `""` rather than nil when unset. (#9)
+
+### Changed
+- `Kit::OAuth::Token`, `Kit::OAuth::Client#refresh` and the README no longer
+  say refresh tokens *are* single-use: Kit documents them so, but the previous
+  token was observed to remain valid immediately after rotation, so callers
+  must serialise refreshes per grant themselves rather than rely on the old
+  token being rejected. (#8)
 - `Kit::OAuth::Client.new` accepts `open_timeout:`, `read_timeout:` and
   `write_timeout:` with the same defaults as `Kit::Client` (10 / 30 / 30 s).
   Token and revoke requests previously ran with no timeout, so a stalled
@@ -27,8 +34,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   instead of the base `Kit::Error`. `rescue Kit::TransportError` now means
   "no response was received" for both clients (whether a retry is safe is
   operation-specific: a timed-out `refresh` may already have consumed the
-  single-use refresh token), and `Kit::OAuthError` is the only error the
-  token endpoint itself produces. (#7)
+  refresh token, documented as single-use), and `Kit::OAuthError` is the only
+  error the token endpoint itself produces. (#7)
 - A 2xx whose envelope key is present but holds `null` or a scalar (for
   example `{"account": null}` or `{"subscriber": "x"}`) raises
   `Kit::UnexpectedResponseError` naming the key and the value found, instead

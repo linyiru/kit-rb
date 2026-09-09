@@ -186,11 +186,22 @@ oauth = Kit::OAuth::Client.new(client_id: ID, client_secret: SECRET,
 
 redirect_to oauth.authorization_url(state: session_token)   # consent
 token = oauth.exchange_code(params[:code])                  # => Kit::OAuth::Token
-token = oauth.refresh(token.refresh_token)                  # single-use refresh
+token = oauth.refresh(token.refresh_token)                  # persist the new pair
 oauth.revoke(token.access_token)                            # RFC 7009
 
 client = Kit::Client.new(access_token: token.access_token)
 ```
+
+Kit documents refresh tokens as single-use and returns a new `refresh_token` on
+every refresh; persist the newest pair after each exchange or refresh. Do not
+rely on the previous refresh token being rejected: on 2026-09-08 it was still
+accepted immediately after rotation, so a second refresh with it silently mints
+a pair that nothing persists and whose access token is simply lost. If several
+processes can refresh the same grant, serialise them yourself (one refresh per
+grant at a time) and have late arrivals adopt the pair that was persisted. The
+access token observed at the same time had `expires_in` 172800 (48 h); treat
+that as an observation and read `expires_in` from each response —
+`Token#expires_at` / `#expired?` do.
 
 Public clients (SPA/mobile/CLI) use PKCE via `Kit::OAuth::PKCE.generate` and omit
 the client secret. `oauth.client_credentials` mints an app-only token (note: Kit
@@ -202,8 +213,8 @@ endpoint cannot block a refresh indefinitely. Its transport failures raise the
 same `Kit::TimeoutError` / `Kit::ConnectionError` (both `< Kit::TransportError`)
 as the API client; `Kit::OAuthError` is the only error the token endpoint itself
 produces. A transport error means no response was received, not that the request
-was not processed: a timed-out `refresh` may already have consumed the single-use
-refresh token, so treat retrying it as your own decision.
+was not processed: a timed-out `refresh` may already have consumed the refresh
+token (documented as single-use), so treat retrying it as your own decision.
 
 ## Testing
 
