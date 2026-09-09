@@ -1,0 +1,2947 @@
+{
+  "account_get": {
+    "verb": "get",
+    "path": "/v4/account",
+    "key": "account",
+    "kind": "object",
+    "type": "account",
+    "responses": {
+      "200": {
+        "user": {
+          "email": "test@kit.dev",
+          "id": 29
+        },
+        "account": {
+          "id": 29,
+          "name": "Kit Greetings",
+          "plan_type": "creator",
+          "primary_email_address": "test@kit.dev",
+          "created_at": "2023-02-17T11:43:55Z",
+          "timezone": {
+            "name": "America/New_York",
+            "friendly_name": "Eastern Time (US & Canada)",
+            "utc_offset": "-05:00"
+          },
+          "sending_addresses": [
+            {
+              "email_address": "joe29@ck.lol",
+              "from_name": "Joe",
+              "status": "pending",
+              "is_default": true,
+              "is_verified": false,
+              "is_dmarc_configured": false
+            }
+          ],
+          "plan": {
+            "plan_type": "creator",
+            "interval": "month",
+            "subscriber_limit": 1000,
+            "on_trial": false,
+            "trial_lapse_date": null,
+            "renews_at": "2023-03-17T11:43:55Z",
+            "cancels_at": null
+          }
+        }
+      }
+    }
+  },
+  "account_colors": {
+    "verb": "get",
+    "path": "/v4/account/colors",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "colors": [
+          "#008000",
+          "#FF0000"
+        ]
+      }
+    }
+  },
+  "account_update_colors": {
+    "verb": "put",
+    "path": "/v4/account/colors",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "colors": [
+          "#000000",
+          "#ffffff"
+        ]
+      }
+    }
+  },
+  "account_creator_profile": {
+    "verb": "get",
+    "path": "/v4/account/creator_profile",
+    "key": "profile",
+    "kind": "object",
+    "type": "creator_profile",
+    "responses": {
+      "200": {
+        "profile": {
+          "name": "A Creator's Journey",
+          "byline": "A Creator",
+          "bio": "Follow my Journey as a Creator",
+          "image_url": "https://convertkit.dev/image.jpg?fit=crop&h=320&w=320",
+          "profile_url": "https://kit-greetings.kit.com/profile"
+        }
+      }
+    }
+  },
+  "account_email_stats": {
+    "verb": "get",
+    "path": "/v4/account/email_stats",
+    "key": "stats",
+    "kind": "object",
+    "type": "email_stats",
+    "responses": {
+      "200": {
+        "stats": {
+          "sent": 6,
+          "clicked": 3,
+          "opened": 6,
+          "email_stats_mode": "last_90",
+          "open_tracking_enabled": true,
+          "click_tracking_enabled": true,
+          "starting": "2022-11-19T11:43:55Z",
+          "ending": "2023-02-17T11:43:55Z",
+          "open_rate": 100.0,
+          "click_rate": 50.0,
+          "unsubscribe_rate": 16.67,
+          "bounce_rate": 16.67
+        }
+      }
+    }
+  },
+  "account_growth_stats": {
+    "verb": "get",
+    "path": "/v4/account/growth_stats",
+    "key": "stats",
+    "kind": "object",
+    "type": "growth_stats",
+    "responses": {
+      "200": {
+        "stats": {
+          "cancellations": 0,
+          "net_new_subscribers": 3,
+          "new_subscribers": 3,
+          "subscribers": 3,
+          "starting": "2023-02-10T00:00:00-05:00",
+          "ending": "2023-02-24T23:59:59-05:00"
+        }
+      }
+    }
+  },
+  "subscribers_list": {
+    "verb": "get",
+    "path": "/v4/subscribers",
+    "key": "subscribers",
+    "kind": "list",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 204,
+            "state": "active",
+            "first_name": "Alice",
+            "email_address": "alice@convertkit.dev",
+            "created_at": "2023-01-27T11:43:55Z",
+            "fields": {
+              "category": "One"
+            },
+            "attribution": {
+              "referrer": "https://t.co/abc123",
+              "utm_source": "twitter",
+              "utm_medium": "cpc",
+              "utm_campaign": "spring_launch",
+              "utm_term": "newsletter+for+creators",
+              "utm_content": "hero_cta",
+              "source_type": "form_subscription",
+              "source_name": "Welcome Form",
+              "source_mechanism": "landing_page",
+              "source_mechanism_id": null
+            },
+            "tags": [
+              {
+                "id": 1,
+                "name": "VIP"
+              }
+            ],
+            "location": {
+              "city": "Portland",
+              "state": "OR",
+              "country": "US",
+              "latitude": 45.5,
+              "longitude": -122.6,
+              "timezone": "America/Los_Angeles"
+            }
+          },
+          {
+            "id": 205,
+            "state": "active",
+            "first_name": "Benito",
+            "email_address": "benito@convertkit.dev",
+            "created_at": "2023-02-03T11:43:55Z",
+            "fields": {},
+            "attribution": {
+              "referrer": "https://creator.kit.com/jane-smith",
+              "utm_source": "kit",
+              "utm_medium": "referral",
+              "utm_campaign": null,
+              "utm_term": null,
+              "utm_content": null,
+              "source_type": "form_subscription",
+              "source_name": "Jane Smith's Recommendations",
+              "source_mechanism": "recommendations",
+              "source_mechanism_id": null
+            },
+            "tags": [
+              {
+                "id": 2,
+                "name": "Newsletter"
+              }
+            ],
+            "location": {
+              "city": "Austin",
+              "state": "TX",
+              "country": "US",
+              "latitude": 30.27,
+              "longitude": -97.74,
+              "timezone": "America/Chicago"
+            }
+          },
+          {
+            "id": 206,
+            "state": "active",
+            "first_name": "Camille",
+            "email_address": "camille@convertkit.dev",
+            "created_at": "2023-02-10T11:43:55Z",
+            "fields": {},
+            "attribution": {
+              "referrer": null,
+              "utm_source": null,
+              "utm_medium": null,
+              "utm_campaign": null,
+              "utm_term": null,
+              "utm_content": null,
+              "source_type": "api_subscription",
+              "source_name": "Partner Integration",
+              "source_mechanism": "api",
+              "source_mechanism_id": 12345
+            },
+            "tags": [],
+            "location": null
+          },
+          {
+            "id": 207,
+            "state": "active",
+            "first_name": "Elliot",
+            "email_address": "elliot@convertkit.dev",
+            "created_at": "2023-02-13T11:43:55Z",
+            "fields": {},
+            "attribution": {
+              "referrer": null,
+              "utm_source": null,
+              "utm_medium": null,
+              "utm_campaign": null,
+              "utm_term": null,
+              "utm_content": null,
+              "source_type": null,
+              "source_name": null,
+              "source_mechanism": null,
+              "source_mechanism_id": null
+            },
+            "tags": [
+              {
+                "id": 3,
+                "name": "Imported"
+              }
+            ],
+            "location": {
+              "city": null,
+              "state": null,
+              "country": null,
+              "latitude": null,
+              "longitude": null,
+              "timezone": null
+            }
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "MjAyMy0wMS0yNyAxMTo0Mzo1NSBVVEM=",
+          "end_cursor": "MjAyMy0wMi0xMyAxMTo0Mzo1NSBVVEM=",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "subscribers_create": {
+    "verb": "post",
+    "path": "/v4/subscribers",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 357,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "inactive",
+          "created_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 353,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "fields": {
+            "birthday": "Feb 17",
+            "last_name": "Lamarr",
+            "source": "landing page"
+          }
+        }
+      },
+      "202": {
+        "subscriber": {
+          "id": 355,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "fields": {
+            "company": null,
+            "coupon": null,
+            "enrolled_in_coaching": null,
+            "how_did_you_hear_about_us": null,
+            "interests": null,
+            "lead_score": null,
+            "phone_number": null,
+            "postal_code": null,
+            "role": null,
+            "social_media": null,
+            "website": null
+          }
+        }
+      }
+    }
+  },
+  "subscribers_filter": {
+    "verb": "post",
+    "path": "/v4/subscribers/filter",
+    "key": "subscribers",
+    "kind": "list",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": "456",
+            "first_name": "Jane",
+            "email_address": "jane@example.com",
+            "created_at": "2024-12-01T15:45:00Z",
+            "tag_names": [
+              "newsletter",
+              "engaged"
+            ],
+            "tag_ids": [
+              "123",
+              "456"
+            ]
+          },
+          {
+            "id": "789",
+            "first_name": null,
+            "email_address": "anonymous@example.com",
+            "created_at": "2024-11-15T10:00:00Z",
+            "tag_names": [],
+            "tag_ids": []
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": true,
+          "start_cursor": "WzQ1Nl0=",
+          "end_cursor": "Wzc4OV0=",
+          "per_page": 10,
+          "total_count": 42
+        }
+      }
+    }
+  },
+  "subscribers_get": {
+    "verb": "get",
+    "path": "/v4/subscribers/{id}",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 339,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "fields": {
+            "category": "One"
+          },
+          "canceled_at": null,
+          "location": {
+            "city": "Williamstown",
+            "state": "Massachusetts",
+            "country": "US",
+            "latitude": 9.99,
+            "longitude": 9.99,
+            "timezone": "US/EST"
+          }
+        }
+      }
+    }
+  },
+  "subscribers_update": {
+    "verb": "put",
+    "path": "/v4/subscribers/{id}",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 382,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "fields": {
+            "birthday": "Feb 17",
+            "last_name": "Lamarr",
+            "source": "landing page"
+          }
+        }
+      },
+      "202": {
+        "subscriber": {
+          "id": 384,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "fields": {
+            "birthday": null,
+            "company": null,
+            "coupon": null,
+            "how_did_you_hear_about_us": null,
+            "interests": null,
+            "last_name": null,
+            "postal_code": null,
+            "role": null,
+            "social_media": null,
+            "source": null,
+            "website": null
+          }
+        }
+      }
+    }
+  },
+  "subscribers_unsubscribe": {
+    "verb": "post",
+    "path": "/v4/subscribers/{id}/unsubscribe",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "subscribers_tags": {
+    "verb": "get",
+    "path": "/v4/subscribers/{subscriber_id}/tags",
+    "key": "tags",
+    "kind": "list",
+    "type": "tag",
+    "responses": {
+      "200": {
+        "tags": [
+          {
+            "id": 140,
+            "name": "Tag B",
+            "tagged_at": "2023-02-17T10:43:55Z"
+          },
+          {
+            "id": 141,
+            "name": "Tag A",
+            "tagged_at": "2023-02-17T10:43:55Z"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzEyXQ==",
+          "end_cursor": "WzExXQ==",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "subscribers_stats": {
+    "verb": "get",
+    "path": "/v4/subscribers/{subscriber_id}/stats",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber_stats",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1103,
+          "stats": {
+            "sent": 2,
+            "opened": 1,
+            "clicked": 1,
+            "bounced": 1,
+            "open_rate": 0.5,
+            "click_rate": 0.5,
+            "last_sent": "2025-07-13T12:00:00Z",
+            "last_opened": "2025-07-13T12:00:00Z",
+            "last_clicked": "2025-07-14T12:00:00Z",
+            "sends_since_last_open": 0,
+            "sends_since_last_click": 0
+          }
+        }
+      }
+    }
+  },
+  "subscribers_set_location": {
+    "verb": "post",
+    "path": "/v4/subscribers/{subscriber_id}/location",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1100,
+          "location": {
+            "city": "Boise",
+            "state_province": "Idaho",
+            "country_code": "US",
+            "latitude": 43.62,
+            "longitude": -116.2,
+            "timezone": "America/Denver"
+          }
+        }
+      }
+    }
+  },
+  "subscribers_update_location": {
+    "verb": "patch",
+    "path": "/v4/subscribers/{subscriber_id}/location",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1128,
+          "location": {
+            "city": "Boise",
+            "state_province": "Idaho",
+            "country_code": "US",
+            "latitude": 43.62,
+            "longitude": -116.2,
+            "timezone": "America/Denver"
+          }
+        }
+      }
+    }
+  },
+  "subscribers_remove_location": {
+    "verb": "delete",
+    "path": "/v4/subscribers/{subscriber_id}/location",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "tags_list": {
+    "verb": "get",
+    "path": "/v4/tags",
+    "key": "tags",
+    "kind": "list",
+    "type": "tag",
+    "responses": {
+      "200": {
+        "tags": [
+          {
+            "id": 12,
+            "name": "Tag B",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 11,
+            "name": "Tag A",
+            "created_at": "2023-02-17T11:43:55Z"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "MTI=",
+          "end_cursor": "MTE=",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "tags_create": {
+    "verb": "post",
+    "path": "/v4/tags",
+    "key": "tag",
+    "kind": "object",
+    "type": "tag",
+    "responses": {
+      "200": {
+        "tag": {
+          "id": 26,
+          "name": "Completed",
+          "created_at": "2023-02-17T11:43:55Z"
+        }
+      },
+      "201": {
+        "tag": {
+          "id": 25,
+          "name": "Completed",
+          "created_at": "2023-02-17T11:43:55Z"
+        }
+      }
+    }
+  },
+  "tags_update": {
+    "verb": "put",
+    "path": "/v4/tags/{id}",
+    "key": "tag",
+    "kind": "object",
+    "type": "tag",
+    "responses": {
+      "200": {
+        "tag": {
+          "id": 44,
+          "name": "signed up",
+          "created_at": "2023-02-17T11:43:55Z"
+        }
+      }
+    }
+  },
+  "tags_subscribers": {
+    "verb": "get",
+    "path": "/v4/tags/{tag_id}/subscribers",
+    "key": "subscribers",
+    "kind": "list",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 1140,
+            "first_name": null,
+            "email_address": "subscriber634@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "tagged_at": "2023-02-17T11:43:55Z",
+            "fields": {
+              "category": "One"
+            }
+          },
+          {
+            "id": 1139,
+            "first_name": null,
+            "email_address": "subscriber633@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "tagged_at": "2023-02-17T11:43:55Z",
+            "fields": {
+              "category": null
+            }
+          },
+          {
+            "id": 1138,
+            "first_name": null,
+            "email_address": "subscriber632@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "tagged_at": "2023-02-17T11:43:55Z",
+            "fields": {
+              "category": null
+            }
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WyIyMDIzLTAyLTE3VDExOjQzOjU1LjAwMFoiLDE3XQ==",
+          "end_cursor": "WyIyMDIzLTAyLTE3VDExOjQzOjU1LjAwMFoiLDE1XQ==",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "tags_tag_subscriber": {
+    "verb": "post",
+    "path": "/v4/tags/{tag_id}/subscribers/{id}",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1256,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "tagged_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 1257,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "tagged_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      }
+    }
+  },
+  "tags_remove_subscriber": {
+    "verb": "delete",
+    "path": "/v4/tags/{tag_id}/subscribers/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "tags_tag_subscriber_by_email": {
+    "verb": "post",
+    "path": "/v4/tags/{tag_id}/subscribers",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1276,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "tagged_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 1277,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "tagged_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      }
+    }
+  },
+  "tags_remove_subscriber_by_email": {
+    "verb": "delete",
+    "path": "/v4/tags/{tag_id}/subscribers",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "custom_fields_list": {
+    "verb": "get",
+    "path": "/v4/custom_fields",
+    "key": "custom_fields",
+    "kind": "list",
+    "type": "custom_field",
+    "responses": {
+      "200": {
+        "custom_fields": [
+          {
+            "id": 1,
+            "name": "ck_field_1_last_name",
+            "key": "last_name",
+            "label": "Last name"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzFd",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "custom_fields_create": {
+    "verb": "post",
+    "path": "/v4/custom_fields",
+    "key": "custom_field",
+    "kind": "object",
+    "type": "custom_field",
+    "responses": {
+      "200": {
+        "custom_field": {
+          "id": 8,
+          "name": "ck_field_8_interests",
+          "key": "interests",
+          "label": "Interests"
+        }
+      },
+      "201": {
+        "custom_field": {
+          "id": 6,
+          "name": "ck_field_6_interests",
+          "key": "interests",
+          "label": "Interests"
+        }
+      }
+    }
+  },
+  "custom_fields_update": {
+    "verb": "put",
+    "path": "/v4/custom_fields/{id}",
+    "key": "custom_field",
+    "kind": "object",
+    "type": "custom_field",
+    "responses": {
+      "200": {
+        "custom_field": {
+          "id": 27,
+          "name": "ck_field_27_last_name",
+          "key": "lastname",
+          "label": "Last name"
+        }
+      }
+    }
+  },
+  "custom_fields_delete": {
+    "verb": "delete",
+    "path": "/v4/custom_fields/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "forms_list": {
+    "verb": "get",
+    "path": "/v4/forms",
+    "key": "forms",
+    "kind": "list",
+    "type": "form",
+    "responses": {
+      "200": {
+        "forms": [
+          {
+            "id": 53,
+            "name": "Sign up",
+            "created_at": "2023-02-17T11:43:55Z",
+            "type": "embed",
+            "format": null,
+            "embed_js": "https://kit-greetings.kit.com/f049e3d9ab/index.js",
+            "embed_url": "https://kit-greetings.kit.com/f049e3d9ab",
+            "archived": false,
+            "uid": "f049e3d9ab"
+          },
+          {
+            "id": 52,
+            "name": "Lead gen",
+            "created_at": "2023-02-17T11:43:55Z",
+            "type": "hosted",
+            "format": null,
+            "embed_js": "https://kit-greetings.kit.com/ae7c1adaa1/index.js",
+            "embed_url": "https://kit-greetings.kit.com/ae7c1adaa1",
+            "archived": false,
+            "uid": "ae7c1adaa1"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzUzXQ==",
+          "end_cursor": "WzUyXQ==",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "forms_subscribers": {
+    "verb": "get",
+    "path": "/v4/forms/{form_id}/subscribers",
+    "key": "subscribers",
+    "kind": "list",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 680,
+            "first_name": null,
+            "email_address": "subscriber359@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+            "referrer_utm_parameters": {
+              "source": "facebook",
+              "medium": "cpc",
+              "campaign": "black_friday",
+              "term": "car_owners",
+              "content": "get_10_off"
+            },
+            "fields": {
+              "category": "One"
+            }
+          },
+          {
+            "id": 679,
+            "first_name": null,
+            "email_address": "subscriber358@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+            "referrer_utm_parameters": {
+              "source": "facebook",
+              "medium": "cpc",
+              "campaign": "black_friday",
+              "term": "car_owners",
+              "content": "get_10_off"
+            },
+            "fields": {
+              "category": null
+            }
+          },
+          {
+            "id": 678,
+            "first_name": null,
+            "email_address": "subscriber357@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+            "referrer_utm_parameters": {
+              "source": "facebook",
+              "medium": "cpc",
+              "campaign": "black_friday",
+              "term": "car_owners",
+              "content": "get_10_off"
+            },
+            "fields": {
+              "category": null
+            }
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzY4MF0=",
+          "end_cursor": "WzY3OF0=",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "forms_add_subscriber": {
+    "verb": "post",
+    "path": "/v4/forms/{form_id}/subscribers/{id}",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 767,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {},
+          "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+          "referrer_utm_parameters": {
+            "source": "facebook",
+            "medium": "cpc",
+            "campaign": "black_friday",
+            "term": "car_owners",
+            "content": "get_10_off"
+          }
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 768,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {},
+          "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+          "referrer_utm_parameters": {
+            "source": "facebook",
+            "medium": "cpc",
+            "campaign": "black_friday",
+            "term": "car_owners",
+            "content": "get_10_off"
+          }
+        }
+      }
+    }
+  },
+  "forms_add_subscriber_by_email": {
+    "verb": "post",
+    "path": "/v4/forms/{form_id}/subscribers",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 790,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {},
+          "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+          "referrer_utm_parameters": {
+            "source": "facebook",
+            "medium": "cpc",
+            "campaign": "black_friday",
+            "term": "car_owners",
+            "content": "get_10_off"
+          }
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 791,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {},
+          "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+          "referrer_utm_parameters": {
+            "source": "facebook",
+            "medium": "cpc",
+            "campaign": "black_friday",
+            "term": "car_owners",
+            "content": "get_10_off"
+          }
+        }
+      }
+    }
+  },
+  "sequences_list": {
+    "verb": "get",
+    "path": "/v4/sequences",
+    "key": "sequences",
+    "kind": "list",
+    "type": "sequence",
+    "responses": {
+      "200": {
+        "sequences": [
+          {
+            "id": 1,
+            "name": "Evergreen sequence",
+            "hold": false,
+            "repeat": false,
+            "created_at": "2023-02-17T11:43:55Z",
+            "updated_at": "2023-02-17T11:43:55Z",
+            "email_address": null,
+            "email_template_id": null,
+            "email_count": 0,
+            "subscriber_count": 0,
+            "send_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday"
+            ],
+            "send_hour": 11,
+            "time_zone": "America/New_York",
+            "active": true,
+            "exclude_subscriber_sources": []
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzFd",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "sequences_create": {
+    "verb": "post",
+    "path": "/v4/sequences",
+    "key": "sequence",
+    "kind": "object",
+    "type": "sequence",
+    "responses": {
+      "201": {
+        "sequence": {
+          "id": 31,
+          "name": "Full Series",
+          "hold": true,
+          "repeat": true,
+          "created_at": "2026-07-28T03:01:49Z",
+          "updated_at": "2026-07-28T03:01:49Z",
+          "email_address": "joe1150@ck.lol",
+          "email_template_id": 38,
+          "send_days": [
+            "monday",
+            "wednesday",
+            "friday"
+          ],
+          "send_hour": 9,
+          "time_zone": "America/Los_Angeles",
+          "active": true,
+          "exclude_subscriber_sources": [
+            {
+              "type": "sequence",
+              "ids": [
+                30
+              ]
+            },
+            {
+              "type": "tag",
+              "ids": [
+                3
+              ]
+            }
+          ],
+          "email_count": 0,
+          "subscriber_count": 0
+        }
+      }
+    }
+  },
+  "sequences_get": {
+    "verb": "get",
+    "path": "/v4/sequences/{id}",
+    "key": "sequence",
+    "kind": "object",
+    "type": "sequence",
+    "responses": {
+      "200": {
+        "sequence": {
+          "id": 23,
+          "name": "Welcome sequence",
+          "hold": false,
+          "repeat": false,
+          "created_at": "2023-02-17T11:43:55Z",
+          "updated_at": "2023-02-17T11:43:55Z",
+          "email_address": null,
+          "email_template_id": null,
+          "send_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ],
+          "send_hour": 11,
+          "time_zone": "America/New_York",
+          "active": true,
+          "exclude_subscriber_sources": [],
+          "email_count": 0,
+          "subscriber_count": 0
+        }
+      }
+    }
+  },
+  "sequences_update": {
+    "verb": "put",
+    "path": "/v4/sequences/{id}",
+    "key": "sequence",
+    "kind": "object",
+    "type": "sequence",
+    "responses": {
+      "200": {
+        "sequence": {
+          "id": 50,
+          "name": "New Name",
+          "hold": true,
+          "repeat": true,
+          "created_at": "2026-07-28T03:01:51Z",
+          "updated_at": "2026-07-28T03:01:52Z",
+          "email_address": "joe1180@ck.lol",
+          "email_template_id": 40,
+          "send_days": [
+            "tuesday",
+            "thursday"
+          ],
+          "send_hour": 14,
+          "time_zone": "America/Chicago",
+          "active": false,
+          "exclude_subscriber_sources": [
+            {
+              "type": "sequence",
+              "ids": [
+                49
+              ]
+            },
+            {
+              "type": "tag",
+              "ids": [
+                4
+              ]
+            }
+          ],
+          "email_count": 0,
+          "subscriber_count": 0
+        }
+      }
+    }
+  },
+  "sequences_delete": {
+    "verb": "delete",
+    "path": "/v4/sequences/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "sequences_subscribers": {
+    "verb": "get",
+    "path": "/v4/sequences/{sequence_id}/subscribers",
+    "key": "subscribers",
+    "kind": "list",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 923,
+            "first_name": null,
+            "email_address": "subscriber494@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "fields": {
+              "category": "One"
+            }
+          },
+          {
+            "id": 922,
+            "first_name": null,
+            "email_address": "subscriber493@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "fields": {
+              "category": null
+            }
+          },
+          {
+            "id": 921,
+            "first_name": null,
+            "email_address": "subscriber492@kit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "fields": {
+              "category": null
+            }
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzkyM10=",
+          "end_cursor": "WzkyMV0=",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "sequences_add_subscriber": {
+    "verb": "post",
+    "path": "/v4/sequences/{sequence_id}/subscribers/{id}",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1008,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 1009,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      }
+    }
+  },
+  "sequences_add_subscriber_by_email": {
+    "verb": "post",
+    "path": "/v4/sequences/{sequence_id}/subscribers",
+    "key": "subscriber",
+    "kind": "object",
+    "type": "subscriber",
+    "responses": {
+      "200": {
+        "subscriber": {
+          "id": 1034,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      },
+      "201": {
+        "subscriber": {
+          "id": 1035,
+          "first_name": "Alice",
+          "email_address": "alice@convertkit.dev",
+          "state": "active",
+          "created_at": "2023-02-17T11:43:55Z",
+          "added_at": "2023-02-17T11:43:55Z",
+          "fields": {}
+        }
+      }
+    }
+  },
+  "sequences_emails": {
+    "verb": "get",
+    "path": "/v4/sequences/{sequence_id}/emails",
+    "key": "emails",
+    "kind": "list",
+    "type": "sequence_email",
+    "responses": {
+      "200": {
+        "emails": [
+          {
+            "id": 6,
+            "sequence_id": 108,
+            "subject": "Welcome to the series",
+            "preview_text": "Here's what to expect",
+            "email_address": "joe2790@ck.lol",
+            "email_template_id": null,
+            "published": true,
+            "position": 0,
+            "delay_value": 0,
+            "delay_unit": "days",
+            "send_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday",
+              "saturday",
+              "sunday"
+            ]
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzAsNl0=",
+          "end_cursor": "WzAsNl0=",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "sequences_create_email": {
+    "verb": "post",
+    "path": "/v4/sequences/{sequence_id}/emails",
+    "key": "email",
+    "kind": "object",
+    "type": "sequence_email",
+    "responses": {
+      "201": {
+        "email": {
+          "id": 38,
+          "sequence_id": 157,
+          "subject": "Welcome to the sequence",
+          "preview_text": null,
+          "email_address": "joe2857@ck.lol",
+          "email_template_id": null,
+          "published": false,
+          "position": 0,
+          "delay_value": 1,
+          "delay_unit": "days",
+          "send_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ],
+          "content": null
+        }
+      }
+    }
+  },
+  "sequences_email": {
+    "verb": "get",
+    "path": "/v4/sequences/{sequence_id}/emails/{id}",
+    "key": "email",
+    "kind": "object",
+    "type": "sequence_email",
+    "responses": {
+      "200": {
+        "email": {
+          "id": 26,
+          "sequence_id": 130,
+          "subject": "Welcome email",
+          "preview_text": "Thanks for signing up",
+          "email_address": "joe2821@ck.lol",
+          "email_template_id": null,
+          "published": true,
+          "position": 0,
+          "delay_value": 0,
+          "delay_unit": "days",
+          "send_days": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+          ],
+          "content": "<p>Welcome!</p>"
+        }
+      }
+    }
+  },
+  "sequences_update_email": {
+    "verb": "put",
+    "path": "/v4/sequences/{sequence_id}/emails/{id}",
+    "key": "email",
+    "kind": "object",
+    "type": "sequence_email",
+    "responses": {
+      "200": {
+        "email": {
+          "id": 78,
+          "sequence_id": 197,
+          "subject": "Updated subject",
+          "preview_text": "Updated preview",
+          "email_address": "joe2906@ck.lol",
+          "email_template_id": null,
+          "published": true,
+          "position": null,
+          "delay_value": 3,
+          "delay_unit": "days",
+          "send_days": [
+            "monday",
+            "wednesday",
+            "friday"
+          ],
+          "content": "Content 44"
+        }
+      }
+    }
+  },
+  "sequences_delete_email": {
+    "verb": "delete",
+    "path": "/v4/sequences/{sequence_id}/emails/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "broadcasts_list": {
+    "verb": "get",
+    "path": "/v4/broadcasts",
+    "key": "broadcasts",
+    "kind": "list",
+    "type": "broadcast",
+    "responses": {
+      "200": {
+        "broadcasts": [
+          {
+            "id": 3,
+            "publication_id": 3,
+            "created_at": "2023-02-17T11:43:55Z",
+            "subject": "Campaign subject 3",
+            "preview_text": null,
+            "description": null,
+            "public": false,
+            "published_at": null,
+            "send_at": null,
+            "status": "draft",
+            "thumbnail_alt": null,
+            "thumbnail_url": null,
+            "content": null,
+            "public_url": null,
+            "email_address": "greetings@kit.dev",
+            "email_template": {
+              "id": 6,
+              "name": "Text Only"
+            },
+            "subscriber_filter": [
+              {
+                "all": [
+                  {
+                    "type": "all_subscribers"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "publication_id": 2,
+            "created_at": "2023-02-17T11:43:55Z",
+            "subject": "Campaign subject 2",
+            "preview_text": null,
+            "description": null,
+            "public": false,
+            "published_at": null,
+            "send_at": null,
+            "status": "draft",
+            "thumbnail_alt": null,
+            "thumbnail_url": null,
+            "content": null,
+            "public_url": null,
+            "email_address": "greetings@kit.dev",
+            "email_template": {
+              "id": 6,
+              "name": "Text Only"
+            },
+            "subscriber_filter": [
+              {
+                "all": [
+                  {
+                    "type": "all_subscribers"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "publication_id": 1,
+            "created_at": "2023-02-17T11:43:55Z",
+            "subject": "Campaign subject 1",
+            "preview_text": null,
+            "description": null,
+            "public": false,
+            "published_at": null,
+            "send_at": null,
+            "status": "draft",
+            "thumbnail_alt": null,
+            "thumbnail_url": null,
+            "content": null,
+            "public_url": null,
+            "email_address": "greetings@kit.dev",
+            "email_template": {
+              "id": 6,
+              "name": "Text Only"
+            },
+            "subscriber_filter": [
+              {
+                "all": [
+                  {
+                    "type": "all_subscribers"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzNd",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "broadcasts_create": {
+    "verb": "post",
+    "path": "/v4/broadcasts",
+    "key": "broadcast",
+    "kind": "object",
+    "type": "broadcast",
+    "responses": {
+      "201": {
+        "broadcast": {
+          "id": 64,
+          "publication_id": 55,
+          "created_at": "2023-02-17T11:43:55Z",
+          "subject": "Hello!",
+          "preview_text": "Pleased to meet you!",
+          "description": "Intro email",
+          "content": "<p>Let me introduce myself</p>",
+          "public": true,
+          "published_at": "2023-02-17T11:43:55Z",
+          "send_at": null,
+          "thumbnail_alt": null,
+          "thumbnail_url": null,
+          "public_url": "https://kit-greetings.kit.com/posts/",
+          "email_address": "greetings@kit.dev",
+          "email_template": {
+            "id": 2,
+            "name": "Classic"
+          },
+          "subscriber_filter": [
+            {
+              "all": [
+                {
+                  "type": "segment",
+                  "ids": [
+                    18
+                  ]
+                }
+              ]
+            }
+          ],
+          "status": "draft"
+        }
+      }
+    }
+  },
+  "broadcasts_get": {
+    "verb": "get",
+    "path": "/v4/broadcasts/{id}",
+    "key": "broadcast",
+    "kind": "object",
+    "type": "broadcast",
+    "responses": {
+      "200": {
+        "broadcast": {
+          "id": 57,
+          "publication_id": 48,
+          "created_at": "2023-02-17T11:43:55Z",
+          "subject": "You'll never guess...",
+          "preview_text": null,
+          "description": null,
+          "content": null,
+          "public": false,
+          "published_at": null,
+          "send_at": null,
+          "thumbnail_alt": null,
+          "thumbnail_url": null,
+          "public_url": null,
+          "email_address": "greetings@kit.dev",
+          "email_template": {
+            "id": 6,
+            "name": "Text Only"
+          },
+          "subscriber_filter": [
+            {
+              "all": [
+                {
+                  "type": "all_subscribers"
+                }
+              ]
+            }
+          ],
+          "status": "draft"
+        }
+      }
+    }
+  },
+  "broadcasts_update": {
+    "verb": "put",
+    "path": "/v4/broadcasts/{id}",
+    "key": "broadcast",
+    "kind": "object",
+    "type": "broadcast",
+    "responses": {
+      "200": {
+        "broadcast": {
+          "id": 92,
+          "publication_id": 83,
+          "created_at": "2023-02-17T11:43:55Z",
+          "subject": "Hello!",
+          "preview_text": "Pleased to meet you!",
+          "description": "Intro email",
+          "content": "<p>Let me introduce myself</p>",
+          "public": true,
+          "published_at": "2023-02-17T11:43:55Z",
+          "send_at": "2023-02-17T11:43:55Z",
+          "thumbnail_alt": null,
+          "thumbnail_url": null,
+          "public_url": "https://kit-greetings.kit.com/posts/hello",
+          "email_address": "greetings@kit.dev",
+          "email_template": {
+            "id": 2,
+            "name": "Classic"
+          },
+          "subscriber_filter": [
+            {
+              "all": [
+                {
+                  "type": "segment",
+                  "ids": [
+                    54
+                  ]
+                }
+              ]
+            }
+          ],
+          "status": "sending"
+        }
+      }
+    }
+  },
+  "broadcasts_delete": {
+    "verb": "delete",
+    "path": "/v4/broadcasts/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "broadcasts_stats_list": {
+    "verb": "get",
+    "path": "/v4/broadcasts/stats",
+    "key": "broadcasts",
+    "kind": "list",
+    "type": "broadcast_stats",
+    "responses": {
+      "200": {
+        "broadcasts": [
+          {
+            "id": 205,
+            "subject": "... or will you",
+            "send_at": null,
+            "stats": {
+              "recipients": 0,
+              "open_rate": 0.0,
+              "emails_opened": 0,
+              "click_rate": 0.0,
+              "unsubscribe_rate": 0.0,
+              "unsubscribes": 0,
+              "total_clicks": 0,
+              "show_total_clicks": false,
+              "status": "draft",
+              "progress": 0.0,
+              "open_tracking_disabled": false,
+              "click_tracking_disabled": false
+            }
+          },
+          {
+            "id": 204,
+            "subject": "You'll never guess...",
+            "send_at": null,
+            "stats": {
+              "recipients": 0,
+              "open_rate": 0.0,
+              "emails_opened": 0,
+              "click_rate": 0.0,
+              "unsubscribe_rate": 0.0,
+              "unsubscribes": 0,
+              "total_clicks": 0,
+              "show_total_clicks": false,
+              "status": "draft",
+              "progress": 0.0,
+              "open_tracking_disabled": false,
+              "click_tracking_disabled": false
+            }
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzIwNV0=",
+          "end_cursor": "WzIwNF0=",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "broadcasts_stats": {
+    "verb": "get",
+    "path": "/v4/broadcasts/{broadcast_id}/stats",
+    "key": "broadcast",
+    "kind": "object",
+    "type": "broadcast_stats",
+    "responses": {
+      "200": {
+        "broadcast": {
+          "id": 270,
+          "stats": {
+            "recipients": 0,
+            "open_rate": 0.0,
+            "emails_opened": 0,
+            "click_rate": 0.0,
+            "unsubscribe_rate": 0.0,
+            "unsubscribes": 0,
+            "total_clicks": 0,
+            "show_total_clicks": false,
+            "status": "draft",
+            "progress": 0.0,
+            "open_tracking_disabled": false,
+            "click_tracking_disabled": false
+          }
+        }
+      }
+    }
+  },
+  "broadcasts_clicks": {
+    "verb": "get",
+    "path": "/v4/broadcasts/{broadcast_id}/clicks",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "broadcast": {
+          "id": 171,
+          "clicks": [
+            {
+              "id": 52,
+              "url": "https://example.com/52",
+              "unique_clicks": 3,
+              "click_to_delivery_rate": 0.006,
+              "click_to_open_rate": 0.03
+            },
+            {
+              "id": 53,
+              "url": "https://example.com/53",
+              "unique_clicks": 3,
+              "click_to_delivery_rate": 0.006,
+              "click_to_open_rate": 0.03
+            },
+            {
+              "id": 54,
+              "url": "https://example.com/54",
+              "unique_clicks": 3,
+              "click_to_delivery_rate": 0.006,
+              "click_to_open_rate": 0.03
+            }
+          ]
+        },
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzE4XQ==",
+          "end_cursor": "WzE4XQ==",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "email_templates_list": {
+    "verb": "get",
+    "path": "/v4/email_templates",
+    "key": "email_templates",
+    "kind": "list",
+    "type": "email_template",
+    "responses": {
+      "200": {
+        "email_templates": [
+          {
+            "id": 36,
+            "name": "Custom HTML Template",
+            "is_default": false,
+            "category": "HTML"
+          },
+          {
+            "id": 35,
+            "name": "Story",
+            "is_default": false,
+            "category": "Starting point"
+          },
+          {
+            "id": 6,
+            "name": "Text Only",
+            "is_default": true,
+            "category": "HTML"
+          },
+          {
+            "id": 4,
+            "name": "Modern",
+            "is_default": false,
+            "category": "HTML"
+          },
+          {
+            "id": 2,
+            "name": "Classic",
+            "is_default": false,
+            "category": "HTML"
+          },
+          {
+            "id": 1,
+            "name": "Card",
+            "is_default": false,
+            "category": "HTML"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzM2XQ==",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "segments_list": {
+    "verb": "get",
+    "path": "/v4/segments",
+    "key": "segments",
+    "kind": "list",
+    "type": "segment",
+    "responses": {
+      "200": {
+        "segments": [
+          {
+            "id": 75,
+            "name": "Segment B",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 74,
+            "name": "Segment A",
+            "created_at": "2023-02-17T11:43:55Z"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "Wzc1XQ==",
+          "end_cursor": "Wzc0XQ==",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "posts_list": {
+    "verb": "get",
+    "path": "/v4/posts",
+    "key": "posts",
+    "kind": "list",
+    "type": "post",
+    "responses": {
+      "200": {
+        "posts": [
+          {
+            "id": 3,
+            "publication_id": 127,
+            "created_at": "2026-07-28T03:01:00Z",
+            "title": "Draft Post",
+            "slug": null,
+            "description": null,
+            "meta_description": null,
+            "status": "draft",
+            "published_at": null,
+            "sent_at": null,
+            "thumbnail_alt": null,
+            "thumbnail_url": null,
+            "is_paid": false,
+            "public_url": null
+          },
+          {
+            "id": 2,
+            "publication_id": 126,
+            "created_at": "2026-07-28T03:01:00Z",
+            "title": "Email and Web Post",
+            "slug": "email-and-web-post",
+            "description": null,
+            "meta_description": null,
+            "status": "published",
+            "published_at": "2026-07-26T03:01:00Z",
+            "sent_at": "2026-07-28T03:01:00Z",
+            "thumbnail_alt": null,
+            "thumbnail_url": null,
+            "is_paid": false,
+            "public_url": "https://asdf.kit.com/posts/email-and-web-post"
+          },
+          {
+            "id": 1,
+            "publication_id": 125,
+            "created_at": "2026-07-28T03:01:00Z",
+            "title": "Web Only Post",
+            "slug": "web-only-post",
+            "description": null,
+            "meta_description": null,
+            "status": "published",
+            "published_at": "2026-07-27T03:01:00Z",
+            "sent_at": null,
+            "thumbnail_alt": null,
+            "thumbnail_url": null,
+            "is_paid": false,
+            "public_url": "https://asdf.kit.com/posts/web-only-post"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzNd",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "posts_get": {
+    "verb": "get",
+    "path": "/v4/posts/{id}",
+    "key": "post",
+    "kind": "object",
+    "type": "post",
+    "responses": {
+      "200": {
+        "post": {
+          "id": 25,
+          "publication_id": 149,
+          "created_at": "2026-07-28T03:01:04Z",
+          "title": "My Newsletter Post",
+          "slug": "my-newsletter-post",
+          "description": null,
+          "meta_description": null,
+          "status": "published",
+          "published_at": "2026-07-27T03:01:04Z",
+          "sent_at": null,
+          "thumbnail_alt": null,
+          "thumbnail_url": null,
+          "is_paid": false,
+          "public_url": "https://asdf.kit.com/posts/my-newsletter-post",
+          "content": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n<!-- -->\n"
+        }
+      }
+    }
+  },
+  "snippets_list": {
+    "verb": "get",
+    "path": "/v4/snippets",
+    "key": "snippets",
+    "kind": "list",
+    "type": "snippet",
+    "responses": {
+      "200": {
+        "snippets": [
+          {
+            "id": 5,
+            "name": "Welcome message",
+            "snippet_type": "inline",
+            "archived": false,
+            "key": "welcome-message",
+            "created_at": "2023-02-17T11:43:55Z",
+            "updated_at": "2023-02-17T11:43:55Z",
+            "content": "Hello {{ subscriber.first_name }}",
+            "document": {
+              "id": 292,
+              "value": null,
+              "value_html": "content",
+              "value_plain": null,
+              "version": 1
+            }
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzVd",
+          "end_cursor": "WzVd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "snippets_get": {
+    "verb": "get",
+    "path": "/v4/snippets/{id}",
+    "key": "snippet",
+    "kind": "object",
+    "type": "snippet",
+    "responses": {
+      "200": {
+        "snippet": {
+          "id": 24,
+          "name": "Welcome message",
+          "snippet_type": "inline",
+          "archived": false,
+          "key": "welcome-message",
+          "created_at": "2023-02-17T11:43:55Z",
+          "updated_at": "2023-02-17T11:43:55Z",
+          "content": "Hello {{ subscriber.first_name }}",
+          "document": {
+            "id": 311,
+            "value": null,
+            "value_html": "content",
+            "value_plain": null,
+            "version": 1
+          }
+        }
+      }
+    }
+  },
+  "snippets_create": {
+    "verb": "post",
+    "path": "/v4/snippets",
+    "key": "snippet",
+    "kind": "object",
+    "type": "snippet",
+    "responses": {
+      "201": {
+        "snippet": {
+          "id": 31,
+          "name": "Cat Fact of the Day",
+          "snippet_type": "inline",
+          "archived": false,
+          "key": "cat-fact-of-the-day",
+          "created_at": "2026-07-28T03:02:06Z",
+          "updated_at": "2026-07-28T03:02:06Z",
+          "content": "Did you know, {{ subscriber.first_name }}? Cats can rotate their ears 180 degrees.",
+          "document": {
+            "id": 318,
+            "value": null,
+            "value_html": null,
+            "value_plain": null,
+            "version": 1
+          }
+        }
+      }
+    }
+  },
+  "snippets_update": {
+    "verb": "put",
+    "path": "/v4/snippets/{id}",
+    "key": "snippet",
+    "kind": "object",
+    "type": "snippet",
+    "responses": {
+      "200": {
+        "snippet": {
+          "id": 59,
+          "name": "Dog Fact of the Day",
+          "snippet_type": "inline",
+          "archived": false,
+          "key": "welcome-message",
+          "created_at": "2023-02-17T11:43:55Z",
+          "updated_at": "2026-07-28T03:02:11Z",
+          "content": "Hello {{ subscriber.first_name }}",
+          "document": {
+            "id": 346,
+            "value": null,
+            "value_html": "content",
+            "value_plain": null,
+            "version": 1
+          }
+        }
+      }
+    }
+  },
+  "purchases_list": {
+    "verb": "get",
+    "path": "/v4/purchases",
+    "key": "purchases",
+    "kind": "list",
+    "type": "purchase",
+    "responses": {
+      "200": {
+        "purchases": [
+          {
+            "id": 3,
+            "transaction_id": "512-41-4101",
+            "status": "paid",
+            "source": "Gumroad",
+            "email_address": "pru.magoo@convertkit.dev",
+            "subscriber_id": 13,
+            "currency": "USD",
+            "transaction_time": "2023-02-17T11:43:55Z",
+            "subtotal": 5.0,
+            "discount": 0.0,
+            "tax": 0.0,
+            "total": 5.0,
+            "products": [
+              {
+                "quantity": 1,
+                "lid": "000-13-0000",
+                "unit_price": 0.05,
+                "sku": null,
+                "name": "Tip",
+                "pid": "111-75-7524"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "transaction_id": "323-79-5320",
+            "status": "paid",
+            "source": "Gumroad",
+            "email_address": "pru.magoo@convertkit.dev",
+            "subscriber_id": 13,
+            "currency": "USD",
+            "transaction_time": "2023-02-17T11:43:55Z",
+            "subtotal": 10.0,
+            "discount": 0.0,
+            "tax": 1.05,
+            "total": 11.05,
+            "products": [
+              {
+                "quantity": 1,
+                "lid": "000-12-0000",
+                "unit_price": 0.1,
+                "sku": null,
+                "name": "Monthly Game Review",
+                "pid": "000-11-0000"
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "transaction_id": "796-92-4892",
+            "status": "paid",
+            "source": "Gumroad",
+            "email_address": "pru.magoo@convertkit.dev",
+            "subscriber_id": 13,
+            "currency": "USD",
+            "transaction_time": "2023-02-17T11:43:55Z",
+            "subtotal": 78.66,
+            "discount": 5.0,
+            "tax": 7.87,
+            "total": 81.53,
+            "products": [
+              {
+                "quantity": 1,
+                "lid": "811-75-7900",
+                "unit_price": 23.22,
+                "sku": null,
+                "name": "Phantom Hourglass",
+                "pid": "804-02-4430"
+              },
+              {
+                "quantity": 1,
+                "lid": "766-49-1241",
+                "unit_price": 32.22,
+                "sku": null,
+                "name": "Twilight Princess",
+                "pid": "833-51-1151"
+              }
+            ]
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzNd",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "purchases_get": {
+    "verb": "get",
+    "path": "/v4/purchases/{id}",
+    "key": "purchase",
+    "kind": "object",
+    "type": "purchase",
+    "responses": {
+      "200": {
+        "purchase": {
+          "id": 14,
+          "transaction_id": "796-92-4892",
+          "subscriber_id": 24,
+          "status": "paid",
+          "email_address": "pru.magoo@convertkit.dev",
+          "currency": "USD",
+          "transaction_time": "2023-02-17T11:43:55Z",
+          "subtotal": 78.66,
+          "discount": 5.0,
+          "tax": 7.87,
+          "total": 81.53,
+          "products": [
+            {
+              "quantity": 1,
+              "lid": "811-75-7900",
+              "unit_price": 23.22,
+              "sku": null,
+              "name": "Phantom Hourglass",
+              "pid": "804-02-4430"
+            },
+            {
+              "quantity": 1,
+              "lid": "766-49-1241",
+              "unit_price": 32.22,
+              "sku": null,
+              "name": "Twilight Princess",
+              "pid": "833-51-1151"
+            }
+          ],
+          "source": "Gumroad"
+        }
+      }
+    }
+  },
+  "purchases_create": {
+    "verb": "post",
+    "path": "/v4/purchases",
+    "key": "purchase",
+    "kind": "object",
+    "type": "purchase",
+    "responses": {
+      "201": {
+        "purchase": {
+          "id": 22,
+          "transaction_id": "796-92-4892",
+          "subscriber_id": 42,
+          "status": "paid",
+          "email_address": "pru.magoo@convertkit.dev",
+          "currency": "USD",
+          "transaction_time": "2023-02-17T11:43:55Z",
+          "subtotal": 78.66,
+          "discount": 5.0,
+          "tax": 7.87,
+          "total": 81.53,
+          "products": [
+            {
+              "quantity": 1,
+              "lid": "811-75-7900",
+              "unit_price": 23.22,
+              "sku": "SM21-SH-M02-RD-S-001",
+              "name": "Phantom Hourglass",
+              "pid": "804-02-4430"
+            },
+            {
+              "quantity": 1,
+              "lid": "766-49-1241",
+              "unit_price": 32.22,
+              "sku": "WT21-JK-M03-BK-L-012",
+              "name": "Twilight Princess",
+              "pid": "833-51-1151"
+            },
+            {
+              "quantity": 1,
+              "lid": "563-95-8878",
+              "unit_price": 23.22,
+              "sku": "FL21-TS-M01-BL-M-020",
+              "name": "Four Swords",
+              "pid": "217-99-4325"
+            }
+          ],
+          "source": "Fancy App 434"
+        }
+      }
+    }
+  },
+  "webhooks_list": {
+    "verb": "get",
+    "path": "/v4/webhooks",
+    "key": "webhooks",
+    "kind": "list",
+    "type": "webhook",
+    "responses": {
+      "200": {
+        "webhooks": [
+          {
+            "id": 2,
+            "account_id": 1776,
+            "event": {
+              "name": "tag_add",
+              "tag_id": 50
+            },
+            "target_url": "http://example.convertkit.dev/tags"
+          },
+          {
+            "id": 1,
+            "account_id": 1776,
+            "event": {
+              "name": "form_subscribe",
+              "form_id": 7
+            },
+            "target_url": "http://example.convertkit.dev/"
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzJd",
+          "end_cursor": "WzFd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "webhooks_create": {
+    "verb": "post",
+    "path": "/v4/webhooks",
+    "key": "webhook",
+    "kind": "object",
+    "type": "webhook",
+    "responses": {
+      "201": {
+        "webhook": {
+          "id": 9,
+          "account_id": 1802,
+          "event": {
+            "name": "subscriber_activate",
+            "initiator_value": null
+          },
+          "target_url": "https://example.convertkit.dev/"
+        }
+      }
+    }
+  },
+  "webhooks_delete": {
+    "verb": "delete",
+    "path": "/v4/webhooks/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "webhook_endpoints_list": {
+    "verb": "get",
+    "path": "/v4/webhook_endpoints",
+    "key": "webhook_endpoints",
+    "kind": "list",
+    "type": "webhook_endpoint",
+    "responses": {
+      "200": {
+        "webhook_endpoints": [
+          {
+            "id": 2,
+            "name": "My webhook",
+            "url": "https://hooks.example.com/incoming",
+            "events": [
+              "custom_field.created",
+              "subscriber.created"
+            ],
+            "status": "active",
+            "source": "creator",
+            "description": "A test webhook",
+            "created_by_app": null,
+            "created_at": "2023-02-17T11:43:55Z",
+            "previous_secret_expires_at": null
+          }
+        ],
+        "pagination": {
+          "has_previous_page": false,
+          "has_next_page": false,
+          "start_cursor": "WzJd",
+          "end_cursor": "WzJd",
+          "per_page": 500
+        }
+      }
+    }
+  },
+  "webhook_endpoints_get": {
+    "verb": "get",
+    "path": "/v4/webhook_endpoints/{id}",
+    "key": "webhook_endpoint",
+    "kind": "object",
+    "type": "webhook_endpoint",
+    "responses": {
+      "200": {
+        "webhook_endpoint": {
+          "id": 13,
+          "name": "My webhook",
+          "url": "https://hooks.example.com/incoming",
+          "events": [
+            "subscriber.created"
+          ],
+          "status": "active",
+          "source": "creator",
+          "description": "A test webhook",
+          "created_by_app": null,
+          "created_at": "2023-02-17T11:43:55Z",
+          "previous_secret_expires_at": null
+        }
+      }
+    }
+  },
+  "webhook_endpoints_create": {
+    "verb": "post",
+    "path": "/v4/webhook_endpoints",
+    "key": "webhook_endpoint",
+    "kind": "object",
+    "type": "webhook_endpoint",
+    "responses": {
+      "201": {
+        "webhook_endpoint": {
+          "id": 20,
+          "name": "My webhook",
+          "url": "https://hooks.example.com/incoming",
+          "events": [
+            "custom_field.created",
+            "subscriber.created"
+          ],
+          "status": "active",
+          "source": "creator",
+          "description": "Listens for things",
+          "created_by_app": null,
+          "created_at": "2023-02-17T11:43:55Z",
+          "previous_secret_expires_at": null,
+          "secret": "whsec_YOUR_SIGNING_SECRET_HERE"
+        }
+      }
+    }
+  },
+  "webhook_endpoints_update": {
+    "verb": "patch",
+    "path": "/v4/webhook_endpoints/{id}",
+    "key": "webhook_endpoint",
+    "kind": "object",
+    "type": "webhook_endpoint",
+    "responses": {
+      "200": {
+        "webhook_endpoint": {
+          "id": 29,
+          "name": "Updated name",
+          "url": "https://hooks.example.com/v2",
+          "events": [
+            "subscriber.activated"
+          ],
+          "status": "active",
+          "source": "creator",
+          "description": "Now with details",
+          "created_by_app": null,
+          "created_at": "2023-02-17T11:43:55Z",
+          "previous_secret_expires_at": null
+        }
+      }
+    }
+  },
+  "webhook_endpoints_delete": {
+    "verb": "delete",
+    "path": "/v4/webhook_endpoints/{id}",
+    "key": null,
+    "kind": "none",
+    "type": null,
+    "responses": {
+      "204": null
+    }
+  },
+  "webhook_endpoints_rotate_secret": {
+    "verb": "post",
+    "path": "/v4/webhook_endpoints/{id}/rotate_secret",
+    "key": "webhook_endpoint",
+    "kind": "object",
+    "type": "webhook_endpoint",
+    "responses": {
+      "200": {
+        "webhook_endpoint": {
+          "id": 66,
+          "name": "My webhook",
+          "url": "https://hooks.example.com/incoming",
+          "events": [
+            "subscriber.created"
+          ],
+          "status": "active",
+          "source": "creator",
+          "description": "A test webhook",
+          "created_by_app": null,
+          "created_at": "2023-02-17T11:43:55Z",
+          "previous_secret_expires_at": "2023-02-18T11:43:55Z",
+          "secret": "whsec_YOUR_SIGNING_SECRET_HERE"
+        }
+      }
+    }
+  },
+  "webhook_endpoints_revoke_previous_secret": {
+    "verb": "post",
+    "path": "/v4/webhook_endpoints/{id}/revoke_previous_secret",
+    "key": "webhook_endpoint",
+    "kind": "object",
+    "type": "webhook_endpoint",
+    "responses": {
+      "200": {
+        "webhook_endpoint": {
+          "id": 85,
+          "name": "My webhook",
+          "url": "https://hooks.example.com/incoming",
+          "events": [
+            "subscriber.created"
+          ],
+          "status": "active",
+          "source": "creator",
+          "description": "A test webhook",
+          "created_by_app": null,
+          "created_at": "2023-02-17T11:43:55Z",
+          "previous_secret_expires_at": null
+        }
+      }
+    }
+  },
+  "bulk_create_subscribers": {
+    "verb": "post",
+    "path": "/v4/bulk/subscribers",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 601,
+            "first_name": null,
+            "email_address": "brooke@convertkit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 602,
+            "first_name": "Camille",
+            "email_address": "camille@convertkit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 600,
+            "first_name": "Alice",
+            "email_address": "alice@convertkit.dev",
+            "state": "active",
+            "created_at": "2023-02-17T11:43:55Z"
+          }
+        ],
+        "failures": [
+          {
+            "subscriber": {
+              "first_name": "Benito",
+              "email_address": null,
+              "state": "active",
+              "created_at": null
+            },
+            "errors": [
+              "Email address is invalid"
+            ]
+          }
+        ]
+      },
+      "202": {}
+    }
+  },
+  "bulk_create_custom_fields": {
+    "verb": "post",
+    "path": "/v4/bulk/custom_fields",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "custom_fields": [
+          {
+            "id": 144,
+            "key": "existing_custom_field",
+            "label": "Existing Custom Field",
+            "name": "ck_field_144_existing_custom_field",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 146,
+            "key": "interests",
+            "label": "Interests",
+            "name": "ck_field_146_interests",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 145,
+            "key": "last_name",
+            "label": "Last name",
+            "name": "ck_field_145_last_name",
+            "created_at": "2023-02-17T11:43:55Z"
+          }
+        ],
+        "failures": []
+      },
+      "202": {}
+    }
+  },
+  "bulk_update_custom_field_values": {
+    "verb": "post",
+    "path": "/v4/bulk/custom_fields/subscribers",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "custom_field_values": [
+          {
+            "subscriber_id": 622,
+            "subscriber_custom_field_id": 157,
+            "value": "Smith"
+          },
+          {
+            "subscriber_id": 622,
+            "subscriber_custom_field_id": 158,
+            "value": "Acme Inc"
+          }
+        ],
+        "failures": [
+          {
+            "errors": [
+              "Subscriber does not exist"
+            ],
+            "custom_field_value": {
+              "subscriber_id": null,
+              "subscriber_custom_field_id": 157,
+              "value": "Jones"
+            }
+          },
+          {
+            "errors": [
+              "Custom field does not exist"
+            ],
+            "custom_field_value": {
+              "subscriber_id": 622,
+              "subscriber_custom_field_id": 999999,
+              "value": "Test"
+            }
+          }
+        ]
+      },
+      "202": {}
+    }
+  },
+  "bulk_add_subscribers_to_forms": {
+    "verb": "post",
+    "path": "/v4/bulk/forms/subscribers",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 640,
+            "first_name": "Sub",
+            "email_address": "sub@example.com",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+            "referrer_utm_parameters": {
+              "source": "facebook",
+              "medium": "cpc",
+              "campaign": "black_friday",
+              "term": "car_owners",
+              "content": "get_10_off"
+            }
+          },
+          {
+            "id": 640,
+            "first_name": "Sub",
+            "email_address": "sub@example.com",
+            "created_at": "2023-02-17T11:43:55Z",
+            "added_at": "2023-02-17T11:43:55Z",
+            "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off",
+            "referrer_utm_parameters": {
+              "source": "facebook",
+              "medium": "cpc",
+              "campaign": "black_friday",
+              "term": "car_owners",
+              "content": "get_10_off"
+            }
+          }
+        ],
+        "failures": [
+          {
+            "errors": [
+              "Subscriber does not exist"
+            ],
+            "subscription": {
+              "form_id": 215,
+              "subscriber_id": null,
+              "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off"
+            }
+          },
+          {
+            "errors": [
+              "Form does not exist"
+            ],
+            "subscription": {
+              "form_id": null,
+              "subscriber_id": 640,
+              "referrer": "https://mywebsite.com/bfpromo/?utm_source=facebook&utm_medium=cpc&utm_campaign=black_friday&utm_term=car_owners&utm_content=get_10_off"
+            }
+          }
+        ]
+      },
+      "202": {}
+    }
+  },
+  "bulk_create_tags": {
+    "verb": "post",
+    "path": "/v4/bulk/tags",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "tags": [
+          {
+            "id": 74,
+            "name": "Existing Tag",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 75,
+            "name": "Attended Event",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 76,
+            "name": "Newsletter",
+            "created_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 77,
+            "name": "Re-engage",
+            "created_at": "2023-02-17T11:43:55Z"
+          }
+        ],
+        "failures": []
+      },
+      "202": {}
+    }
+  },
+  "bulk_delete_tags": {
+    "verb": "delete",
+    "path": "/v4/bulk/tags",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "failures": [
+          {
+            "errors": [
+              "Tag does not exist"
+            ],
+            "tag": {
+              "id": 92
+            }
+          }
+        ]
+      },
+      "202": {}
+    }
+  },
+  "bulk_tag_subscribers": {
+    "verb": "post",
+    "path": "/v4/bulk/tags/subscribers",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "subscribers": [
+          {
+            "id": 656,
+            "first_name": "Sub",
+            "email_address": "sub@example.com",
+            "created_at": "2023-02-17T11:43:55Z",
+            "tagged_at": "2023-02-17T11:43:55Z"
+          },
+          {
+            "id": 656,
+            "first_name": "Sub",
+            "email_address": "sub@example.com",
+            "created_at": "2023-02-17T11:43:55Z",
+            "tagged_at": "2023-02-17T11:43:55Z"
+          }
+        ],
+        "failures": [
+          {
+            "errors": [
+              "Subscriber does not exist"
+            ],
+            "tagging": {
+              "tag_id": 112,
+              "subscriber_id": null
+            }
+          },
+          {
+            "errors": [
+              "Tag does not exist"
+            ],
+            "tagging": {
+              "tag_id": null,
+              "subscriber_id": 656
+            }
+          }
+        ]
+      },
+      "202": {}
+    }
+  },
+  "bulk_remove_tag_subscribers": {
+    "verb": "delete",
+    "path": "/v4/bulk/tags/subscribers",
+    "key": null,
+    "kind": "raw",
+    "type": null,
+    "responses": {
+      "200": {
+        "failures": []
+      },
+      "202": {}
+    }
+  }
+}

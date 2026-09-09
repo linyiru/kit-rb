@@ -25,6 +25,15 @@ namespace :contract do
   end
 end
 
+namespace :testing do
+  desc "Regenerate lib/kit/testing/fixtures.json from the registry + OpenAPI examples"
+  task :fixtures do
+    require_relative "spec/support/testing_fixtures"
+    TestingFixtures.write
+    puts "Wrote #{TestingFixtures::PATH} (#{Kit::Testing::OPERATIONS.size} operations)"
+  end
+end
+
 desc "Live read-only smoke test against the real API (needs KIT_API_KEY)"
 task :smoke do
   require_relative "spec/support/smoke"
