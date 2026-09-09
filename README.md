@@ -372,8 +372,11 @@ The suite is layered:
   document, so reading the wrong envelope, sending an undocumented field, or
   parsing a no-content response fails automatically. A weekly workflow diffs
   the vendored document against Kit's and fails on drift.
-- **Integration** — real recorded responses (VCR cassettes, secrets scrubbed)
-  replayed in CI, proving the live shapes still parse into our value objects.
+- **Integration** — real recorded responses (VCR cassettes) replayed in CI,
+  proving the live shapes still parse into our value objects. Credentials,
+  cookies, emails and everything else that names the recording account (its
+  subdomain, sender names, form uids, account/user ids) are scrubbed at record
+  time, and a hygiene spec fails the suite if a committed cassette carries any.
 - **Smoke** — `rake smoke` hits every read endpoint live (needs `KIT_API_KEY`).
 - **E2E** — an opt-in (`KIT_E2E=1`) create→update→list→delete lifecycle that
   cleans up after itself.

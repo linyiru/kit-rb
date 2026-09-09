@@ -12,6 +12,7 @@ require "vcr"
 require "kit-rb"
 
 require_relative "support/openapi_contract"
+require_relative "support/cassette_scrub"
 
 WebMock.disable_net_connect!
 
@@ -42,13 +43,11 @@ VCR.configure do |c|
   c.filter_sensitive_data("Bearer <OAUTH_TOKEN>") do |interaction|
     interaction.request.headers["Authorization"]&.first
   end
-  # Scrub every email address from recorded request and response bodies — an
-  # account can expose several distinct emails, so a value-based filter is not
-  # enough; rewrite them all at record time.
-  email_pattern = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/
+  # Bodies: emails, the creator's subdomain, sender names, form uids and the
+  # account/user ids (see spec/support/cassette_scrub.rb for the rules).
   c.before_record do |interaction|
-    interaction.response.body = interaction.response.body&.gsub(email_pattern, "<EMAIL>")
-    interaction.request.body = interaction.request.body&.gsub(email_pattern, "<EMAIL>")
+    interaction.response.body = CassetteScrub.body(interaction.response.body)
+    interaction.request.body = CassetteScrub.body(interaction.request.body)
     # Kit sets an XSRF cookie on every response; it is session state, not part
     # of the API contract, and has no business in a committed fixture.
     interaction.response.headers.delete("Set-Cookie")
