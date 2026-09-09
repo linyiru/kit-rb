@@ -16,8 +16,24 @@ RSpec.describe CassetteScrub do
     expect(described_class.body('{"u":"https://api.kit.com/v4/tags/1"}')).to include("https://api.kit.com/v4/tags/1")
   end
 
-  it "returns non-JSON and nil bodies unchanged apart from the pattern rewrites" do
+  it "rewrites user.id and account.id regardless of key order or formatting" do
+    body = "{ \"user\" : { \"email\" : \"ada@example.com\", \"id\" : 410676 },\n " \
+           "\"account\" : { \"name\" : \"\", \"id\" : 379565 } }"
+    json = JSON.parse(described_class.body(body))
+    expect(json.dig("user", "id")).to eq(1)
+    expect(json.dig("account", "id")).to eq(2)
+    expect(json.dig("user", "email")).to eq("<EMAIL>")
+  end
+
+  it "does not invent ids, and leaves other ids alone" do
+    no_id = JSON.parse(described_class.body('{"user":{"email":"ada@example.com"}}'))
+    expect(no_id).to eq("user" => { "email" => "<EMAIL>" })
+    expect(JSON.parse(described_class.body('{"tag":{"id":23217323}}'))).to eq("tag" => { "id" => 23_217_323 })
+  end
+
+  it "returns non-JSON, non-object and nil bodies unchanged apart from the pattern rewrites" do
     expect(described_class.body("not json ada@example.com")).to eq("not json <EMAIL>")
+    expect(described_class.body("[1,2]")).to eq("[1,2]")
     expect(described_class.body("")).to eq("")
     expect(described_class.body(nil)).to be_nil
   end

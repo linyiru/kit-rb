@@ -17,12 +17,31 @@ module CassetteScrub
   # pretty-printed body is scrubbed the same way.
   FROM_NAME = /"from_name"\s*:\s*"(?:[^"\\]|\\.)*"/
   FORM_UID = /"uid"\s*:\s*"[a-f0-9]+"/
+  # The account and user ids name the creator in Kit's App Store and support
+  # tooling; fixed Integer stand-ins keep the typed objects parsing the same.
+  # Other ids are opaque and stay as recorded.
+  ACCOUNT_IDS = { "user" => 1, "account" => 2 }.freeze
+
   def self.body(body)
     return body if body.nil?
 
-    body.gsub(EMAIL, "<EMAIL>")
-        .gsub(SUBDOMAIN_URL, "https://<SUBDOMAIN>.kit.com/<FORM_UID>")
-        .gsub(FROM_NAME, '"from_name":"<FROM_NAME>"')
-        .gsub(FORM_UID, '"uid":"<FORM_UID>"')
+    account_ids(
+      body.gsub(EMAIL, "<EMAIL>")
+          .gsub(SUBDOMAIN_URL, "https://<SUBDOMAIN>.kit.com/<FORM_UID>")
+          .gsub(FROM_NAME, '"from_name":"<FROM_NAME>"')
+          .gsub(FORM_UID, '"uid":"<FORM_UID>"')
+    )
+  end
+
+  # Rewrites user.id / account.id on the parsed JSON, so key order does not
+  # matter; a body that is not a JSON object is returned unchanged.
+  def self.account_ids(body)
+    json = JSON.parse(body)
+    return body unless json.is_a?(Hash)
+
+    ACCOUNT_IDS.each { |key, stand_in| json[key]["id"] = stand_in if json[key].is_a?(Hash) && json[key].key?("id") }
+    JSON.generate(json)
+  rescue JSON::ParserError
+    body
   end
 end

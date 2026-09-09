@@ -43,8 +43,8 @@ VCR.configure do |c|
   c.filter_sensitive_data("Bearer <OAUTH_TOKEN>") do |interaction|
     interaction.request.headers["Authorization"]&.first
   end
-  # Bodies: emails, the creator's subdomain, sender names and form uids (see
-  # spec/support/cassette_scrub.rb for the rules).
+  # Bodies: emails, the creator's subdomain, sender names, form uids and the
+  # account/user ids (see spec/support/cassette_scrub.rb for the rules).
   c.before_record do |interaction|
     interaction.response.body = CassetteScrub.body(interaction.response.body)
     interaction.request.body = CassetteScrub.body(interaction.request.body)

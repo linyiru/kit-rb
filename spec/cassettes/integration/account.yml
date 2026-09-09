@@ -68,7 +68,7 @@ http_interactions:
       - Origin
     body:
       encoding: UTF-8
-      string: '{"user":{"id":410676,"email":"<EMAIL>"},"account":{"id":379565,"name":"","plan_type":"free","primary_email_address":"<EMAIL>","created_at":"2020-07-01T07:40:11Z","plan":{"plan_type":"free","interval":"month","subscriber_limit":1000,"on_trial":false,"trial_lapse_date":null,"renews_at":null,"cancels_at":null},"sending_addresses":[{"email_address":"<EMAIL>","from_name":"<FROM_NAME>","status":"confirmed","is_default":false,"is_verified":true,"is_dmarc_configured":false},{"email_address":"<EMAIL>","from_name":"<FROM_NAME>","status":"confirmed","is_default":true,"is_verified":true,"is_dmarc_configured":false}],"timezone":{"name":"America/New_York","friendly_name":"Eastern
+      string: '{"user":{"id":1,"email":"<EMAIL>"},"account":{"id":2,"name":"","plan_type":"free","primary_email_address":"<EMAIL>","created_at":"2020-07-01T07:40:11Z","plan":{"plan_type":"free","interval":"month","subscriber_limit":1000,"on_trial":false,"trial_lapse_date":null,"renews_at":null,"cancels_at":null},"sending_addresses":[{"email_address":"<EMAIL>","from_name":"<FROM_NAME>","status":"confirmed","is_default":false,"is_verified":true,"is_dmarc_configured":false},{"email_address":"<EMAIL>","from_name":"<FROM_NAME>","status":"confirmed","is_default":true,"is_verified":true,"is_dmarc_configured":false}],"timezone":{"name":"America/New_York","friendly_name":"Eastern
         Time (US & Canada)","utc_offset":"-05:00"}}}'
   recorded_at: Fri, 04 Sep 2026 16:26:23 GMT
 recorded_with: VCR 6.4.0
