@@ -223,8 +223,9 @@ are its job, not the gem's; the "persisted pair already differs" check matters
 because Kit was observed to accept a superseded refresh token (see above). The
 client's side of the race is handled: concurrent requests that 401 on the same
 old token do not each renew (once one has installed a newer token the others just
-retry with it), and a renewal that finishes late cannot roll a newer token back. Refreshing ahead of
-expiry stays with the caller: `Token#expires_at` / `#expired?` tell you when.
+retry with it), and a renewal that finishes late cannot roll a newer token back.
+Refreshing ahead of expiry stays with the caller: `Token#expiring_within?(seconds)`
+(or `#expires_at` / `#expired?`) tells you when.
 
 Kit documents refresh tokens as single-use and returns a new `refresh_token` on
 every refresh; persist the newest pair after each exchange or refresh. Do not

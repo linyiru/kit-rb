@@ -78,6 +78,7 @@ module Kit
       def to_s: () -> String
       def expires_at: () -> Integer?
       def expired?: (?now: Integer, ?leeway: Integer) -> bool
+      def expiring_within?: (Integer seconds, ?now: Integer) -> bool
     end
     class Client
       AUTHORIZE_PATH: String

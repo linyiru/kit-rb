@@ -17,6 +17,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   newer token installed meanwhile is simply retried with, and a late renewal
   cannot roll a newer token back). `Kit::Auth::OAuth` gained `#access_token`,
   `#headers_for` and a compare-and-swap `#replace` to support this. (#11)
+- `Kit::OAuth::Token#expiring_within?(seconds)` for refreshing proactively
+  ahead of the expiry each token response reports (`expires_in`) instead of
+  waiting for a 401. (#11)
 - README "Background jobs" recipe: `max_retries: 0` (which also disables the
   429 `Retry-After` sleep), mapping the typed errors onto the job framework's
   retries, and which POSTs are safe to re-run (`subscribers.create` is an
