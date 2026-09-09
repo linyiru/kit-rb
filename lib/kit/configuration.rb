@@ -3,14 +3,24 @@
 module Kit
   # Immutable per-client configuration. Exactly one credential (api_key or
   # access_token) must be supplied; the matching auth strategy is selected here.
+  #
+  # `renew:` (OAuth only) is a callable invoked once when a request answers
+  # 401. It receives the access token the client was using and returns a
+  # replacement to retry with, or nil when it cannot renew (the 401 is then
+  # raised as usual). Refreshing, persisting the new pair and serialising
+  # concurrent refreshes are the callable's job; if the persisted pair already
+  # differs from the token it was given, another process refreshed first and
+  # it should return the persisted token without calling Kit. Errors it raises
+  # propagate untouched. A 403 is never renewed: that is scope, not expiry.
   class Configuration
     attr_reader :auth, :base_url, :open_timeout, :read_timeout, :write_timeout,
-                :max_retries, :retry_backoff, :max_backoff
+                :max_retries, :retry_backoff, :max_backoff, :renew
 
     def initialize(api_key: nil, access_token: nil, base_url: DEFAULT_BASE_URL,
                    open_timeout: 10, read_timeout: 30, write_timeout: 30,
-                   max_retries: 2, retry_backoff: 0.5, max_backoff: 30)
+                   max_retries: 2, retry_backoff: 0.5, max_backoff: 30, renew: nil)
       @auth = build_auth(api_key, access_token)
+      @renew = validate_renew(renew)
       @base_url = base_url
       @open_timeout = open_timeout
       @read_timeout = read_timeout
@@ -21,6 +31,14 @@ module Kit
     end
 
     private
+
+    def validate_renew(renew)
+      return nil if renew.nil?
+      raise ConfigurationError, "renew: is only meaningful with access_token" unless @auth.is_a?(Auth::OAuth)
+      raise ConfigurationError, "renew: must respond to #call" unless renew.respond_to?(:call)
+
+      renew
+    end
 
     def build_auth(api_key, access_token)
       raise ConfigurationError, "supply either api_key or access_token, not both" if api_key && access_token

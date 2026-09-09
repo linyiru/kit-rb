@@ -153,9 +153,18 @@ module Kit
     class OAuth
       def initialize: (String access_token) -> void
       def headers: () -> Hash[String, String]
+      def headers_for: (String token) -> Hash[String, String]
+      def access_token: () -> String
+      def replace: (String access_token, ?if_current: String?) -> bool
       def inspect: () -> String
       def to_s: () -> String
     end
+  end
+
+  # Anything that answers a 401 with a replacement access token (or nil to
+  # give up): a lambda, a Method, or a service object with #call.
+  interface _Renewer
+    def call: (String current_access_token) -> String?
   end
 
   class Configuration
@@ -167,7 +176,8 @@ module Kit
     attr_reader max_retries: Integer
     attr_reader retry_backoff: Float
     attr_reader max_backoff: Numeric
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
+    attr_reader renew: _Renewer?
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?) -> void
   end
 
   class Connection
@@ -650,7 +660,7 @@ module Kit
 
   class Client
     attr_reader config: Configuration
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric) -> void
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?) -> void
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
     def tags: () -> Resources::Tags
