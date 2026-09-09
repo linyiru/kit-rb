@@ -15,7 +15,7 @@ module Kit
     #                                  redirect_uri: "https://app.example/callback")
     #   redirect_to oauth.authorization_url(state: session_token)
     #   token = oauth.exchange_code(params[:code])          # Kit::OAuth::Token
-    #   token = oauth.refresh(token.refresh_token)          # single-use refresh
+    #   token = oauth.refresh(token.refresh_token)          # persist the new pair
     #   client = Kit::Client.new(access_token: token.access_token)
     #
     # Public clients (SPAs/mobile/CLIs) omit client_secret and use PKCE instead.
@@ -41,6 +41,11 @@ module Kit
       end
 
       # The URL to redirect the Kit account owner to for consent.
+      #
+      # App Store apps need a paid Kit plan: on a free-plan account the consent
+      # page redirects to Kit's billing settings instead of returning to
+      # redirect_uri, with no `error` parameter, so the flow simply never
+      # completes. API keys, by contrast, work on every plan.
       def authorization_url(scope: "public", state: nil, code_challenge: nil,
                             code_challenge_method: nil, tenant_name: nil, redirect_uri: @redirect_uri)
         query = {
@@ -84,8 +89,12 @@ module Kit
         )
       end
 
-      # Refreshes a token. Kit refresh tokens are single-use; the returned Token
-      # carries a new refresh_token to persist.
+      # Refreshes a token. The returned Token carries a new refresh_token to
+      # persist. Kit documents refresh tokens as single-use, but the previous
+      # one was observed to remain valid right after rotation (2026-09-08), so
+      # a second refresh with it silently mints a pair that nothing persists: do not
+      # use "the old token was rejected" as a signal that another process
+      # refreshed first — serialise refreshes per grant yourself (see Token).
       def refresh(refresh_token)
         token_request(
           grant_type: "refresh_token",
@@ -118,8 +127,8 @@ module Kit
       # received" for both clients, and Kit::OAuthError is the only error the
       # token endpoint itself produces. Whether a retry is safe is up to the
       # operation: the server may have processed the request before the
-      # connection failed, and a refresh_token is single-use, so replaying a
-      # timed-out #refresh can answer invalid_grant.
+      # connection failed, and Kit documents refresh tokens as single-use, so
+      # replaying a timed-out #refresh may answer invalid_grant.
       def post_form(path, form)
         @http.post("#{@base_url}#{path}", form: form.compact)
       rescue HTTP::TimeoutError => e

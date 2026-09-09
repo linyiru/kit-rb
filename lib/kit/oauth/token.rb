@@ -2,9 +2,13 @@
 
 module Kit
   module OAuth
-    # An OAuth token set from the token endpoint. Kit's refresh tokens are
-    # single-use: every refresh returns a *new* refresh_token, so persist the
-    # whole Token after each exchange/refresh.
+    # An OAuth token set from the token endpoint. Kit documents refresh tokens
+    # as single-use and returns a new refresh_token on every refresh, so
+    # persist the whole Token after each exchange/refresh. Do not rely on the
+    # previous refresh token being rejected, though: on 2026-09-08 Kit still
+    # accepted it immediately after rotation. If several processes can refresh
+    # the same grant, serialise them yourself (one refresh per grant at a time)
+    # and have late arrivals adopt the pair that was persisted.
     Token = Data.define(
       :access_token, :refresh_token, :token_type, :expires_in, :scope, :created_at
     ) do

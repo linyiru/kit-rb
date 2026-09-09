@@ -46,7 +46,7 @@ rate limits 120/60s (key) and 600/60s (OAuth); cursor pagination (`after`/`befor
   `Data` object) with full spec coverage.
 - **P1 — core, by hand. ✅** Cursor auto-pagination (lazy Enumerator, POST-based
   lists supported), 429/5xx retry with backoff, and the full OAuth suite:
-  authorization-code grant, single-use refresh, PKCE (S256), RFC 7009 revocation,
+  authorization-code grant, rotating refresh tokens, PKCE (S256), RFC 7009 revocation,
   and the client_credentials grant.
 - **P2 — resources, spec-driven + local models. ✅** Every resource group shipped
   with objects + specs — subscribers, tags, custom fields, forms, sequences (+

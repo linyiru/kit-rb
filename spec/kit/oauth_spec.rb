@@ -105,7 +105,7 @@ RSpec.describe Kit::OAuth do
       expect(stub).to have_been_requested
     end
 
-    it "refreshes and returns the new single-use refresh_token" do
+    it "refreshes and returns the rotated refresh_token to persist" do
       stub_request(:post, "https://api.kit.com/v4/oauth/token")
         .with(body: hash_including("grant_type" => "refresh_token", "refresh_token" => "old-rt"))
         .to_return(status: 200, headers: { "Content-Type" => "application/json" },

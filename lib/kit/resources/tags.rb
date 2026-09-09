@@ -9,7 +9,9 @@ module Kit
         collection("/v4/tags", "tags", Objects::Tag, params)
       end
 
-      # POST /v4/tags
+      # POST /v4/tags — idempotent on name, matched case-insensitively: an
+      # existing tag is returned (200) rather than duplicated (201). Safe to
+      # replay. There is no single-tag delete in v4; use Bulk#delete_tags.
       def create(name:)
         one(:post, "/v4/tags", "tag", Objects::Tag, body: { name: name })
       end
