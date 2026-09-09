@@ -23,6 +23,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   (`Kit::OAuth::Token` with a working 48 h expiry) and `tagged_subscriber`
   (`upsert_and_tag`'s result). Overrides are validated like the builders'.
   Loading `kit/testing` no longer needs http.rb. (#14)
+- `Kit::Testing.stub(operation, http_status:, **path_params_and_overrides)`,
+  `stub_error(operation, status, *messages)`, `stub_rate_limited(operation,
+  retry_after:)` and `url_for(operation, **path_params)`: WebMock stubs by
+  operation name, built from the same documented examples — path params by
+  name, percent-encoded exactly as the client sends them (one that is also a
+  response field, like `id:`, shapes the body too; on a list, every row),
+  unspecified ones and any query string match, `http_status:` selects the
+  status-specific documented body, 204 operations answer with no body. WebMock is required by the consumer, not by this gem; a clear
+  `ConfigurationError` says so when it is absent. (#14)
 - `instrumenter:` and `logger:` on `Kit::Client` / `Kit::Configuration`. The
   instrumenter receives one `"request.kit"` event per HTTP attempt through
   `instrument(name, payload) { }` (`ActiveSupport::Notifications` compatible,
