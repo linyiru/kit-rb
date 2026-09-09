@@ -56,8 +56,10 @@ module Kit
       attempt = 0
       renewed = false
       begin
-        used = renewable_token
-        handle(perform(method, path, params, body, used), method, path)
+        # Snapshot the token this attempt is sent with (renewal on), so a 401 is
+        # attributed to it rather than to whatever another thread installs since.
+        used = @config.renew && @config.auth.access_token
+        attempt_request(method, path, params, body, token: used, attempt: attempt, renewed: renewed)
       rescue *RETRYABLE => e
         attempt += 1
         raise if attempt > @config.max_retries || !retryable?(method, e)
@@ -84,20 +86,12 @@ module Kit
       error.is_a?(RateLimitError) || IDEMPOTENT.include?(method)
     end
 
-    # The access token this request will be sent with, when renewal is on (nil
-    # otherwise): snapshotted so the 401 is attributed to the token that
-    # earned it, not to whatever another thread has installed since.
-    def renewable_token
-      @config.renew && @config.auth.access_token
-    end
-
-    # Answers a 401 on `used`. Returns true when the request should be retried:
-    # either another thread already installed a newer token (use it, do not
-    # renew again), or config.renew returned a replacement. False when there
-    # is no callable or it answered nil (cannot renew) — unless a newer token
-    # arrived while it was deciding, which is still worth a retry. The
-    # replacement is installed compare-and-swap against `used`, so a renewal
-    # that completes after a newer token was installed does not roll it back.
+    # Answers a 401 on `used`. True when the request should be retried: another
+    # thread already installed a newer token (use it, do not renew again), or
+    # config.renew returned a replacement. False when there is no callable or
+    # it answered nil — unless a newer token arrived meanwhile, still worth a
+    # retry. The replacement is installed compare-and-swap against `used`, so
+    # a renewal that completes after a newer token cannot roll it back.
     def renew_token?(used)
       renew = @config.renew
       return false unless renew
@@ -112,8 +106,21 @@ module Kit
       true
     end
 
+    # One HTTP attempt, instrumented (see Instrumentation): perform + handle.
+    # `attempt` is the retry budget (429/5xx/transport only); the renewal retry
+    # does not consume it but is still an earlier attempt, so it is reported.
+    def attempt_request(method, path, params, body, token:, attempt:, renewed:)
+      retries = attempt + (renewed ? 1 : 0)
+      Instrumentation.around(@config.instrumenter, method, path, retries) do
+        handle(perform(method, path, params, body, token), method, path)
+      end
+    end
+
+    # The auth header is added per request as a new immutable http.rb chain —
+    # for the given token snapshot, or the credential's current header — so a
+    # renewed token is used without rebuilding @client.
     def perform(method, path, params, body, token = nil)
-      authed_client(token).request(method, "#{@config.base_url}#{path}", params: params, json: body)
+      authed(token).request(method, "#{@config.base_url}#{path}", params: params, json: body)
     rescue HTTP::TimeoutError => e
       raise TimeoutError, "#{method.to_s.upcase} #{path} timed out: #{e.message}"
     rescue HTTP::ConnectionError => e
@@ -122,12 +129,7 @@ module Kit
       raise TransportError, "#{method.to_s.upcase} #{path} failed in transport: #{e.message}"
     end
 
-    # The shared client plus the auth header (a new immutable chain each time,
-    # so a renewed token is used without rebuilding @client) — for the given
-    # OAuth token snapshot, or the credential's current header.
-    def authed_client(token = nil)
-      @client.headers(token ? @config.auth.headers_for(token) : @config.auth.headers)
-    end
+    def authed(token) = @client.headers(token ? @config.auth.headers_for(token) : @config.auth.headers)
 
     def default_headers
       {

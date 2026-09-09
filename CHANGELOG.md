@@ -6,6 +6,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `instrumenter:` and `logger:` on `Kit::Client` / `Kit::Configuration`. The
+  instrumenter receives one `"request.kit"` event per HTTP attempt through
+  `instrument(name, payload) { }` (`ActiveSupport::Notifications` compatible,
+  no Rails dependency) with `method`, `path`, `status`, `duration`, `retries`,
+  `retry_after` and `error`; never the query string, body or a header value.
+  `logger:` writes the same payload as one debug line per attempt. Both may be
+  given. (#13)
+
 ## [0.4.0] - 2026-09-09
 
 ### Added

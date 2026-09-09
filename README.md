@@ -75,6 +75,33 @@ A 429 is retried for every request (with `Retry-After`, capped at
 retried only for idempotent verbs, so a POST is never replayed after those.
 Credentials are masked in `#inspect`.
 
+### Instrumentation
+
+Pass `instrumenter:` to observe every HTTP attempt (Sentry breadcrumbs,
+per-request timing), or `logger:` for one debug line each:
+
+```ruby
+client = Kit::Client.new(api_key: key, instrumenter: ActiveSupport::Notifications)
+ActiveSupport::Notifications.subscribe("request.kit") do |*, payload|
+  Sentry.add_breadcrumb(Sentry::Breadcrumb.new(category: "kit", data: payload))
+end
+
+client = Kit::Client.new(api_key: key, logger: Rails.logger)
+# D, kit GET /v4/account status=429 duration=0.212s retries=0 retry_after=7 error=Kit::RateLimitError
+# D, kit GET /v4/account status=200 duration=0.180s retries=1
+```
+
+The interface is `ActiveSupport::Notifications`' (`instrument(name, payload) { }`)
+but the gem has no Rails dependency: any object with that method works. One
+`"request.kit"` event is emitted per attempt, so a retried request shows each
+attempt, with `method`, `path`, `status` (nil when no response arrived),
+`duration` (seconds), `retries`, `retry_after` (on a 429) and `error` (the Kit
+error class name). The payload never contains the query string, the body, or
+any header value, so no credential or subscriber email can reach a log — and a
+failed attempt is reported through `error`, not by raising inside the
+instrumenter, so `ActiveSupport::Notifications` never attaches the exception
+(with its response body) to the payload.
+
 ### Background jobs
 
 The built-in retry sleeps on the calling thread, which is right for a script
