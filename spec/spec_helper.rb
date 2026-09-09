@@ -49,6 +49,9 @@ VCR.configure do |c|
   c.before_record do |interaction|
     interaction.response.body = interaction.response.body&.gsub(email_pattern, "<EMAIL>")
     interaction.request.body = interaction.request.body&.gsub(email_pattern, "<EMAIL>")
+    # Kit sets an XSRF cookie on every response; it is session state, not part
+    # of the API contract, and has no business in a committed fixture.
+    interaction.response.headers.delete("Set-Cookie")
   end
 end
 

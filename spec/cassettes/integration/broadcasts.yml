@@ -44,13 +44,6 @@ http_interactions:
       - none
       Referrer-Policy:
       - strict-origin-when-cross-origin
-      Set-Cookie:
-      - XSRF-TOKEN=zrvVHABC1Ere-5S3xxDKDb9LhFzyfGMGYLg99QR2C_0wBKSELLNagui2c5HQtC8IiztBJKmGoy7mNJLt6hM_Ew;
-        path=/; secure
-      - XSRF-TOKEN=zrvVHABC1Ere-5S3xxDKDb9LhFzyfGMGYLg99QR2C_0wBKSELLNagui2c5HQtC8IiztBJKmGoy7mNJLt6hM_Ew;
-        path=/; secure
-      - _mailapp_session=3177c7e9ec7168de96857c6be5de3ed7; path=/; expires=Fri, 04
-        Sep 2026 16:36:24 GMT; secure; HttpOnly
       Etag:
       - W/"46f9342fa8559820131a6cba26d12d7c"
       Cache-Control:
