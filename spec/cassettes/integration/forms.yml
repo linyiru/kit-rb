@@ -68,6 +68,6 @@ http_interactions:
       - Origin
     body:
       encoding: UTF-8
-      string: '{"forms":[{"id":3893419,"name":"Newsletter site","created_at":"2022-12-26T05:16:25Z","type":"embed","format":null,"embed_js":"https://imoney.kit.com/10d511a4df/index.js","embed_url":"https://imoney.kit.com/10d511a4df","archived":false,"uid":"10d511a4df"}],"pagination":{"has_previous_page":false,"has_next_page":false,"start_cursor":"WzM4OTM0MTld","end_cursor":"WzM4OTM0MTld","per_page":500}}'
+      string: '{"forms":[{"id":3893419,"name":"Newsletter site","created_at":"2022-12-26T05:16:25Z","type":"embed","format":null,"embed_js":"https://<SUBDOMAIN>.kit.com/<FORM_UID>/index.js","embed_url":"https://<SUBDOMAIN>.kit.com/<FORM_UID>","archived":false,"uid":"<FORM_UID>"}],"pagination":{"has_previous_page":false,"has_next_page":false,"start_cursor":"WzM4OTM0MTld","end_cursor":"WzM4OTM0MTld","per_page":500}}'
   recorded_at: Fri, 04 Sep 2026 16:26:23 GMT
 recorded_with: VCR 6.4.0
