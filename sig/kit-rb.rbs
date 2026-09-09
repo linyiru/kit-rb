@@ -718,3 +718,21 @@ module Kit
     def bulk: () -> Resources::Bulk
   end
 end
+
+module Kit
+  # require "kit/testing" — consumer test support (not loaded by kit-rb).
+  module Testing
+    OPERATIONS: Hash[Symbol, [Symbol, String]]
+
+    module Fixtures
+      PATH: String
+      ALL: Hash[String, Hash[String, untyped]]
+      KNOWN_FIELDS: Hash[String, Set[String]]
+      def self.for: (Symbol | String operation) -> Hash[String, untyped]
+      def self.status_for: (Hash[String, untyped] fixture, (Integer | String)? status) -> String
+      def self.merge_fields: (String key, Hash[String, untyped] example, Hash[Symbol | String, untyped] overrides) -> Hash[String, untyped]
+      def self.deep_dup: [T] (T value) -> T
+      def self.deep_freeze: (untyped value) -> untyped
+    end
+  end
+end
