@@ -12,6 +12,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `Tags.name_key`, using `[[:space:]]` so a fullwidth space cannot mint a
   look-alike tag). `tags.update` re-keys the cached entry on a rename;
   `refresh: true` drops one by hand. (#15)
+- `subscribers.upsert_and_tag(email_address:, tag_names:, first_name: nil,
+  state: nil, fields: nil)`: the v4 replacement for v3's tag-subscribe —
+  upserts the subscriber, ensures each distinct tag by name and applies it,
+  returning a `Kit::Objects::TaggedSubscriber` (`subscriber`, `tags` applied).
+  A tag deleted outside the client is re-ensured once on a 404. (#15)
 - `renew:` on `Kit::Client` / `Kit::Configuration` (OAuth only): a callable
   invoked once when a request answers 401, receiving the access token in use
   and returning a replacement (or `nil` to give up). The connection adopts the

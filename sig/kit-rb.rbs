@@ -283,6 +283,11 @@ module Kit
       attr_reader tagged_at: String?
       def self.from: (Hash[String, untyped] hash) -> Tag
     end
+    class TaggedSubscriber
+      attr_reader subscriber: Subscriber
+      attr_reader tags: Array[Tag]
+      def tag_names: () -> Array[String?]
+    end
     class CustomField
       attr_reader id: Integer?
       attr_reader name: String?
@@ -553,9 +558,11 @@ module Kit
       def growth_stats: (**untyped params) -> Objects::GrowthStats
     end
     class Subscribers < Base
+      def initialize: (Connection connection, ?tags: Tags?) -> void
       def list: (**untyped params) -> Collection[Objects::Subscriber]
       def get: (Integer id) -> Objects::Subscriber
       def create: (email_address: String, ?first_name: String?, ?state: String?, ?fields: Hash[untyped, untyped]?) -> Objects::Subscriber
+      def upsert_and_tag: (email_address: String, tag_names: Array[String], ?first_name: String?, ?state: String?, ?fields: Hash[untyped, untyped]?) -> Objects::TaggedSubscriber
       def update: (Integer id, ?first_name: String?, ?email_address: String?, ?fields: Hash[untyped, untyped]?) -> Objects::Subscriber
       def unsubscribe: (Integer id) -> Objects::Subscriber?
       def filter: (**untyped params) -> Collection[Objects::Subscriber]
@@ -667,7 +674,7 @@ module Kit
     def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?) -> void
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
-    def tags: () -> Resources::Tags
+    attr_reader tags: Resources::Tags
     def custom_fields: () -> Resources::CustomFields
     def forms: () -> Resources::Forms
     def sequences: () -> Resources::Sequences
