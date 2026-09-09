@@ -12,22 +12,12 @@ module Kit
       end
 
       # Kit matches tag names case-insensitively and v3 consumers carry over a
-      # "find_tag_by_name or create" dance that v4 no longer needs. This is the
-      # canonical form of a name for that matching: runs of Unicode whitespace
-      # (`[[:space:]]`, not `\s`, so a fullwidth or typographic space cannot
-      # mint a look-alike tag) collapsed to one ASCII space and trimmed.
-      # Raises ArgumentError when nothing is left.
-      def self.normalize_name(name)
-        normalized = name.to_s.gsub(/[[:space:]]+/, " ").strip
-        raise ArgumentError, "tag name must not be blank" if normalized.empty?
+      # "find_tag_by_name or create" dance that v4 no longer needs. These are
+      # the canonical form of a name for that matching and its match key; the
+      # rules live in Kit::TagNames so Kit::Testing shares them exactly.
+      def self.normalize_name(name) = TagNames.normalize(name)
 
-        normalized
-      end
-
-      # The key two names share when Kit would treat them as the same tag.
-      def self.name_key(name)
-        normalize_name(name).downcase
-      end
+      def self.name_key(name) = TagNames.key(name)
 
       # GET /v4/tags
       def list(**params)

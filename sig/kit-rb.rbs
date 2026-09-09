@@ -196,6 +196,12 @@ module Kit
     end
   end
 
+  module TagNames
+    def self.normalize: (untyped name) -> String
+    def self.key: (untyped name) -> String
+    def self.distinct: (untyped names) -> Array[String]
+  end
+
   class Configuration
     attr_reader auth: (Auth::ApiKey | Auth::OAuth)
     attr_reader base_url: String
