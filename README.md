@@ -331,9 +331,15 @@ Kit::Testing.response(:tags_create, http_status: 201, name: "vip")        # any 
 Kit::Testing.list_json(:subscribers_list, [{ id: 1 }, { id: 2 }], has_next_page: true, end_cursor: "E")
 Kit::Testing.attributes(:subscribers_get, first_name: "Ada")              # the bare object, for Objects::Subscriber.from
 
-stub_request(:post, "https://api.kit.com/v4/subscribers")
-  .to_return(status: 201, headers: { "Content-Type" => "application/json" },
-             body: JSON.generate(Kit::Testing.subscriber_json(id: 500)))
+# With WebMock loaded, stub a whole operation by name (path params by name — one
+# that is also a response field, like id:, shapes the body too; any query string
+# matches; returns WebMock's stub for .with / have_been_requested):
+Kit::Testing.stub(:subscribers_create, id: 500)
+Kit::Testing.stub(:tags_tag_subscriber, tag_id: 7, id: 500)
+Kit::Testing.stub(:tags_list, items: [{ name: "vip" }], has_next_page: true)
+Kit::Testing.stub_error(:account_get, 401, "The API key is invalid")
+Kit::Testing.stub_rate_limited(:subscribers_create, retry_after: 7)
+expect(a_request(:post, Kit::Testing.url_for(:tags_tag_subscriber, tag_id: 7, id: 500))).to have_been_made
 
 # Typed values for instance_double returns and unit tests — the same examples,
 # parsed by the same Kit::Objects classes the client uses:

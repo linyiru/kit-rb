@@ -24,6 +24,9 @@ module Kit
   #   Kit::Testing.account_info(plan_type: "free")                    # Kit::Objects::AccountInfo
   #   Kit::Testing.oauth_token(created_at: Time.now.to_i)             # Kit::OAuth::Token
   #
+  #   Kit::Testing.stub(:subscribers_create, id: 500)                 # WebMock stub by operation
+  #   Kit::Testing.stub_error(:account_get, 401, "The API key is invalid")
+  #
   # Operation names are `<resource>_<method>` after the client method
   # (Kit::Testing::OPERATIONS). Overrides must be fields Kit documents for
   # that response type (Kit::Testing::TYPES) — a typo, or a field of another
@@ -54,6 +57,8 @@ module Kit
       subscriber_stats: :subscribers_stats,
       account: :account_get
     }.freeze
+
+    PAGINATION_FIELDS = %i[has_next_page has_previous_page start_cursor end_cursor per_page total_count].freeze
 
     class << self
       # The documented example body for `operation` at `http_status` (default:
@@ -92,8 +97,6 @@ module Kit
         body["pagination"] = pagination_json(body["pagination"], **page_fields(rows, pagination))
         body
       end
-
-      PAGINATION_FIELDS = %i[has_next_page has_previous_page start_cursor end_cursor per_page total_count].freeze
 
       # A pagination object: `example` (default: the tags list's) with exactly
       # the given fields replaced — an omitted keyword keeps the example's
@@ -179,3 +182,4 @@ module Kit
 end
 
 require_relative "testing/factories"
+require_relative "testing/stubs"

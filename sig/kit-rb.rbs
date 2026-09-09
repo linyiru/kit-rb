@@ -765,6 +765,16 @@ module Kit
     end
     extend Factories
 
+    module Stubs
+      BASE_URL: String
+      JSON_HEADERS: Hash[String, String]
+      def stub: (Symbol | String operation, ?http_status: (Integer | String)?, **untyped params) -> untyped
+      def stub_error: (Symbol | String operation, Integer status, *(String | Array[String]) messages, **untyped path_params) -> untyped
+      def stub_rate_limited: (Symbol | String operation, ?retry_after: Integer, **untyped path_params) -> untyped
+      def url_for: (Symbol | String operation, **untyped path_params) -> (String | Regexp)
+    end
+    extend Stubs
+
     def self.subscriber: (**untyped overrides) -> Objects::Subscriber
     def self.tag: (**untyped overrides) -> Objects::Tag
     def self.custom_field: (**untyped overrides) -> Objects::CustomField
