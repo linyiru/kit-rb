@@ -41,6 +41,11 @@ module Kit
       end
 
       # The URL to redirect the Kit account owner to for consent.
+      #
+      # App Store apps need a paid Kit plan: on a free-plan account the consent
+      # page redirects to Kit's billing settings instead of returning to
+      # redirect_uri, with no `error` parameter, so the flow simply never
+      # completes. API keys, by contrast, work on every plan.
       def authorization_url(scope: "public", state: nil, code_challenge: nil,
                             code_challenge_method: nil, tenant_name: nil, redirect_uri: @redirect_uri)
         query = {

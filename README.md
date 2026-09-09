@@ -39,6 +39,21 @@ info = client.account.get       # => Kit::Objects::AccountInfo
 info.account.plan_type          # => "creator_pro"
 ```
 
+Which auth mode an account can use depends on its plan:
+
+- **API keys work on every plan, including free.** Verified 2026-09-09 with a
+  key from a `plan_type: "free"` account: account, subscriber and tag reads and
+  writes all succeed. Kit positions keys as the owner's own automation and
+  does not support public integrations built on them.
+- **OAuth apps (App Store) need a paid plan.** On a free account the consent
+  page redirects to Kit's billing settings instead of coming back to your
+  `redirect_uri`, with no `error` parameter; the flow just never completes.
+- The bulk and purchase endpoints require OAuth on any plan (an API key gets
+  `401 OAuth authentication required`).
+- `info.account.name` is `""` (not nil) when no name is set, so fall back to
+  `info.account.primary_email_address` when presenting the account.
+  `info.account.id` is the account id used in the App Store.
+
 Responses are immutable `Data` value objects. Errors are typed, and every one
 is a `Kit::Error`:
 

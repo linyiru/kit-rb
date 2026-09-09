@@ -11,6 +11,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   429 `Retry-After` sleep), mapping the typed errors onto the job framework's
   retries, and which POSTs are safe to re-run (`subscribers.create` is an
   upsert, `tags.create` is idempotent on name). (#12)
+- README note on plan eligibility: API keys work on every plan including
+  free (verified live); OAuth App Store apps need a paid plan, and on a free
+  account the consent page redirects to billing without an `error` parameter.
+  Also that `account.name` is `""` rather than nil when unset. (#9)
 - `Kit::OAuth::Client.new` accepts `open_timeout:`, `read_timeout:` and
   `write_timeout:` with the same defaults as `Kit::Client` (10 / 30 / 30 s).
   Token and revoke requests previously ran with no timeout, so a stalled
