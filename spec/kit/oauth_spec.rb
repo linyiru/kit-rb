@@ -28,6 +28,14 @@ RSpec.describe Kit::OAuth do
     it "is not expired when the fields are absent" do
       expect(described_class.from("access_token" => "a").expired?).to be(false)
     end
+
+    it "reports expiring_within? for proactive refresh" do
+      token = described_class.from("access_token" => "a", "created_at" => 1000, "expires_in" => 100)
+      expect(token.expiring_within?(50, now: 1040)).to be(false)
+      expect(token.expiring_within?(60, now: 1040)).to be(true)
+      expect(token.expiring_within?(0, now: 1100)).to be(true)
+      expect(described_class.from("access_token" => "a").expiring_within?(3600)).to be(false)
+    end
   end
 
   describe Kit::OAuth::Client do

@@ -192,6 +192,41 @@ oauth.revoke(token.access_token)                            # RFC 7009
 client = Kit::Client.new(access_token: token.access_token)
 ```
 
+#### Renewing the access token on 401
+
+Pass `renew:` and the client answers a 401 by calling it once, then retrying
+the request with the token it returns (every verb: Kit rejected the request
+unauthenticated, so nothing was applied). A second 401 is raised; a 403 is
+never renewed (scope, not expiry); an error raised by the callable propagates
+untouched, so your own error taxonomy survives.
+
+```ruby
+client = Kit::Client.new(
+  access_token: grant.access_token,
+  renew: lambda do |current|
+    grant.with_lock do                        # one refresh per grant at a time
+      grant.reload
+      next grant.access_token if grant.access_token != current  # another process refreshed: adopt it
+      token = oauth.refresh(grant.refresh_token)
+      grant.update!(access_token: token.access_token, refresh_token: token.refresh_token)
+      token.access_token
+    end
+  end
+)
+```
+
+The callable receives the token the request that got the 401 was sent with and
+returns a replacement, or `nil` when it cannot renew (the 401 is then raised as
+usual — unless another thread installed a newer token meanwhile, which is
+retried with). Refreshing, persisting the new pair and serialising concurrent refreshes
+are its job, not the gem's; the "persisted pair already differs" check matters
+because Kit was observed to accept a superseded refresh token (see above). The
+client's side of the race is handled: concurrent requests that 401 on the same
+old token do not each renew (once one has installed a newer token the others just
+retry with it), and a renewal that finishes late cannot roll a newer token back.
+Refreshing ahead of expiry stays with the caller: `Token#expiring_within?(seconds)`
+(or `#expires_at` / `#expired?`) tells you when.
+
 Kit documents refresh tokens as single-use and returns a new `refresh_token` on
 every refresh; persist the newest pair after each exchange or refresh. Do not
 rely on the previous refresh token being rejected: on 2026-09-08 it was still

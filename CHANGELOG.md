@@ -7,6 +7,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- `renew:` on `Kit::Client` / `Kit::Configuration` (OAuth only): a callable
+  invoked once when a request answers 401, receiving the access token in use
+  and returning a replacement (or `nil` to give up). The connection adopts the
+  token and retries the request once; a second 401 is raised, a 403 is never
+  renewed, and errors from the callable propagate untouched. Refreshing,
+  persistence and locking stay with the callable; the client's own race is
+  handled (a 401 is attributed to the token the request was sent with, a
+  newer token installed meanwhile is simply retried with, and a late renewal
+  cannot roll a newer token back). `Kit::Auth::OAuth` gained `#access_token`,
+  `#headers_for` and a compare-and-swap `#replace` to support this. (#11)
+- `Kit::OAuth::Token#expiring_within?(seconds)` for refreshing proactively
+  ahead of the expiry each token response reports (`expires_in`) instead of
+  waiting for a 401. (#11)
 - README "Background jobs" recipe: `max_retries: 0` (which also disables the
   429 `Retry-After` sleep), mapping the typed errors onto the job framework's
   retries, and which POSTs are safe to re-run (`subscribers.create` is an

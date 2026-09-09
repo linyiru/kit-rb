@@ -46,6 +46,13 @@ module Kit
 
         now >= (exp - leeway)
       end
+
+      # True when the token expires within `seconds` from now (or already has),
+      # for refreshing proactively before a request would 401. False when the
+      # expiry fields are absent.
+      def expiring_within?(seconds, now: Time.now.to_i)
+        expired?(now: now, leeway: seconds)
+      end
     end
   end
 end
