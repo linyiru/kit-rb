@@ -16,7 +16,9 @@ module Kit
         one(:get, "/v4/subscribers/#{path_id(id)}", "subscriber", Objects::Subscriber)
       end
 
-      # POST /v4/subscribers — email_address required; first_name, state, fields optional.
+      # POST /v4/subscribers — email_address required; first_name, state, fields
+      # optional. An upsert: an existing email address has its first_name
+      # updated rather than being duplicated, so the call is safe to replay.
       def create(email_address:, first_name: nil, state: nil, fields: nil)
         body = { email_address: email_address, first_name: first_name,
                  state: state, fields: fields }.compact

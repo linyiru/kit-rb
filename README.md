@@ -56,8 +56,65 @@ end
 ```
 
 A 429 is retried for every request (with `Retry-After`, capped at
-`max_backoff`); 5xx and transport failures are retried only for idempotent
-verbs, so a POST is never replayed. Credentials are masked in `#inspect`.
+`max_backoff`) because Kit did not apply it; 5xx and transport failures are
+retried only for idempotent verbs, so a POST is never replayed after those.
+Credentials are masked in `#inspect`.
+
+### Background jobs
+
+The built-in retry sleeps on the calling thread, which is right for a script
+and wrong inside a job: the job framework already owns retrying. Turn the
+client's retries off and map the typed errors onto the framework's:
+
+```ruby
+class SyncSubscriberJob < ApplicationJob
+  # grant_id identifies the stored OAuth pair for one Kit account (your model).
+  def perform(grant_id, email_address, tag_id)
+    grant = KitGrant.find(grant_id)
+    renewed = false                 # outside the begin: `retry` must not reset it
+    begin
+      client = Kit::Client.new(access_token: grant.access_token, max_retries: 0) # never sleep in the worker
+      subscriber = client.subscribers.create(email_address: email_address)     # upsert: safe to replay
+      client.tags.tag_subscriber(tag_id, subscriber.id)                        # idempotent: safe to replay
+    rescue Kit::RateLimitError => e
+      wait = e.retry_after&.positive? ? e.retry_after : 30  # nil = no header, 0 = unparsable
+      retry_job wait: wait.seconds
+    rescue Kit::TransportError, Kit::ServerError
+      # Only because every call above is safe to replay. The client itself does
+      # not retry a POST after these (it does after a 429, which Kit did not
+      # apply); a timed-out purchases.create may have succeeded and would append
+      # its items again, so a job doing that must checkpoint or skip instead.
+      raise                                                 # let retry_on / Sidekiq back off
+    rescue Kit::AuthenticationError
+      # With an API key a 401 means it was revoked: record it, tell the account
+      # owner, and stop. With OAuth the access token may merely have expired:
+      if renewed
+        grant.mark_revoked!                                 # 401 on the renewed token: the grant is gone
+        raise                                               # fail loudly; pair with discard_on
+      end
+      renewed = true
+      grant.refresh!                                        # oauth.refresh(grant.refresh_token) + persist the new pair
+      retry
+    end
+  end
+end
+```
+
+- `max_retries: 0` disables *all* client-side retries, including the 429
+  `Retry-After` sleep, so the job must read `RateLimitError#retry_after`
+  itself: `nil` when Kit sent no header, `0` when it was not a number of
+  seconds (an HTTP-date). Only a positive value is usable, so test for that
+  rather than for `nil`.
+- After a 5xx or transport failure the client does not replay a POST (it does
+  after a 429, which Kit did not apply), so a job that retries a whole batch
+  will re-run its earlier successful creates. Decide per operation whether
+  that is safe. It is for the common ones:
+  `POST /v4/subscribers` is an upsert (an existing email address gets its
+  first name updated, nothing is duplicated), and `POST /v4/tags` is
+  idempotent on name, matched case-insensitively (an existing tag answers 200
+  with its record; a new one 201). It is not for `purchases.create`, whose
+  product items are append-only. There is no single-tag delete in v4 —
+  removing a tag needs `bulk.delete_tags` (OAuth).
 
 ## Resources
 

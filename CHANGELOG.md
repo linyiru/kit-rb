@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- README "Background jobs" recipe: `max_retries: 0` (which also disables the
+  429 `Retry-After` sleep), mapping the typed errors onto the job framework's
+  retries, and which POSTs are safe to re-run (`subscribers.create` is an
+  upsert, `tags.create` is idempotent on name). (#12)
 - `Kit::OAuth::Client.new` accepts `open_timeout:`, `read_timeout:` and
   `write_timeout:` with the same defaults as `Kit::Client` (10 / 30 / 30 s).
   Token and revoke requests previously ran with no timeout, so a stalled
