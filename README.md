@@ -311,7 +311,42 @@ produces. A transport error means no response was received, not that the request
 was not processed: a timed-out `refresh` may already have consumed the refresh
 token (documented as single-use), so treat retrying it as your own decision.
 
-## Testing
+## Testing your integration
+
+`require "kit/testing"` (not loaded by `kit-rb` itself; no test-framework
+dependency) builds response bodies from Kit's own documented examples, so a
+consumer spec reads as "the upsert succeeds" instead of a hand-written envelope
+that drifts when a field changes:
+
+```ruby
+require "kit/testing"
+
+Kit::Testing.subscriber_json(id: 500, email_address: "ada@example.com")
+# => { "subscriber" => { "id" => 500, "email_address" => "ada@example.com", "state" => "active", ... } }
+Kit::Testing.tag_json(name: "vip")                       # { "tag" => {...} }
+Kit::Testing.account_json(plan_type: "free", name: "")   # { "user" => {...}, "account" => {...} }
+Kit::Testing.error_json("The API key is invalid")        # { "errors" => [...] }
+
+Kit::Testing.response(:tags_create, http_status: 201, name: "vip")        # any operation, by name
+Kit::Testing.list_json(:subscribers_list, [{ id: 1 }, { id: 2 }], has_next_page: true, end_cursor: "E")
+Kit::Testing.attributes(:subscribers_get, first_name: "Ada")              # the bare object, for Objects::Subscriber.from
+
+stub_request(:post, "https://api.kit.com/v4/subscribers")
+  .to_return(status: 201, headers: { "Content-Type" => "application/json" },
+             body: JSON.generate(Kit::Testing.subscriber_json(id: 500)))
+```
+
+Operations are named `<resource>_<method>` after the client method
+(`Kit::Testing::OPERATIONS`, 83 of them); `http_status:` picks among the 2xx
+codes Kit documents for one (`status:` stays free for the field of that name on
+posts, purchases, broadcasts and webhook endpoints). An override that is not a documented field of the
+response type (`Kit::Testing::TYPES` disambiguates envelopes such as `"stats"`
+that wrap different objects) raises `ArgumentError`, so a typo — or a field of
+the wrong object — cannot build a response the real API would never send. The fixtures are generated from the vendored OpenAPI
+document's examples (`rake testing:fixtures`) and a contract test fails when
+they, the operation registry, or the document drift apart.
+
+## Testing this gem
 
 The suite is layered:
 

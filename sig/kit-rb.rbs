@@ -723,6 +723,10 @@ module Kit
   # require "kit/testing" — consumer test support (not loaded by kit-rb).
   module Testing
     OPERATIONS: Hash[Symbol, [Symbol, String]]
+    OBJECTS: Hash[Symbol, Symbol]
+    FIXTURES_PATH: String
+    FIXTURES: Hash[String, Hash[String, untyped]]
+    KNOWN_FIELDS: Hash[String, Set[String]]
 
     module Fixtures
       PATH: String
@@ -730,9 +734,37 @@ module Kit
       KNOWN_FIELDS: Hash[String, Set[String]]
       def self.for: (Symbol | String operation) -> Hash[String, untyped]
       def self.status_for: (Hash[String, untyped] fixture, (Integer | String)? status) -> String
-      def self.merge_fields: (String key, Hash[String, untyped] example, Hash[Symbol | String, untyped] overrides) -> Hash[String, untyped]
-      def self.deep_dup: [T] (T value) -> T
+      def self.merge_fields: (String type, Hash[String, untyped] example, Hash[Symbol | String, untyped] overrides) -> Hash[String, untyped]
+      def self.deep_dup: (untyped value) -> untyped
       def self.deep_freeze: (untyped value) -> untyped
     end
+
+    def self.response: (Symbol | String operation, ?http_status: (Integer | String)?, **untyped overrides) -> untyped
+    def self.attributes: (Symbol | String operation, **untyped overrides) -> Hash[String, untyped]
+    PAGINATION_FIELDS: Array[Symbol]
+    TYPES: Hash[Symbol, String]
+    def self.list_json: (Symbol | String operation, ?(Integer | Array[Hash[Symbol | String, untyped]]) items, ?has_next_page: bool, ?has_previous_page: bool, ?start_cursor: String?, ?end_cursor: String?, ?per_page: Integer?, ?total_count: Integer?) -> Hash[String, untyped]
+    def self.pagination_json: (?Hash[String, untyped] example, ?has_next_page: bool, ?has_previous_page: bool, ?start_cursor: String?, ?end_cursor: String?, ?per_page: Integer?, ?total_count: Integer?) -> Hash[String, untyped]
+    def self.error_json: (*(String | Array[String]) messages) -> Hash[String, Array[String]]
+    def self.http_status: (Symbol | String operation, ?(Integer | String)? http_status) -> Integer
+    def self.operation: (Symbol | String name) -> [Symbol, String]
+
+    def self.subscriber_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.tag_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.custom_field_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.sequence_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.sequence_email_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.broadcast_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.broadcast_stats_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.post_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.snippet_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.purchase_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.webhook_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.webhook_endpoint_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.creator_profile_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.email_stats_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.growth_stats_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.subscriber_stats_json: (**untyped overrides) -> Hash[String, untyped]
+    def self.account_json: (**untyped overrides) -> Hash[String, untyped]
   end
 end
