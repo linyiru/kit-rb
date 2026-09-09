@@ -334,6 +334,14 @@ Kit::Testing.attributes(:subscribers_get, first_name: "Ada")              # the 
 stub_request(:post, "https://api.kit.com/v4/subscribers")
   .to_return(status: 201, headers: { "Content-Type" => "application/json" },
              body: JSON.generate(Kit::Testing.subscriber_json(id: 500)))
+
+# Typed values for instance_double returns and unit tests — the same examples,
+# parsed by the same Kit::Objects classes the client uses:
+Kit::Testing.subscriber(id: 500, email_address: "ada@example.com")  # => Kit::Objects::Subscriber
+Kit::Testing.account_info(plan_type: "free", user: { email: "owner@example.com" })
+Kit::Testing.oauth_token(created_at: Time.now.to_i)                  # => Kit::OAuth::Token, 48 h expiry
+Kit::Testing.tagged_subscriber(tag_names: ["vip", "beta"])           # upsert_and_tag's result
+allow(kit).to receive(:subscribers).and_return(instance_double(Kit::Resources::Subscribers, get: Kit::Testing.subscriber))
 ```
 
 Operations are named `<resource>_<method>` after the client method
@@ -344,7 +352,9 @@ response type (`Kit::Testing::TYPES` disambiguates envelopes such as `"stats"`
 that wrap different objects) raises `ArgumentError`, so a typo — or a field of
 the wrong object — cannot build a response the real API would never send. The fixtures are generated from the vendored OpenAPI
 document's examples (`rake testing:fixtures`) and a contract test fails when
-they, the operation registry, or the document drift apart.
+they, the operation registry, or the document drift apart. `require "kit/testing"` loads only the
+value objects, not http.rb, so it works wherever the gem's runtime dependencies
+are absent.
 
 ## Testing this gem
 

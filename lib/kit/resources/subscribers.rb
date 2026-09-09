@@ -107,10 +107,7 @@ module Kit
 
       private
 
-      # Normalised names, first spelling wins, one per case-insensitive key.
-      def distinct_tag_names(tag_names)
-        Array(tag_names).map { |name| Tags.normalize_name(name) }.uniq(&:downcase)
-      end
+      def distinct_tag_names(tag_names) = TagNames.distinct(tag_names)
 
       def apply_tag(subscriber, name)
         tag = @tags.ensure(name: name)
