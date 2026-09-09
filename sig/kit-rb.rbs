@@ -168,6 +168,34 @@ module Kit
     def call: (String current_access_token) -> String?
   end
 
+  # ActiveSupport::Notifications-compatible: `instrument(name, payload) { }`.
+  interface _Instrumenter
+    def instrument: (String name, Hash[Symbol, untyped] payload) { (Hash[Symbol, untyped]) -> untyped } -> untyped
+  end
+
+  # Anything with a Logger-like #debug (block or message form).
+  interface _Logger
+    def debug: (?untyped message) ?{ () -> untyped } -> untyped
+  end
+
+  module Instrumentation
+    EVENT: String
+    def self.around: (_Instrumenter? instrumenter, Symbol method, String path, Integer retries) { () -> [Integer, untyped] } -> [Integer, untyped]
+    def self.new_payload: (Symbol method, String path, Integer retries) -> Hash[Symbol, untyped]
+    def self.record_error: (Hash[Symbol, untyped] payload, Error error) -> void
+    def self.build: (?instrumenter: _Instrumenter?, ?logger: _Logger?) -> _Instrumenter?
+
+    class LoggerInstrumenter
+      def initialize: (_Logger logger) -> void
+      def instrument: (String name, Hash[Symbol, untyped] payload) { (Hash[Symbol, untyped]) -> untyped } -> untyped
+    end
+
+    class Multi
+      def initialize: (Array[_Instrumenter] instrumenters) -> void
+      def instrument: (String name, Hash[Symbol, untyped] payload) { (Hash[Symbol, untyped]) -> untyped } -> untyped
+    end
+  end
+
   class Configuration
     attr_reader auth: (Auth::ApiKey | Auth::OAuth)
     attr_reader base_url: String
@@ -178,7 +206,8 @@ module Kit
     attr_reader retry_backoff: Float
     attr_reader max_backoff: Numeric
     attr_reader renew: _Renewer?
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?) -> void
+    attr_reader instrumenter: _Instrumenter?
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?, ?instrumenter: _Instrumenter?, ?logger: _Logger?) -> void
   end
 
   class Connection
@@ -671,7 +700,7 @@ module Kit
 
   class Client
     attr_reader config: Configuration
-    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?) -> void
+    def initialize: (?api_key: String?, ?access_token: String?, ?base_url: String, ?open_timeout: Integer, ?read_timeout: Integer, ?write_timeout: Integer, ?max_retries: Integer, ?retry_backoff: Float, ?max_backoff: Numeric, ?renew: _Renewer?, ?instrumenter: _Instrumenter?, ?logger: _Logger?) -> void
     def account: () -> Resources::Account
     def subscribers: () -> Resources::Subscribers
     attr_reader tags: Resources::Tags

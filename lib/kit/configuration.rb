@@ -12,15 +12,21 @@ module Kit
   # differs from the token it was given, another process refreshed first and
   # it should return the persisted token without calling Kit. Errors it raises
   # propagate untouched. A 403 is never renewed: that is scope, not expiry.
+  #
+  # `instrumenter:` receives one "request.kit" event per HTTP attempt through
+  # `instrument(name, payload) { }` (ActiveSupport::Notifications compatible);
+  # `logger:` logs the same payload at debug level. See Kit::Instrumentation.
   class Configuration
     attr_reader :auth, :base_url, :open_timeout, :read_timeout, :write_timeout,
-                :max_retries, :retry_backoff, :max_backoff, :renew
+                :max_retries, :retry_backoff, :max_backoff, :renew, :instrumenter
 
     def initialize(api_key: nil, access_token: nil, base_url: DEFAULT_BASE_URL,
                    open_timeout: 10, read_timeout: 30, write_timeout: 30,
-                   max_retries: 2, retry_backoff: 0.5, max_backoff: 30, renew: nil)
+                   max_retries: 2, retry_backoff: 0.5, max_backoff: 30, renew: nil,
+                   instrumenter: nil, logger: nil)
       @auth = build_auth(api_key, access_token)
       @renew = validate_renew(renew)
+      @instrumenter = Instrumentation.build(instrumenter: instrumenter, logger: logger)
       @base_url = base_url
       @open_timeout = open_timeout
       @read_timeout = read_timeout
