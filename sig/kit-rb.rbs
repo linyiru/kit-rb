@@ -566,8 +566,11 @@ module Kit
       def remove_location: (Integer id) -> void
     end
     class Tags < Base
+      def self.normalize_name: (untyped name) -> String
+      def self.name_key: (untyped name) -> String
       def list: (**untyped params) -> Collection[Objects::Tag]
       def create: (name: String) -> Objects::Tag
+      def ensure: (name: String, ?refresh: bool) -> Objects::Tag
       def update: (Integer id, name: String) -> Objects::Tag
       def tag_subscriber: (Integer tag_id, Integer subscriber_id) -> Objects::Subscriber
       def remove_subscriber: (Integer tag_id, Integer subscriber_id) -> untyped

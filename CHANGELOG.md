@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- `tags.ensure(name:)`: find-or-create by name, cached per client under a
+  case-insensitive, whitespace-normalised key (`Tags.normalize_name` /
+  `Tags.name_key`, using `[[:space:]]` so a fullwidth space cannot mint a
+  look-alike tag). `tags.update` re-keys the cached entry on a rename;
+  `refresh: true` drops one by hand. (#15)
 - `renew:` on `Kit::Client` / `Kit::Configuration` (OAuth only): a callable
   invoked once when a request answers 401, receiving the access token in use
   and returning a replacement (or `nil` to give up). The connection adopts the
