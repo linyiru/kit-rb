@@ -20,6 +20,10 @@ module Kit
   #   Kit::Testing.list_json(:tags_list, [{ name: "vip" }, { name: "beta" }], has_next_page: true)
   #   Kit::Testing.error_json("The API key is invalid")               # => { "errors" => [...] }
   #
+  #   Kit::Testing.subscriber(id: 500)                                # typed Kit::Objects::Subscriber
+  #   Kit::Testing.account_info(plan_type: "free")                    # Kit::Objects::AccountInfo
+  #   Kit::Testing.oauth_token(created_at: Time.now.to_i)             # Kit::OAuth::Token
+  #
   # Operation names are `<resource>_<method>` after the client method
   # (Kit::Testing::OPERATIONS). Overrides must be fields Kit documents for
   # that response type (Kit::Testing::TYPES) — a typo, or a field of another
@@ -173,3 +177,5 @@ module Kit
     end
   end
 end
+
+require_relative "testing/factories"

@@ -755,6 +755,34 @@ module Kit
     def self.http_status: (Symbol | String operation, ?(Integer | String)? http_status) -> Integer
     def self.operation: (Symbol | String name) -> [Symbol, String]
 
+    module Factories
+      OBJECT_CLASSES: Hash[Symbol, untyped]
+      TOKEN_EXAMPLE: Hash[String, untyped]
+      def object: (Symbol | String factory, **untyped overrides) -> untyped
+      def account_info: (?user: Hash[Symbol | String, untyped], **untyped account_overrides) -> Objects::AccountInfo
+      def oauth_token: (**untyped overrides) -> OAuth::Token
+      def tagged_subscriber: (?tag_names: Array[String], **untyped subscriber_overrides) -> Objects::TaggedSubscriber
+    end
+    extend Factories
+
+    def self.subscriber: (**untyped overrides) -> Objects::Subscriber
+    def self.tag: (**untyped overrides) -> Objects::Tag
+    def self.custom_field: (**untyped overrides) -> Objects::CustomField
+    def self.sequence: (**untyped overrides) -> Objects::Sequence
+    def self.sequence_email: (**untyped overrides) -> Objects::SequenceEmail
+    def self.broadcast: (**untyped overrides) -> Objects::Broadcast
+    def self.broadcast_stats: (**untyped overrides) -> Objects::BroadcastStats
+    def self.post: (**untyped overrides) -> Objects::Post
+    def self.snippet: (**untyped overrides) -> Objects::Snippet
+    def self.purchase: (**untyped overrides) -> Objects::Purchase
+    def self.webhook: (**untyped overrides) -> Objects::Webhook
+    def self.webhook_endpoint: (**untyped overrides) -> Objects::WebhookEndpoint
+    def self.creator_profile: (**untyped overrides) -> Objects::CreatorProfile
+    def self.email_stats: (**untyped overrides) -> Objects::EmailStats
+    def self.growth_stats: (**untyped overrides) -> Objects::GrowthStats
+    def self.subscriber_stats: (**untyped overrides) -> Objects::SubscriberStats
+    def self.account: (**untyped overrides) -> Objects::Account
+
     def self.subscriber_json: (**untyped overrides) -> Hash[String, untyped]
     def self.tag_json: (**untyped overrides) -> Hash[String, untyped]
     def self.custom_field_json: (**untyped overrides) -> Hash[String, untyped]
