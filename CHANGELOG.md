@@ -21,6 +21,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   operation-specific: a timed-out `refresh` may already have consumed the
   single-use refresh token), and `Kit::OAuthError` is the only error the
   token endpoint itself produces. (#7)
+- A 2xx whose envelope key is present but holds `null` or a scalar (for
+  example `{"account": null}` or `{"subscriber": "x"}`) raises
+  `Kit::UnexpectedResponseError` naming the key and the value found, instead
+  of a `NoMethodError` from inside the object builder that `rescue Kit::Error`
+  could not catch. Object envelopes must be a JSON object, list envelopes and
+  `colors`/`clicks` an array, `pagination` an object; `account.get` now
+  applies the same check to `user` and `account`. (#10)
 
 ## [0.3.1] - 2026-09-06
 

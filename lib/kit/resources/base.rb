@@ -62,7 +62,7 @@ module Kit
       # build/return plumbing — it declares only verb, path, key, class, body.
       def one(verb, path, key, klass, body: nil, params: {})
         response = @connection.request(verb, path, params: params, body: body)
-        klass.from(extract(response, key))
+        klass.from(extract(response, key, as: Hash))
       end
 
       # Fetches a cursor-paginated list and wraps it in a Collection whose next
@@ -74,8 +74,8 @@ module Kit
       # endpoints pass verb: :post with a filter body, still paging by cursor.
       def collection(path, key, klass, params, verb: :get, body: nil)
         response = @connection.request(verb, path, params: params, body: body)
-        data = extract(response, key).map { |element| klass.from(element) }
-        Collection.new(data: data, pagination: Pagination.from(extract(response, "pagination"))) do |after|
+        data = extract(response, key, as: Array).map { |element| klass.from(element) }
+        Collection.new(data: data, pagination: Pagination.from(extract(response, "pagination", as: Hash))) do |after|
           collection(path, key, klass, Collection.next_page_params(params, after), verb: verb, body: body)
         end
       end
@@ -83,12 +83,24 @@ module Kit
       # Reads `key` from a 2xx body, raising UnexpectedResponseError (a
       # Kit::Error, so `rescue Kit::Error` still catches it) instead of the bare
       # KeyError/NoMethodError a drifted or non-JSON response would otherwise
-      # produce deep inside the resource.
-      def extract(response, key)
-        return response.fetch(key) if response.is_a?(Hash) && response.key?(key)
+      # produce deep inside the resource. With `as:` the value must also be of
+      # that class (Hash for an object envelope, Array for a list): a present
+      # key holding `null` or a scalar is the same malformed envelope as a
+      # missing key and must not reach `klass.from`, where it would surface as
+      # a NoMethodError that looks like a bug in the caller.
+      def extract(response, key, as: nil)
+        unless response.is_a?(Hash) && response.key?(key)
+          raise UnexpectedResponseError.new(
+            "expected a JSON object with #{key.inspect} in the response, got #{describe(response)}",
+            body: response
+          )
+        end
+
+        value = response.fetch(key)
+        return value if as.nil? || value.is_a?(as)
 
         raise UnexpectedResponseError.new(
-          "expected a JSON object with #{key.inspect} in the response, got #{describe(response)}",
+          "expected #{key.inspect} in the response to be #{article(as)}, got #{describe_value(value)}",
           body: response
         )
       end
@@ -99,6 +111,18 @@ module Kit
         when nil then "an empty body"
         else "a #{response.class} body"
         end
+      end
+
+      def describe_value(value)
+        case value
+        when nil then "null"
+        when Hash then "an object with keys #{value.keys.inspect}"
+        else "#{article(value.class)} (#{value.inspect[0, 60]})"
+        end
+      end
+
+      def article(klass)
+        klass == Array ? "an Array" : "a #{klass}"
       end
     end
   end

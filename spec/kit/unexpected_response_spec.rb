@@ -50,4 +50,45 @@ RSpec.describe Kit::UnexpectedResponseError do
     stub_raw(:get, "/v4/broadcasts/1/clicks", '{"broadcast":{}}')
     expect { client.broadcasts.clicks(1) }.to raise_error(described_class, /"clicks"/)
   end
+
+  describe "a present key whose value is not the expected type" do
+    it "rejects null where a single object is expected, instead of NoMethodError" do
+      stub_raw(:get, "/v4/subscribers/1", '{"subscriber":null}')
+      expect { client.subscribers.get(1) }.to raise_error(described_class) do |e|
+        expect(e.message).to include('"subscriber"').and include("a Hash").and include("null")
+        expect(e.body).to eq("subscriber" => nil)
+      end
+    end
+
+    it "rejects a scalar where a single object is expected" do
+      stub_raw(:get, "/v4/subscribers/1", '{"subscriber":"x"}')
+      expect { client.subscribers.get(1) }.to raise_error(described_class, /to be a Hash, got a String \("x"\)/)
+    end
+
+    it "rejects a non-array list envelope" do
+      stub_raw(:get, "/v4/tags", '{"tags":{},"pagination":{}}')
+      expect { client.tags.list }.to raise_error(described_class, /"tags".*to be an Array, got an object/)
+    end
+
+    it "rejects a null pagination object" do
+      stub_raw(:get, "/v4/tags", '{"tags":[],"pagination":null}')
+      expect { client.tags.list }.to raise_error(described_class, /"pagination".*to be a Hash, got null/)
+    end
+
+    it "rejects null user/account on GET /v4/account, which previously reached Account.from(nil)" do
+      stub_raw(:get, "/v4/account", '{"user":{"email":"<EMAIL>"},"account":null}')
+      expect { client.account.get }.to raise_error(described_class, /"account".*to be a Hash, got null/)
+
+      stub_raw(:get, "/v4/account", '{"user":{"email":"<EMAIL>"}}')
+      expect { client.account.get }.to raise_error(described_class, /"account"/)
+    end
+
+    it "rejects a non-array colors palette and a non-array clicks list" do
+      stub_raw(:get, "/v4/account/colors", '{"colors":"#fff"}')
+      expect { client.account.colors }.to raise_error(described_class, /"colors".*to be an Array/)
+
+      stub_raw(:get, "/v4/broadcasts/1/clicks", '{"broadcast":{"clicks":null},"pagination":{}}')
+      expect { client.broadcasts.clicks(1) }.to raise_error(described_class, /"clicks".*to be an Array, got null/)
+    end
+  end
 end
